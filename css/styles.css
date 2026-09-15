@@ -730,11 +730,11 @@ p { margin: 0 0 11px; }
   .top-callout__brand {
     display: block;
     text-align: center;
-    font-family: "Satisfy", "Segoe Script", "Brush Script MT", cursive;
-    font-weight: 400;
-    font-size: clamp(1.9rem, 3.5vw, 2.6rem);
-    letter-spacing: 0.01em;
-    line-height: 1.25;
+    font-family: "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    letter-spacing: 0.06em;
+    line-height: 1.2;
     color: var(--navy);
     margin: 0 auto 8px;
     padding-bottom: 18px;
