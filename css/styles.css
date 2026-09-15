@@ -731,11 +731,25 @@ p { margin: 0 0 11px; }
     display: block;
     text-align: center;
     font-family: var(--font-ui);
-    font-weight: 800;
-    font-size: 1.75rem;
-    letter-spacing: 0.03em;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: 0.14em;
+    line-height: 1.15;
     color: var(--navy);
-    margin: 0 0 20px;
+    margin: 0 auto 8px;
+    padding-bottom: 18px;
+    position: relative;
+  }
+  .top-callout__brand::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--teal));
   }
   .top-callout__content {
     flex: 0 1 auto;
