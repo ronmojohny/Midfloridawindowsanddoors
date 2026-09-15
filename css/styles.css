@@ -128,7 +128,7 @@ p { margin: 0 0 11px; }
   font-size: 1.7em;
   margin: 0 0 8px;
 }
-.top-callout__text h2 a { color: var(--navy); }
+.top-callout__text h2 a { color: var(--navy); font-size: 0.82em; }
 .top-callout__text h2 a:hover { color: var(--teal); }
 .top-callout__phones {
   font-family: var(--font-ui);
