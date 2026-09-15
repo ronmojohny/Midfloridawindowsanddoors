@@ -719,6 +719,8 @@ p { margin: 0 0 11px; }
   .col-heading { width: 33.3333%; }
   .col-text { width: 66.6667%; }
 
+  .top-callout__break { display: none; }
+
   .top-callout__row {
     flex-direction: row;
     text-align: right;
