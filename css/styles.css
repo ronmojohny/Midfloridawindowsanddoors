@@ -121,6 +121,7 @@ p { margin: 0 0 11px; }
 }
 .top-callout__brand {
   display: none;
+  text-align: center;
 }
 .top-callout__text h2 {
   color: var(--navy);
@@ -728,12 +729,13 @@ p { margin: 0 0 11px; }
   .top-callout__img { flex: 0 0 200px; }
   .top-callout__brand {
     display: block;
+    text-align: center;
     font-family: var(--font-ui);
     font-weight: 800;
     font-size: 1.75rem;
     letter-spacing: 0.03em;
     color: var(--navy);
-    margin: 0 0 6px;
+    margin: 0 0 20px;
   }
   .top-callout__content {
     flex: 0 1 auto;
