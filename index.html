@@ -24,10 +24,10 @@
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
-  <!-- Fonts -->
+  <!-- Fonts: Neuton (body) + Montserrat (headings/UI) — matching Weather Tite Windows -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Neuton:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -98,463 +98,345 @@
 </head>
 <body>
 
-  <!-- Announcement Bar -->
-  <div class="announce">
-    <div class="container announce__inner">
-      <p><strong>Top Brand Names at Affordable Prices</strong> — PGT · Simonton · Plastpro</p>
-      <p class="announce__phone"><a href="tel:+18882300243" aria-label="Call 888-230-0243">☎ 888-230-0243</a></p>
-    </div>
-  </div>
+  <!-- ===================== HEADER ===================== -->
+  <header id="site-header">
+    <div class="container">
+      <div class="topbar">
+        <div class="logo">
+          <a href="/" aria-label="Mid-Florida Windows and Doors home">
+            <img src="logo.svg" alt="Mid-Florida Windows and Doors" width="300" height="80" />
+          </a>
+        </div>
 
-  <!-- Header -->
-  <header class="site-header" id="siteHeader">
-    <div class="container header__inner">
-      <a href="/" class="brand" aria-label="Mid-Florida Windows and Doors home">
-        <span class="brand__mark">
-          <img src="images/logo.png" width="44" height="44" alt="Mid-Florida Windows and Doors logo" />
-        </span>
-        <span class="brand__text">
-          <span class="brand__name">Mid-Florida</span>
-          <span class="brand__sub">Windows & Doors</span>
-        </span>
-      </a>
+        <div class="phone">
+          <h2>Call Now: <a href="tel:+18882300243">888-230-0243</a></h2>
+        </div>
 
-      <nav class="nav" id="nav" aria-label="Primary navigation">
-        <ul class="nav__list">
-          <li><a href="#products" class="nav__link">Windows & Doors</a></li>
-          <li><a href="#why-us" class="nav__link">Why Us</a></li>
-          <li><a href="#process" class="nav__link">Process</a></li>
-          <li><a href="#service-area" class="nav__link">Service Area</a></li>
-          <li><a href="#testimonials" class="nav__link">Reviews</a></li>
-          <li><a href="#faq" class="nav__link">FAQ</a></li>
-          <li><a href="#contact" class="nav__link">Contact</a></li>
-        </ul>
-      </nav>
+        <div class="phone2">
+          <a href="tel:+18882300243">888-230-0243</a>
+          <span class="sep">|</span>
+          <a href="tel:+17274321899">(727) 432-1899</a>
+        </div>
 
-      <div class="header__cta">
-        <a href="tel:+18882300243" class="btn btn--ghost header__call" aria-label="Call 888-230-0243">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>888-230-0243</span>
-        </a>
-        <a href="#contact" class="btn btn--accent header__quote">Get Free Quote</a>
-        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Toggle navigation menu">
-          <span></span><span></span><span></span>
-        </button>
+        <div class="estimate">
+          <a href="#free-estimate" class="btn btn-primary">Click Here For Your FREE Estimate! &raquo;</a>
+        </div>
       </div>
+
+      <nav class="navbar-wrapper" aria-label="Primary navigation">
+        <div class="navbar">
+          <button type="button" class="navbar-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav" aria-label="Toggle navigation menu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-collapse" id="primaryNav">
+            <ul class="nav navbar-nav">
+              <li class="current-menu-item"><a href="/" aria-current="page">Home</a></li>
+              <li><a href="#products">Products</a></li>
+              <li><a href="#why-us">Why Us</a></li>
+              <li><a href="#process">Process</a></li>
+              <li><a href="#service-area">Service Area</a></li>
+              <li><a href="#reviews">Reviews</a></li>
+              <li><a href="#faq">FAQs</a></li>
+              <li><a href="#free-estimate">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </div>
   </header>
 
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero" id="hero">
-      <div class="container hero__inner">
-        <div class="hero__content">
-          <p class="hero__eyebrow">Trusted in Central Florida · License #CGC1533928</p>
-          <h1 class="hero__title">Replacement Windows & Doors in Central Florida</h1>
-          <p class="hero__lede">
-            Impact and non-impact windows, patio doors, French doors and entry doors from
-            <strong>PGT, Simonton and Plastpro</strong> — backed by the most comprehensive warranties in the industry.
-          </p>
-          <ul class="hero__points">
-            <li>Free in-home consultation & quote</li>
-            <li>Top brand names at affordable prices</li>
-            <li>3-Year Anniversary Inspection Program</li>
-          </ul>
-          <div class="hero__actions">
-            <a href="#contact" class="btn btn--accent btn--lg">Get My Free Quote</a>
-            <a href="tel:+18882300243" class="btn btn--outline btn--lg">Call 888-230-0243</a>
-          </div>
-          <div class="hero__trust">
-            <span class="trust-item">★★★★★ <b>5.0</b> Customer Rated</span>
-            <span class="trust-item">BBB Accredited</span>
-            <span class="trust-item">Licensed & Insured</span>
+  <!-- ===================== HERO SLIDER ===================== -->
+  <section id="motion" aria-label="Featured">
+    <div class="hero-slider">
+      <div class="hero-slide hero-slide--1 is-active">
+        <div class="container hero-slide__inner">
+          <p class="hero-slide__eyebrow">Trusted in Central Florida · License #CGC1533928</p>
+          <h1>Replacement Windows & Doors in Central Florida</h1>
+          <p class="hero-slide__lede">Impact and non-impact windows, patio doors, French doors and entry doors from <strong>PGT, Simonton and Plastpro</strong> — backed by the most comprehensive warranties in the industry.</p>
+          <a href="#free-estimate" class="btn btn-primary btn-lg">Get My Free Quote</a>
+        </div>
+      </div>
+      <div class="hero-slide hero-slide--2">
+        <div class="container hero-slide__inner">
+          <p class="hero-slide__eyebrow">Hurricane Season Ready</p>
+          <h2>Impact Protection for Every Florida Home</h2>
+          <p class="hero-slide__lede">Storm-ready windows and doors that help protect your home — and may qualify for insurance savings.</p>
+          <a href="#free-estimate" class="btn btn-primary btn-lg">Get My Free Quote</a>
+        </div>
+      </div>
+      <div class="hero-slide hero-slide--3">
+        <div class="container hero-slide__inner">
+          <p class="hero-slide__eyebrow">Save on Energy Costs</p>
+          <h2>Energy-Efficient Windows & Doors</h2>
+          <p class="hero-slide__lede">Modern windows can account for up to 40% of your home's cooling bill. Upgrade and start saving.</p>
+          <a href="#free-estimate" class="btn btn-primary btn-lg">Get My Free Quote</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slider__dots" id="heroDots" role="tablist" aria-label="Slides">
+      <button class="hero-dot is-active" data-slide="0" aria-label="Slide 1"></button>
+      <button class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
+      <button class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
+    </div>
+  </section>
+
+  <!-- ===================== INTRO ===================== -->
+  <div id="intro-content">
+    <div class="container">
+      <div class="row intro-row">
+        <div class="col col-heading">
+          <h2>Central Florida Replacement Windows and Doors</h2>
+        </div>
+        <div class="col col-text">
+          <p>Mid-Florida Windows & Doors installs replacement windows and doors for homes and condominiums throughout Central Florida. We provide everything from window and door selection to installation, backed by manufacturer warranties plus our 3-Year Anniversary Inspection Program. Our services are available throughout Central Florida — Clearwater, Tampa, St. Petersburg, Brandon, Lakeland, Sarasota, and surrounding areas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CTA CARDS ===================== -->
+  <section id="cta-content">
+    <div class="container">
+      <div class="row">
+        <div class="col col-3">
+          <div class="cta-inner">
+            <h3>WINDOWS</h3>
+            <p>Is it time to update your home with new windows? We offer energy efficient, non-impact and impact-resistant windows.</p>
+            <p><a class="right-arrow" href="#products">View All</a></p>
+            <a href="#products" class="cta-inner__img"><span class="img-box img-box--windows">Replacement Windows</span></a>
           </div>
         </div>
+        <div class="col col-3">
+          <div class="cta-inner">
+            <h3>DOORS</h3>
+            <p>We feature a fine selection of patio doors, French doors and entry doors. Brands include PGT, Simonton and Plastpro.</p>
+            <p><a class="right-arrow" href="#products">View All</a></p>
+            <a href="#products" class="cta-inner__img"><span class="img-box img-box--doors">Patio, French & Entry Doors</span></a>
+          </div>
+        </div>
+        <div class="col col-3">
+          <div class="cta-inner">
+            <h3>IMPACT & ENERGY</h3>
+            <p>Hurricane impact protection and energy efficiency — choose the perfect fit for your home and budget.</p>
+            <p><a class="right-arrow" href="#why-us">Learn More</a></p>
+            <a href="#why-us" class="cta-inner__img"><span class="img-box img-box--impact">Impact & Energy Efficient</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="hero__card" aria-label="Request a free quote">
-          <form class="quote-form" id="heroForm" novalidate>
-            <h2 class="quote-form__title">Request a Free Quote</h2>
-            <p class="quote-form__sub">No obligation. Fast response.</p>
-            <div class="field">
-              <label for="hero-name">Full Name *</label>
-              <input type="text" id="hero-name" name="name" placeholder="Your name" required autocomplete="name" />
+  <!-- ===================== PRODUCTS / PROMISE ===================== -->
+  <section id="main-content">
+    <div class="container">
+      <div class="entry-content">
+        <div class="row">
+          <div class="col col-6">
+            <h2>Our Products</h2>
+            <p>Our extensive selection of products, featuring PGT and Simonton, includes aluminum and vinyl impact-resistant windows, energy efficient doors and patio doors — all at a price you can afford, backed by our signature warranties on installations.</p>
+            <p>Our vast product line includes vinyl replacement windows, sliding patio doors, entry doors, French doors and more.</p>
+            <ul class="two-col">
+              <li>PGT WinGuard 5500 — Impact</li>
+              <li>PGT EnergyVue 5400 — Non-Impact</li>
+              <li>Simonton Stormbreaker Plus — Impact</li>
+              <li>Simonton Collection Series</li>
+            </ul>
+            <ul class="two-col">
+              <li>PGT & Simonton Patio Doors</li>
+              <li>French & Entry Doors</li>
+              <li>Plastpro Fiberglass Doors</li>
+              <li>Schlage Locksets</li>
+            </ul>
+            <p><a class="btn btn-primary btn-block lg" href="#free-estimate">Get Window & Door Pricing &raquo;</a></p>
+          </div>
+          <div class="col col-6">
+            <h2>Our Promise to You</h2>
+            <p>Our mission is to maintain 100% customer satisfaction by marketing the finest quality, top-brand-name replacement windows and doors — backed by the most comprehensive warranties in the industry — at the most affordable prices in all of Central Florida.</p>
+            <h2>Why Choose Us</h2>
+            <p>Locally owned and licensed (License #CGC1533928). We market the finest top-brand-name replacement windows and doors at the most affordable prices, with a 100% satisfaction focus and industry-best warranties.</p>
+            <p>For a <strong>FREE QUOTE</strong>, call <a href="tel:+18882300243">888-230-0243</a> today.</p>
+            <div id="logos">
+              <span class="brand-chip brand-chip--pgt">PGT</span>
+              <span class="brand-chip brand-chip--simonton">SIMONTON</span>
+              <span class="brand-chip brand-chip--plastpro">PLASTPRO</span>
+              <span class="brand-chip brand-chip--schlage">SCHLAGE</span>
             </div>
-            <div class="field">
-              <label for="hero-email">Email *</label>
-              <input type="email" id="hero-email" name="email" placeholder="you@example.com" required autocomplete="email" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROCESS / SERVICE AREA ===================== -->
+  <section id="service-area">
+    <div class="container">
+      <div class="row">
+        <div class="col col-6">
+          <h2 class="center">What to Expect</h2>
+          <ol class="steps">
+            <li><strong>Free Consultation</strong> — a product specialist visits your home to evaluate your needs.</li>
+            <li><strong>Custom Proposal</strong> — the right products and an honest, no-pressure quote.</li>
+            <li><strong>Professional Install</strong> — skilled installation with attention to detail.</li>
+            <li><strong>Final Walkthrough</strong> — we ensure you're fully satisfied before sign-off.</li>
+          </ol>
+        </div>
+        <div class="col col-6">
+          <h2 class="center">Serving Central Florida</h2>
+          <p class="center">One of our product specialists will gladly visit your home for a <strong>FREE consultation and quote</strong>.</p>
+          <div class="counties">
+            <span class="county">Pinellas</span>
+            <span class="county">Hillsborough</span>
+            <span class="county">Polk</span>
+            <span class="county">Orange</span>
+            <span class="county">Pasco</span>
+            <span class="county">Manatee</span>
+            <span class="county">Sarasota</span>
+            <span class="county">Hernando</span>
+          </div>
+          <p class="center"><a class="btn btn-primary btn-block lg" href="tel:+18882300243">Call 888-230-0243</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REVIEWS ===================== -->
+  <section id="reviews">
+    <div class="container">
+      <h2 class="center">What Our Customers Say</h2>
+      <div class="row">
+        <div class="col col-3">
+          <div class="review">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>“Don put 24 PGT WinGuard windows in our home and they look great! I highly recommend Mid-Florida Windows & Doors.”</blockquote>
+            <cite>— Mark T.</cite>
+          </div>
+        </div>
+        <div class="col col-3">
+          <div class="review">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>“We had our front entry doors and sidelights replaced and they are fabulous. Installed beautifully and added much to the value of our home.”</blockquote>
+            <cite>— Kathleen W.</cite>
+          </div>
+        </div>
+        <div class="col col-3">
+          <div class="review">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>“My experience with Mid-Florida Windows and Doors was nothing less than impeccable service & quality craftsmanship.”</blockquote>
+            <cite>— Loretta K.</cite>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section id="faq">
+    <div class="container">
+      <h2 class="center">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What areas do you serve?</summary>
+          <p>We proudly serve Central Florida, including Pinellas, Hillsborough, Polk, Orange, Pasco, Manatee, Sarasota and Hernando counties.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What window and door brands do you carry?</summary>
+          <p>We install PGT WinGuard 5500 impact windows, PGT EnergyVue 5400 non-impact windows, Simonton Stormbreaker Plus impact windows, Simonton Collection Series, PGT and Simonton patio doors, French and entry doors, Plastpro doors, and Schlage locksets.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do you offer free in-home quotes?</summary>
+          <p>Yes. One of our product specialists will gladly visit your home for a free consultation and quote. Call 888-230-0243 to schedule.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Are impact windows worth it in Florida?</summary>
+          <p>Impact windows provide storm protection, may reduce homeowners insurance costs, improve energy efficiency, and add long-term value — making them a strong investment for Florida homes.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do you offer a warranty?</summary>
+          <p>Yes. Products are backed by manufacturer warranties (PGT, Simonton, Plastpro), and we include our 3-Year Anniversary Inspection Program for added peace of mind.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FREE ESTIMATE FORM ===================== -->
+  <div id="free-estimate" class="footer-form">
+    <div class="container">
+      <h2 class="center">Have a Question? We Have an Answer.</h2>
+      <p class="center">Request your free in-home estimate today — no obligation, fast response.</p>
+      <form class="quote-form" id="estimateForm" novalidate>
+        <div class="row">
+          <div class="col col-6">
+            <div class="form-group">
+              <label class="sr-only" for="f-name">Name</label>
+              <input type="text" id="f-name" name="name" placeholder="Name *" required autocomplete="name" />
             </div>
-            <div class="field">
-              <label for="hero-phone">Phone *</label>
-              <input type="tel" id="hero-phone" name="phone" placeholder="(555) 555-5555" required autocomplete="tel" />
+            <div class="form-group">
+              <label class="sr-only" for="f-email">Email</label>
+              <input type="email" id="f-email" name="email" placeholder="Email *" required autocomplete="email" />
             </div>
-            <div class="field">
-              <label for="hero-interest">I'm interested in</label>
-              <select id="hero-interest" name="interest">
+            <div class="form-group">
+              <label class="sr-only" for="f-phone">Phone</label>
+              <input type="tel" id="f-phone" name="phone" placeholder="Phone *" required autocomplete="tel" />
+            </div>
+          </div>
+          <div class="col col-6">
+            <div class="form-group">
+              <label class="sr-only" for="f-city">City</label>
+              <input type="text" id="f-city" name="city" placeholder="City" autocomplete="address-level2" />
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="f-interest">Primary Interest</label>
+              <select id="f-interest" name="interest">
+                <option value="">Primary Interest</option>
                 <option>Windows</option>
                 <option>Patio Doors</option>
                 <option>French / Entry Doors</option>
                 <option>Windows & Doors</option>
               </select>
             </div>
-            <button type="submit" class="btn btn--accent btn--full">Request My Quote</button>
-            <p class="quote-form__fine">We respect your privacy. No spam, ever.</p>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- BRAND BAR -->
-    <section class="brand-bar" aria-label="Brands we carry">
-      <div class="container">
-        <p class="brand-bar__label">Proudly Installing</p>
-        <div class="brand-bar__logos">
-          <span class="brand-logo">
-            <img src="images/brands/pgt.png" width="120" height="72" alt="PGT Windows and Doors" loading="lazy" />
-            <span class="brand-logo__sub">WinGuard · EnergyVue</span>
-          </span>
-          <span class="brand-logo">
-            <img src="images/brands/simonton.gif" width="150" height="46" alt="Simonton Windows" loading="lazy" />
-            <span class="brand-logo__sub">Stormbreaker · Collection</span>
-          </span>
-          <span class="brand-logo brand-logo--text">PLASTPRO<span class="brand-logo__sub">Doors & Fiberglass</span></span>
-          <span class="brand-logo brand-logo--text">SCHLAGE<span class="brand-logo__sub">Locksets</span></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRODUCTS -->
-    <section class="section products" id="products">
-      <div class="container">
-        <div class="section__head">
-          <p class="section__kicker">Our Products</p>
-          <h2 class="section__title">Windows & Doors for Every Florida Home</h2>
-          <p class="section__lede">Hurricane impact protection, energy efficiency and lasting beauty — choose the perfect fit for your home and budget.</p>
-        </div>
-
-        <div class="product-grid">
-          <!-- Windows card -->
-          <article class="product-card product-card--wide">
-            <div class="product-card__head">
-              <span class="product-card__icon" aria-hidden="true">▦</span>
-              <h3 class="product-card__title">Replacement Windows</h3>
+            <div class="form-group">
+              <label class="sr-only" for="f-message">Comments</label>
+              <textarea id="f-message" name="message" rows="2" placeholder="Comments"></textarea>
             </div>
-            <p class="product-card__text">Impact-rated and non-impact vinyl windows engineered for Florida's heat, storms and energy costs.</p>
-            <ul class="product-card__list">
-              <li><strong>PGT WinGuard 5500</strong> — Impact</li>
-              <li><strong>PGT EnergyVue 5400</strong> — Non-Impact</li>
-              <li><strong>Simonton Stormbreaker Plus</strong> — Impact</li>
-              <li><strong>Simonton Collection Series</strong> — Non-Impact</li>
-            </ul>
-            <a href="#contact" class="link-arrow">Get window pricing →</a>
-          </article>
-
-          <!-- Doors card -->
-          <article class="product-card product-card--wide">
-            <div class="product-card__head">
-              <span class="product-card__icon" aria-hidden="true">🚪</span>
-              <h3 class="product-card__title">Patio, French & Entry Doors</h3>
-            </div>
-            <p class="product-card__text">Beautiful, secure doors that enhance curb appeal and stand up to Florida weather.</p>
-            <ul class="product-card__list">
-              <li><strong>PGT Patio Doors</strong> — Impact rated</li>
-              <li><strong>Simonton Patio Doors</strong></li>
-              <li><strong>French & Entry Doors</strong></li>
-              <li><strong>Plastpro Doors</strong> — Fiberglass</li>
-            </ul>
-            <a href="#contact" class="link-arrow">Get door pricing →</a>
-          </article>
-        </div>
-
-        <div class="product-feature">
-          <div class="product-feature__item">
-            <h3>Impact Protection</h3>
-            <p>Storm-ready windows and doors that help protect your home and may qualify for insurance savings.</p>
-          </div>
-          <div class="product-feature__item">
-            <h3>Energy Efficiency</h3>
-            <p>Reduce cooling costs — modern windows can account for up to 40% of your home's cooling bill.</p>
-          </div>
-          <div class="product-feature__item">
-            <h3>Comprehensive Warranties</h3>
-            <p>Backed by manufacturer warranties plus our own 3-Year Anniversary Inspection Program.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- WHY US -->
-    <section class="section why-us" id="why-us">
-      <div class="container">
-        <div class="section__head">
-          <p class="section__kicker">Why Choose Us</p>
-          <h2 class="section__title">The Mid-Florida Difference</h2>
-        </div>
-        <div class="why-grid">
-          <div class="why-item">
-            <span class="why-item__num">01</span>
-            <h3>Top Brands, Fair Prices</h3>
-            <p>We market the finest top-brand-name replacement windows and doors at the most affordable prices in Central Florida.</p>
-          </div>
-          <div class="why-item">
-            <span class="why-item__num">02</span>
-            <h3>100% Satisfaction Focus</h3>
-            <p>Our mission is to maintain 100% customer satisfaction on every single installation.</p>
-          </div>
-          <div class="why-item">
-            <span class="why-item__num">03</span>
-            <h3>Industry-Best Warranties</h3>
-            <p>Backed by the most comprehensive warranties in the industry, so your investment is protected.</p>
-          </div>
-          <div class="why-item">
-            <span class="why-item__num">04</span>
-            <h3>Local & Licensed</h3>
-            <p>Locally owned in Florida with license #CGC1533928. We know Central Florida homes.</p>
+        <div class="row">
+          <div class="col col-12">
+            <button type="submit" class="btn btn-primary btn-block">Submit &raquo;</button>
+            <p class="form-fine">We respect your privacy. No spam, ever.</p>
           </div>
         </div>
-
-        <blockquote class="mission">
-          <p>“To maintain 100% customer satisfaction by marketing the finest quality top brand name replacement windows and doors — backed by the most comprehensive warranties in the industry — at the most affordable prices in all of Central Florida.”</p>
-          <cite>— Our Mission Statement</cite>
-        </blockquote>
-      </div>
-    </section>
-
-    <!-- PROCESS -->
-    <section class="section process" id="process">
-      <div class="container">
-        <div class="section__head">
-          <p class="section__kicker">How It Works</p>
-          <h2 class="section__title">What to Expect</h2>
-          <p class="section__lede">From first call to final walkthrough, we make replacement simple and stress-free.</p>
-        </div>
-        <ol class="steps">
-          <li class="step">
-            <span class="step__num">1</span>
-            <h3>Free Consultation</h3>
-            <p>A product specialist visits your home to evaluate your needs and options.</p>
-          </li>
-          <li class="step">
-            <span class="step__num">2</span>
-            <h3>Custom Proposal</h3>
-            <p>We present the right products and an honest, no-pressure quote.</p>
-          </li>
-          <li class="step">
-            <span class="step__num">3</span>
-            <h3>Professional Install</h3>
-            <p>Our skilled team installs with attention to detail and tidy workmanship.</p>
-          </li>
-          <li class="step">
-            <span class="step__num">4</span>
-            <h3>Final Walkthrough</h3>
-            <p>We ensure you're fully satisfied before you sign off on the job.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- SERVICE AREA -->
-    <section class="section service-area" id="service-area">
-      <div class="container service-area__inner">
-        <div class="service-area__content">
-          <p class="section__kicker">Where We Work</p>
-          <h2 class="section__title">Serving Central Florida</h2>
-          <p class="service-area__lede">
-            One of our product specialists will gladly visit your home for a <strong>FREE consultation and quote</strong>.
-            Call today at <a href="tel:+18882300243">888-230-0243</a> to learn more!
-          </p>
-          <a href="#contact" class="btn btn--accent btn--lg">Schedule My Free Visit</a>
-        </div>
-        <div class="service-area__counties" aria-label="Counties served">
-          <span class="county">Pinellas</span>
-          <span class="county">Hillsborough</span>
-          <span class="county">Polk</span>
-          <span class="county">Orange</span>
-          <span class="county">Pasco</span>
-          <span class="county">Manatee</span>
-          <span class="county">Sarasota</span>
-          <span class="county">Hernando</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="section testimonials" id="testimonials">
-      <div class="container">
-        <div class="section__head">
-          <p class="section__kicker">Reviews</p>
-          <h2 class="section__title">What Our Customers Say</h2>
-        </div>
-        <div class="testimonial-grid">
-          <figure class="testimonial">
-            <div class="testimonial__stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“Don put 24 PGT WinGuard windows in our home and they look great! I highly recommend Mid-Florida Windows & Doors. They did a wonderful job here.”</blockquote>
-            <figcaption>— Mark T.</figcaption>
-          </figure>
-          <figure class="testimonial">
-            <div class="testimonial__stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“We had our front entry doors and sidelights replaced by Mid-Florida Windows & Doors and they are fabulous. They were installed beautifully and have added much to the value of our home.”</blockquote>
-            <figcaption>— Kathleen W.</figcaption>
-          </figure>
-          <figure class="testimonial">
-            <div class="testimonial__stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“My experience with Mid-Florida Windows and Doors was nothing less than impeccable service & quality craftsmanship. Thank you!”</blockquote>
-            <figcaption>— Loretta K.</figcaption>
-          </figure>
-        </div>
-
-        <div class="testimonial-featured">
-          <div class="testimonial__stars" aria-label="5 out of 5 stars">★★★★★</div>
-          <blockquote>“Mid-Florida Windows and Doors is an excellent company. They pay special attention to details and have good workmanship. They also make sure you are satisfied with the job done before you sign off on it. I would recommend this company to anyone looking for a reputable company for windows and doors.”</blockquote>
-          <figcaption>— Hyacinth F.</figcaption>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section faq" id="faq">
-      <div class="container">
-        <div class="section__head">
-          <p class="section__kicker">FAQ</p>
-          <h2 class="section__title">Frequently Asked Questions</h2>
-        </div>
-        <div class="faq-list">
-          <details class="faq-item">
-            <summary>What areas do you serve?</summary>
-            <p>We proudly serve Central Florida, including Pinellas, Hillsborough, Polk, Orange, Pasco, Manatee, Sarasota and Hernando counties.</p>
-          </details>
-          <details class="faq-item">
-            <summary>What window and door brands do you carry?</summary>
-            <p>We install PGT WinGuard 5500 impact windows, PGT EnergyVue 5400 non-impact windows, Simonton Stormbreaker Plus impact windows, Simonton Collection Series, PGT and Simonton patio doors, French and entry doors, Plastpro doors, and Schlage locksets.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Do you offer free in-home quotes?</summary>
-            <p>Yes. One of our product specialists will gladly visit your home for a free consultation and quote. Call 888-230-0243 to schedule.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Are impact windows worth it in Florida?</summary>
-            <p>Impact windows provide storm protection, may reduce homeowners insurance costs, improve energy efficiency, and add long-term value — making them a strong investment for Florida homes.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Do you offer a warranty?</summary>
-            <p>Yes. Products are backed by manufacturer warranties (PGT, Simonton, Plastpro), and we include our 3-Year Anniversary Inspection Program for added peace of mind.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="section contact" id="contact">
-      <div class="container contact__inner">
-        <div class="contact__info">
-          <p class="section__kicker">Contact Us</p>
-          <h2 class="section__title">Get Your Free In-Home Quote</h2>
-          <p class="contact__lede">Interested in learning more? Call today for a FREE in-home demonstration.</p>
-
-          <address class="contact__block">
-            <h3>Office</h3>
-            <p>Mid-Florida Windows and Doors, LLC<br />
-            2451 McMullen Booth Road, Ste. 258<br />
-            Clearwater, FL 33759</p>
-          </address>
-
-          <div class="contact__block">
-            <h3>Phone</h3>
-            <p>
-              <a href="tel:+18882300243">888-230-0243</a><br />
-              <a href="tel:+17274321899">727-432-1899</a> (office)<br />
-              727-725-0389 (fax)
-            </p>
-          </div>
-
-          <div class="contact__block">
-            <h3>Email</h3>
-            <p>
-              <a href="mailto:info@midfloridawindowsanddoors.com">info@midfloridawindowsanddoors.com</a><br />
-              <a href="mailto:dondavid@midfloridawindowsanddoors.com">dondavid@midfloridawindowsanddoors.com</a>
-            </p>
-          </div>
-
-          <div class="contact__block">
-            <h3>Sales</h3>
-            <p>Donald V. David<br />Owner / Operator</p>
-          </div>
-
-          <div class="contact__block">
-            <h3>Payment Accepted</h3>
-            <p>MasterCard · VISA · American Express</p>
-          </div>
-
-          <p class="contact__license">Florida License #CGC1533928</p>
-        </div>
-
-        <form class="quote-form quote-form--dark" id="contactForm" novalidate>
-          <h2 class="quote-form__title">Request More Information</h2>
-          <div class="field">
-            <label for="c-name">Full Name *</label>
-            <input type="text" id="c-name" name="name" placeholder="Your name" required autocomplete="name" />
-          </div>
-          <div class="field">
-            <label for="c-email">Email *</label>
-            <input type="email" id="c-email" name="email" placeholder="you@example.com" required autocomplete="email" />
-          </div>
-          <div class="field">
-            <label for="c-phone">Phone *</label>
-            <input type="tel" id="c-phone" name="phone" placeholder="(555) 555-5555" required autocomplete="tel" />
-          </div>
-          <div class="field">
-            <label for="c-message">Message</label>
-            <textarea id="c-message" name="message" rows="4" placeholder="Tell us about your project..."></textarea>
-          </div>
-          <button type="submit" class="btn btn--accent btn--full">Send My Request</button>
-          <p class="quote-form__fine">We'll respond within one business day.</p>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <a href="/" class="brand brand--footer" aria-label="Mid-Florida Windows and Doors home">
-          <span class="brand__mark">
-            <img src="images/logo.png" width="36" height="36" alt="Mid-Florida Windows and Doors logo" />
-          </span>
-          <span class="brand__text">
-            <span class="brand__name">Mid-Florida</span>
-            <span class="brand__sub">Windows & Doors</span>
-          </span>
-        </a>
-        <p>Top brand names at affordable prices — serving all of Central Florida with quality replacement windows and doors.</p>
-      </div>
-
-      <nav class="footer__nav" aria-label="Footer navigation">
-        <h3>Explore</h3>
-        <ul>
-          <li><a href="#products">Windows & Doors</a></li>
-          <li><a href="#why-us">Why Choose Us</a></li>
-          <li><a href="#process">Our Process</a></li>
-          <li><a href="#service-area">Service Area</a></li>
-          <li><a href="#testimonials">Reviews</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-
-      <div class="footer__contact">
-        <h3>Get In Touch</h3>
-        <ul>
-          <li><a href="tel:+18882300243">888-230-0243</a></li>
-          <li><a href="tel:+17274321899">727-432-1899</a></li>
-          <li><a href="mailto:info@midfloridawindowsanddoors.com">info@midfloridawindowsanddoors.com</a></li>
-          <li>2451 McMullen Booth Rd, Ste. 258<br />Clearwater, FL 33759</li>
-        </ul>
-      </div>
+      </form>
     </div>
+  </div>
 
-    <div class="footer__bottom">
-      <div class="container footer__bottom-inner">
+  <!-- ===================== FOOTER ===================== -->
+  <footer id="site-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col col-3 footer-col">
+          <i class="fa fa-phone" aria-hidden="true"></i>
+          <a href="tel:+18882300243">888-230-0243</a> | <a href="tel:+17274321899">(727) 432-1899</a><br />
+          Call us today for a FREE estimate
+        </div>
+        <div class="col col-3 footer-col">
+          <i class="fa fa-map-marker" aria-hidden="true"></i>
+          2451 McMullen Booth Road, Ste. 258<br />
+          Clearwater, FL 33759<br />
+          <a href="https://www.google.com/maps/search/?api=1&query=2451+McMullen+Booth+Road+Ste+258+Clearwater+FL+33759" target="_blank" rel="noopener">Click for directions</a>
+        </div>
+        <div class="col col-3 footer-col">
+          <i class="fa fa-info" aria-hidden="true"></i>
+          License # CGC1533928<br />
+          MasterCard · VISA · American Express<br />
+          All Rights Reserved
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p><a href="/">Home</a> · <a href="#products">Products</a> · <a href="#service-area">Service Area</a> · <a href="#free-estimate">Contact</a></p>
         <p>© <span id="year">2026</span> Mid-Florida Windows and Doors, LLC. All rights reserved.</p>
-        <p>Florida License #CGC1533928 · MasterCard · VISA · American Express</p>
       </div>
     </div>
   </footer>

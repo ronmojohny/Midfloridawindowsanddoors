@@ -4,13 +4,12 @@
 
   /* ---- Mobile navigation toggle ---- */
   const navToggle = document.getElementById("navToggle");
-  const nav = document.getElementById("nav");
+  const nav = document.getElementById("primaryNav");
 
   if (navToggle && nav) {
     navToggle.addEventListener("click", function () {
       const isOpen = nav.classList.toggle("is-open");
       navToggle.setAttribute("aria-expanded", String(isOpen));
-      document.body.style.overflow = isOpen ? "hidden" : "";
     });
 
     // Close menu when a nav link is clicked
@@ -18,28 +17,61 @@
       if (e.target.closest("a")) {
         nav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
-        document.body.style.overflow = "";
       }
     });
 
     // Close menu on resize to desktop
     window.addEventListener("resize", function () {
-      if (window.innerWidth > 860) {
+      if (window.innerWidth >= 992) {
         nav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
-        document.body.style.overflow = "";
       }
     });
   }
 
-  /* ---- Sticky header shadow ---- */
-  const header = document.getElementById("siteHeader");
-  if (header) {
-    const onScroll = function () {
-      header.classList.toggle("is-scrolled", window.scrollY > 8);
+  /* ---- Hero slider (simple crossfade with dots) ---- */
+  const slides = document.querySelectorAll(".hero-slide");
+  const dots = document.querySelectorAll(".hero-dot");
+
+  if (slides.length > 1) {
+    let current = 0;
+    let timer = null;
+    const interval = 5500;
+
+    const show = function (index) {
+      slides.forEach(function (s, i) {
+        s.classList.toggle("is-active", i === index);
+      });
+      dots.forEach(function (d, i) {
+        d.classList.toggle("is-active", i === index);
+      });
+      current = index;
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+
+    const next = function () {
+      show((current + 1) % slides.length);
+    };
+
+    const start = function () {
+      stop();
+      timer = setInterval(next, interval);
+    };
+
+    const stop = function () {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        show(parseInt(dot.getAttribute("data-slide"), 10));
+        start();
+      });
+    });
+
+    start();
   }
 
   /* ---- Footer year ---- */
@@ -62,8 +94,8 @@
       });
 
       if (!valid) {
-        form.querySelector(".quote-form__fine").textContent =
-          "Please fill in all required fields.";
+        const fine = form.querySelector(".form-fine");
+        if (fine) fine.textContent = "Please fill in all required fields.";
         return;
       }
 
@@ -77,7 +109,7 @@
         btn.textContent = original;
         btn.disabled = false;
         form.reset();
-        const fine = form.querySelector(".quote-form__fine");
+        const fine = form.querySelector(".form-fine");
         if (fine) fine.textContent = "Thanks! We'll be in touch shortly.";
       }, 900);
     });
