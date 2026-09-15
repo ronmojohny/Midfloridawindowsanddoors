@@ -125,6 +125,7 @@ p { margin: 0 0 11px; }
 }
 .top-callout__text h2 {
   color: var(--navy);
+  font-size: 1.7em;
   margin: 0 0 8px;
 }
 .top-callout__text h2 a { color: var(--navy); }
@@ -720,6 +721,7 @@ p { margin: 0 0 11px; }
   .col-text { width: 66.6667%; }
 
   .top-callout__break { display: none; }
+  .top-callout__text h2 { font-size: 2.5em; }
 
   .top-callout__row {
     flex-direction: row;
@@ -834,7 +836,7 @@ p { margin: 0 0 11px; }
 /* Small phones: keep the callout image/text side-by-side and scale text to fit */
 @media (max-width: 479px) {
   .top-callout__row { gap: 10px; }
-  .top-callout__text h2 { font-size: 1.02em; line-height: 1.15; }
+  .top-callout__text h2 { font-size: 1.35em; line-height: 1.15; }
   .top-callout__text h2 a { white-space: normal; overflow-wrap: break-word; }
   .top-callout__phones { font-size: 0.8em; margin-bottom: 8px; }
   .top-callout__phones .sep { margin-inline: 2px; }
