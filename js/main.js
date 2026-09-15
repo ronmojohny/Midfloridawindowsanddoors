@@ -36,7 +36,7 @@
   if (slides.length > 1) {
     let current = 0;
     let timer = null;
-    const interval = 7500;
+    const interval = 10000;
 
     const show = function (index) {
       slides.forEach(function (s, i) {
