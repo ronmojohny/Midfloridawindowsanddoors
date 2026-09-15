@@ -730,10 +730,10 @@ p { margin: 0 0 11px; }
   .top-callout__brand {
     display: block;
     text-align: center;
-    font-family: "Brush Script MT", "Lucida Handwriting", "Segoe Script", cursive;
+    font-family: "Great Vibes", "Brush Script MT", "Lucida Handwriting", cursive;
     font-weight: 400;
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    letter-spacing: 0.02em;
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    letter-spacing: 0.01em;
     line-height: 1.2;
     color: var(--navy);
     margin: 0 auto 8px;
