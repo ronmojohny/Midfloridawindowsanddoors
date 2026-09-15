@@ -89,17 +89,29 @@ p { margin: 0 0 11px; }
 }
 .top-callout__row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
-  text-align: center;
-  gap: 18px;
+  text-align: left;
+  gap: 14px;
+}
+.top-callout__img {
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 200px;
 }
 .top-callout__img img {
   display: block;
   width: 200px;
+  max-width: 200px;
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
+}
+.top-callout__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 .top-callout__text h2 {
   color: var(--navy);
@@ -686,11 +698,7 @@ p { margin: 0 0 11px; }
     align-items: center;
   }
   .top-callout__img { flex: 0 0 auto; }
-  .top-callout__img img {
-    width: 300px;
-    height: 300px;
-  }
-  .top-callout__text { flex: 1 1 auto; }
+  .top-callout__text { flex: 1 1 auto; min-width: 0; }
 
   .intro-row { display: flex; align-items: flex-start; }
   #intro-content h2 { text-align: left; }
@@ -728,6 +736,16 @@ p { margin: 0 0 11px; }
     border-top: 3px solid var(--teal);
     color: var(--navy);
   }
+}
+
+/* Small phones: keep the callout image/text side-by-side and scale text to fit */
+@media (max-width: 479px) {
+  .top-callout__row { gap: 10px; }
+  .top-callout__text h2 { font-size: 1.02em; line-height: 1.15; }
+  .top-callout__text h2 a { white-space: normal; overflow-wrap: break-word; }
+  .top-callout__phones { font-size: 0.8em; margin-bottom: 8px; }
+  .top-callout__phones .sep { margin-inline: 2px; }
+  .top-callout__text .btn { font-size: 0.8em; padding: 6px 8px; }
 }
 
 /* ---------- Reduced motion ---------- */
