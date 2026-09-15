@@ -4,7 +4,7 @@
 
   /* ---- Mobile navigation toggle ---- */
   const navToggle = document.getElementById("navToggle");
-  const nav = document.getElementById("primaryNav");
+  const nav = document.getElementById("topCalloutNav");
 
   if (navToggle && nav) {
     navToggle.addEventListener("click", function () {
