@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" role="img" aria-label="Mid-Florida Windows and Doors">
   <g>
-    <rect x="6" y="12" width="56" height="56" rx="8" fill="none" stroke="#12b3a8" stroke-width="5"/>
-    <line x1="34" y1="12" x2="34" y2="68" stroke="#12b3a8" stroke-width="5"/>
-    <line x1="6" y1="40" x2="62" y2="40" stroke="#12b3a8" stroke-width="5"/>
-    <path d="M6 68 L34 40 L62 68" fill="none" stroke="#f5b942" stroke-width="4"/>
+    <rect x="6" y="12" width="56" height="56" rx="8" fill="none" stroke="#2F7C7A" stroke-width="5"/>
+    <line x1="34" y1="12" x2="34" y2="68" stroke="#2F7C7A" stroke-width="5"/>
+    <line x1="6" y1="40" x2="62" y2="40" stroke="#2F7C7A" stroke-width="5"/>
+    <path d="M6 68 L34 40 L62 68" fill="none" stroke="#E9A23B" stroke-width="4"/>
   </g>
   <g font-family="Arial, sans-serif">
-    <text x="80" y="36" font-size="24" font-weight="800" fill="#0b1f3a">Mid-Florida</text>
-    <text x="80" y="60" font-size="14" font-weight="600" letter-spacing="3" fill="#5b6b7b">WINDOWS & DOORS</text>
+    <text x="80" y="36" font-size="24" font-weight="800" fill="#12304A">Mid-Florida</text>
+    <text x="80" y="60" font-size="14" font-weight="600" letter-spacing="3" fill="#45565E">WINDOWS & DOORS</text>
   </g>
 </svg>
