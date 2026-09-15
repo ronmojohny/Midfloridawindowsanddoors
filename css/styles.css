@@ -696,9 +696,15 @@ p { margin: 0 0 11px; }
     flex-direction: row;
     text-align: left;
     align-items: center;
+    gap: 48px;
   }
-  .top-callout__img { flex: 0 0 auto; }
-  .top-callout__text { flex: 1 1 auto; min-width: 0; }
+  .top-callout__img { flex: 0 0 200px; }
+  .top-callout__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 40px;
+    border-left: 1px solid var(--line);
+  }
 
   .intro-row { display: flex; align-items: flex-start; }
   #intro-content h2 { text-align: left; }
