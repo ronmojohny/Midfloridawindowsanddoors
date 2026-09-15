@@ -82,6 +82,9 @@ p { margin: 0 0 11px; }
 .center { text-align: center; }
 
 /* ---------- Top callout (image left / text right) ---------- */
+.top-callout__room {
+  display: none;
+}
 #top-callout {
   background: var(--card);
   border-bottom: 1px solid var(--line);
@@ -722,6 +725,13 @@ p { margin: 0 0 11px; }
 
   .top-callout__break { display: none; }
   .top-callout__text h2 { font-size: 2.5em; }
+  .top-callout__room {
+    display: block;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
+  }
 
   .top-callout__row {
     flex-direction: row;
