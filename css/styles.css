@@ -838,6 +838,7 @@ p { margin: 0 0 11px; }
   .top-callout__row { gap: 10px; }
   .top-callout__text h2 { font-size: 1.35em; line-height: 1.15; }
   .top-callout__label { font-size: 0.82em; }
+  .top-callout__text h2 a { color: #c00; }
   .top-callout__text h2 a { white-space: normal; overflow-wrap: break-word; }
   .top-callout__phones { font-size: 0.8em; margin-bottom: 8px; }
   .top-callout__phones .sep { margin-inline: 2px; }
