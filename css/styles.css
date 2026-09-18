@@ -404,6 +404,57 @@ p { margin: 0 0 11px; }
 }
 .hero-dot.is-active { background: var(--amber); }
 
+/* ---------- BBB reviews banner ---------- */
+.bbb-banner {
+  display: block;
+  background: var(--card);
+  border-block: 1px solid var(--line);
+  text-decoration: none;
+}
+.bbb-banner:hover, .bbb-banner:focus { text-decoration: none; }
+.bbb-banner__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-block: 20px;
+  text-align: center;
+}
+.bbb-banner__logo {
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.bbb-banner__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.bbb-banner__stars {
+  color: var(--amber);
+  letter-spacing: 2px;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.bbb-banner__title {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 1.05rem;
+}
+.bbb-banner__cta {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--teal);
+  font-size: 0.9rem;
+}
+.bbb-banner__cta span { color: var(--amber); font-weight: 800; font-size: 1.15em; line-height: 0; }
+.bbb-banner:hover .bbb-banner__cta { color: var(--navy); }
+
 /* ---------- Intro band ---------- */
 #intro-content {
   background: var(--section);
@@ -780,6 +831,14 @@ p { margin: 0 0 11px; }
     max-width: 520px;
     align-items: flex-end;
   }
+
+  .bbb-banner__inner {
+    flex-direction: row;
+    gap: 22px;
+    padding-block: 22px;
+  }
+  .bbb-banner__logo { width: 150px; flex: 0 0 150px; }
+  .bbb-banner__text { align-items: flex-start; text-align: left; gap: 5px; }
 
   .intro-row { display: flex; align-items: flex-start; }
   #intro-content h2 { text-align: left; }
