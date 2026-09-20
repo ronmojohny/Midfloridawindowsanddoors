@@ -455,6 +455,35 @@ p { margin: 0 0 11px; }
 .bbb-banner__cta span { color: var(--amber); font-weight: 800; font-size: 1.15em; line-height: 0; }
 .bbb-banner:hover .bbb-banner__cta { color: var(--navy); }
 
+/* ---------- Financing banner ---------- */
+#financing {
+  background: var(--section);
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+}
+.financing__inner {
+  display: flex;
+  justify-content: center;
+}
+.financing__link {
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(18, 48, 74, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.financing__link:hover, .financing__link:focus {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(18, 48, 74, 0.26);
+}
+.financing__img {
+  display: block;
+  width: 320px;
+  max-width: 100%;
+  height: auto;
+}
+
 /* ---------- Intro band ---------- */
 #intro-content {
   background: var(--section);
@@ -839,6 +868,8 @@ p { margin: 0 0 11px; }
   }
   .bbb-banner__logo { width: 150px; flex: 0 0 150px; }
   .bbb-banner__text { align-items: flex-start; text-align: left; gap: 5px; }
+
+  .financing__img { width: 360px; }
 
   .intro-row { display: flex; align-items: flex-start; }
   #intro-content h2 { text-align: left; }
