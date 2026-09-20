@@ -186,6 +186,19 @@ p { margin: 0 0 11px; }
   border-color: #a56d1d;
   text-decoration: none;
 }
+.btn-secondary {
+  color: var(--navy);
+  background-color: transparent;
+  border-color: var(--navy);
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+.btn-secondary:hover, .btn-secondary:focus {
+  color: #fff;
+  background-color: var(--navy);
+  border-color: var(--navy);
+  text-decoration: none;
+}
 .btn-block { display: block; width: 100%; }
 .btn-lg, .btn.lg { padding: 10px 16px; font-size: 18px; }
 
@@ -880,6 +893,9 @@ p { margin: 0 0 11px; }
   margin-top: 28px;
 }
 .pull-quote p { color: #fff; margin: 0; font-size: 1.02rem; }
+
+/* .row utility for spacing between stacked rows */
+.row--gap { margin-top: 20px; }
 
 /* Numbered verify steps */
 .steps-block {
