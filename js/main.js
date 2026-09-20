@@ -29,6 +29,59 @@
     });
   }
 
+  /* ---- Photo lightbox (photos.html) ---- */
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxClose = document.getElementById("lightboxClose");
+  const lightboxTriggers = document.querySelectorAll("[data-lightbox]");
+
+  if (lightbox && lightboxImg && lightboxClose && lightboxTriggers.length) {
+    let lastFocused = null;
+
+    const openLightbox = function (link) {
+      const thumb = link.querySelector("img");
+      const full = link.getAttribute("href");
+
+      lightboxImg.src = full || (thumb ? thumb.getAttribute("src") : "");
+      lightboxImg.alt = thumb ? thumb.getAttribute("alt") || "" : "";
+
+      lastFocused = link;
+      lightbox.hidden = false;
+      lightbox.classList.add("is-open");
+      lightboxClose.focus();
+    };
+
+    const closeLightbox = function () {
+      lightbox.classList.remove("is-open");
+      lightbox.hidden = true;
+      lightboxImg.src = "";
+
+      if (lastFocused && typeof lastFocused.focus === "function") {
+        lastFocused.focus();
+      }
+      lastFocused = null;
+    };
+
+    lightboxTriggers.forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        openLightbox(link);
+      });
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lightbox.classList.contains("is-open")) {
+        closeLightbox();
+      }
+    });
+  }
+
   /* ---- Hero slider (simple crossfade with dots) ---- */
   const slides = document.querySelectorAll(".hero-slide");
   const dots = document.querySelectorAll(".hero-dot");
