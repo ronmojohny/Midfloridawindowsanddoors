@@ -116,44 +116,47 @@
 </head>
 <body>
 
-  <!-- ===================== TOP CALLOUT ===================== -->
-  <section id="top-callout" aria-label="Contact information and navigation">
-    <div class="container">
-      <p class="top-callout__brand">MID FLORIDA WINDOWS AND DOORS</p>
-      <div class="top-callout__row">
-        <div class="top-callout__img">
-          <img src="images/top-image.png" alt="Mid-Florida Windows and Doors" width="200" height="200" />
+  <!-- ===================== SITE HEADER — full-bleed image banner ===================== -->
+  <header class="site-header" aria-label="Site header">
+
+    <!-- Logo lockup is baked into this image, so it links home and carries the alt text. -->
+    <a class="site-header__banner" href="/" aria-label="Mid-Florida Windows & Doors — Home">
+      <picture>
+        <source type="image/webp" media="(max-width: 767px)" srcset="images/header-hero-960.webp" width="960" height="411" />
+        <source type="image/webp" srcset="images/header-hero.webp" width="1920" height="823" />
+        <source type="image/jpeg" media="(max-width: 767px)" srcset="images/header-hero-960.jpg" width="960" height="411" />
+        <img src="images/header-hero.jpg" alt="Mid-Florida Windows & Doors — impact windows and doors on a Florida waterfront home" width="1920" height="823" fetchpriority="high" decoding="async" />
+      </picture>
+    </a>
+
+    <div class="site-header__bar">
+      <div class="container site-header__bar-inner">
+        <div class="site-header__cta">
+          <p class="site-header__phone"><span class="site-header__label">Call Now:</span> <a href="tel:888-230-0243">(888) 230-0243</a></p>
+          <a href="#free-estimate" class="btn btn-primary">Click here for your FREE Estimate! >></a>
         </div>
-        <div class="top-callout__content">
-          <div class="top-callout__text">
-            <h2><span class="top-callout__label">Call Now:</span><br class="top-callout__break" /> <a href="tel:888-230-0243">(888) 230-0243</a></h2>
-            <br />
-            <a href="#free-estimate" class="btn btn-primary">Click here for your FREE Estimate! >></a>
-          </div>
-          <nav class="top-callout__nav" aria-label="Primary navigation">
-            <button type="button" class="top-callout__nav-toggle" id="navToggle" aria-expanded="false" aria-controls="topCalloutNav" aria-label="Toggle navigation menu">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <ul class="top-callout__nav-list" id="topCalloutNav">
-              <li class="current-menu-item"><a href="/" aria-current="page">Home</a></li>
-              <li><a href="https://www.lightstream.com/?cid=PS-39487&gclsrc=aw.ds&gad_source=1&gad_campaignid=21385836945&gbraid=0AAAAADsiTCFzY7AmU7mdcuz3pjvUOYh5A&gclid=CjwKCAjwwrPVBhA1EiwAv_YO-W1e2IIOnYhxThjTKQ2U8MWB1XeKHpYPUMajnv4_SfUDEd3qmEznJBoCT0QQAvD_BwE&fact=39487&isredirect=True" target="_blank" rel="noopener sponsored">Financing</a></li>
-              <li><a href="licensing.html">Licenses</a></li>
-              <li><a href="photos.html">Photos</a></li>
-              <li><a href="products.html">Products</a></li>
-              <li><a href="service-area.html">Service Area</a></li>
-              <li><a href="testimonials.html">Testimonials</a></li>
-              <li><a href="warranty.html">Warranty</a></li>
-              <li><a href="#free-estimate">Contact Us</a></li>
-            </ul>
-          </nav>
-        </div>
+        <nav class="top-callout__nav" aria-label="Primary navigation">
+          <button type="button" class="top-callout__nav-toggle" id="navToggle" aria-expanded="false" aria-controls="topCalloutNav" aria-label="Toggle navigation menu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <ul class="top-callout__nav-list" id="topCalloutNav">
+            <li class="current-menu-item"><a href="/" aria-current="page">Home</a></li>
+            <li><a href="https://www.lightstream.com/?cid=PS-39487&gclsrc=aw.ds&gad_source=1&gad_campaignid=21385836945&gbraid=0AAAAADsiTCFzY7AmU7mdcuz3pjvUOYh5A&gclid=CjwKCAjwwrPVBhA1EiwAv_YO-W1e2IIOnYhxThjTKQ2U8MWB1XeKHpYPUMajnv4_SfUDEd3qmEznJBoCT0QQAvD_BwE&fact=39487&isredirect=True" target="_blank" rel="noopener sponsored">Financing</a></li>
+            <li><a href="licensing.html">Licenses</a></li>
+            <li><a href="photos.html">Photos</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="service-area.html">Service Area</a></li>
+            <li><a href="testimonials.html">Testimonials</a></li>
+            <li><a href="warranty.html">Warranty</a></li>
+            <li><a href="#free-estimate">Contact Us</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
-  </section>
 
-  <img src="images/room.jpg" alt="Mid-Florida Windows and Doors room" class="top-callout__room" width="1600" height="1066" loading="lazy" decoding="async" />
+  </header>
 
   <!-- ===================== HERO SLIDER ===================== -->
   <section id="motion" aria-label="Featured">

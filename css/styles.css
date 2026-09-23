@@ -160,6 +160,63 @@ p { margin: 0 0 11px; }
 .top-callout__nav-list a:hover { color: var(--teal); }
 .top-callout__nav-list .current-menu-item a { color: var(--teal); }
 
+/* ---------- Site header — full-bleed image banner + navy action bar ----------
+   Used by index2.html (staging) only. #top-callout above is left intact so the
+   live index.html continues to render exactly as before. */
+.site-header__banner {
+  display: block;
+  width: 100%;
+  background: var(--navy-dark);
+  line-height: 0; /* kill the inline-image descender gap */
+}
+.site-header__banner picture,
+.site-header__banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.site-header__bar {
+  background: var(--navy);
+  border-bottom: 1px solid var(--navy-dark);
+}
+.site-header__bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding-block: 12px;
+}
+.site-header__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.site-header__phone {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+  color: #fff;
+}
+.site-header__phone a { color: #fff; }
+.site-header__phone a:hover { color: var(--amber); }
+.site-header__label { font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+
+/* Nav now sits on the navy bar instead of white — invert link/toggle colours */
+.site-header__bar .top-callout__nav-list a { color: #fff; }
+.site-header__bar .top-callout__nav-list a:hover { color: var(--amber); }
+.site-header__bar .top-callout__nav-list .current-menu-item a { color: var(--amber); }
+.site-header__bar .top-callout__nav-toggle { border-color: rgba(255, 255, 255, 0.45); }
+.site-header__bar .top-callout__nav-toggle .icon-bar { background-color: #fff; }
+
+/* Small phones: tighten the action bar (the .top-callout__text rules no longer apply) */
+@media (max-width: 479px) {
+  .site-header__cta { gap: 6px 10px; }
+  .site-header__phone { font-size: 0.9em; }
+  .site-header__cta .btn { font-size: 0.82em; padding: 6px 8px; }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-block;
