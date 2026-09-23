@@ -9,9 +9,24 @@
   <meta name="description" content="Impact and non-impact replacement windows, patio doors and entry doors from PGT, Simonton and Plastpro. Free in-home quotes across Central Florida." />
   <meta name="keywords" content="replacement windows Florida, impact windows Florida, patio doors, French doors, PGT windows, Simonton windows, Plastpro doors, Central Florida windows and doors" />
   <link rel="canonical" href="https://midfloridawindowsanddoors.com/" />
-  <!-- Duplicate working copy of index.html — not linked from the site.
-       noindex prevents it being indexed as a duplicate of the homepage.
-       Remove this override if index2.html ever becomes a real page. -->
+  <!-- ───────────────────────────────────────────────────────────────
+       STAGING COPY — index2.html is a working copy of index.html used to
+       test homepage variations before they go live. It deploys for preview
+       at /index2 (a request to /index2.html 308-redirects there) but is
+       deliberately kept out of search results so it cannot compete with
+       the homepage as a near-duplicate.
+
+         noindex   -> keeps this copy out of search indexes
+         canonical -> still points at "/", consolidating signals to the homepage
+
+       PROMO-CHECKLIST — run this when promoting this file to the homepage:
+         [ ] Replace <meta name="robots" content="noindex, follow" />
+             with  <meta name="robots" content="index, follow" />
+         [ ] Verify <link rel="canonical" href="https://midfloridawindowsanddoors.com/" />
+         [ ] Copy this file over index.html, then delete index2.html
+         [ ] Commit + push — Pages rebuilds automatically
+         [ ] Re-check / live, and request re-indexing if the content changed
+       ─────────────────────────────────────────────────────────────── -->
   <meta name="robots" content="noindex, follow" />
   <meta name="author" content="Mid-Florida Windows and Doors, LLC" />
 
