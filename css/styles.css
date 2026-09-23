@@ -217,6 +217,22 @@ p { margin: 0 0 11px; }
   .site-header__cta .btn { font-size: 0.82em; padding: 6px 8px; }
 }
 
+/* Desktop: the logo lockup is ~60% of the image width, so its rendered size
+   scales ONLY with banner width — cropping height cannot shrink it. Full-bleed
+   1920px renders the lockup ~362px tall, which dominates the page. Capping the
+   banner is the one effective lever; tune --hero-max to taste. Mobile stays
+   full-bleed, where the image already reads correctly. */
+.site-header {
+  --hero-max: 900px;
+  background: var(--navy-dark); /* makes the desktop inset read as deliberate */
+}
+@media (min-width: 768px) {
+  .site-header__banner {
+    max-width: var(--hero-max);
+    margin-inline: auto;
+  }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-block;
