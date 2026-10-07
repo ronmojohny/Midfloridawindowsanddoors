@@ -888,6 +888,10 @@ p { margin: 0 0 11px; }
   max-width: 760px;
   margin: 0 auto 26px;
 }
+.page-lede--mobile-hide { display: none; }
+@media (min-width: 768px) {
+  .page-lede--mobile-hide { display: block; }
+}
 .page-note {
   text-align: center;
   font-family: var(--font-ui);
