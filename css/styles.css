@@ -301,21 +301,21 @@ p { margin: 0 0 11px; }
     display: none;
   }
 
-  /* Desktop only: bump the phone line to match the larger button, and switch it
-     to the amber accent with a soft shadow so it stays legible over the photo. */
+  /* Desktop only: bump the phone line to match the larger button, and keep it
+     white with a soft shadow so it stays legible over the photo. */
   .site-header__phone {
     font-size: 1.8rem;
   }
   .site-header__phone,
   .site-header__phone a,
   .site-header__phone .site-header__label {
-    color: var(--amber);
+    color: #fff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
-  /* Base is now amber, so give the link a distinct hover state. */
+  /* Base is now white, so give the link a distinct hover state. */
   .site-header__phone a:hover,
   .site-header__phone a:focus {
-    color: #fff;
+    color: var(--amber);
   }
 }
 
