@@ -459,6 +459,15 @@ p { margin: 0 0 11px; }
   visibility: hidden;
   transition: opacity 0.5s ease;
 }
+
+/* Desktop only: the laptop/desktop breakpoints pushed a lot of dead space above
+   the slider copy. Trim the top padding (bottom stays generous) so the text sits
+   closer to the header image. */
+@media (min-width: 768px) {
+  .hero-slide {
+    padding-top: clamp(30px, 4vw, 56px);
+  }
+}
 .hero-slide.is-active {
   opacity: 1;
   visibility: visible;
