@@ -216,18 +216,11 @@ p { margin: 0 0 11px; }
   .site-header__cta .btn { font-size: 0.82em; padding: 6px 8px; }
 }
 
-/* Desktop banner is capped (mobile stays full-bleed and uses the 960px crops).
-   Capping the width is the one effective lever on the rendered banner height;
-   tune --hero-max to taste. The desktop image is 1920x823. */
+/* Banner is full-bleed at every width — no max-width cap, so no navy bars on
+   wide displays. The desktop art is 2688x1152 to stay sharp on large monitors;
+   mobile keeps the 960x411 crops. */
 .site-header {
-  --hero-max: 1200px;
-  background: var(--navy-dark); /* makes the desktop inset read as deliberate */
-}
-@media (min-width: 768px) {
-  .site-header__banner {
-    max-width: var(--hero-max);
-    margin-inline: auto;
-  }
+  background: var(--navy-dark);
 }
 
 /* ---------- Buttons ---------- */
