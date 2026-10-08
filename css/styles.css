@@ -296,6 +296,11 @@ p { margin: 0 0 11px; }
     border-radius: 6px;
   }
 
+  /* Desktop banner label reads "Call Us" — hide the trailing colon here only. */
+  .site-header__label-colon {
+    display: none;
+  }
+
   /* Desktop only: bump the phone line to match the larger button, and switch it
      to the amber accent with a soft shadow so it stays legible over the photo. */
   .site-header__phone {
