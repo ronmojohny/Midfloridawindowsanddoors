@@ -232,6 +232,29 @@ p { margin: 0 0 11px; }
     object-fit: cover;
     object-position: center;
   }
+  /* Pull the banner under the nav so the bar overlays the image on desktop. */
+  .site-header {
+    position: relative;
+  }
+}
+
+/* Desktop only (nav is inline at >=992px): lift the whole action bar out of flow
+   and pin it across the top of the header image, so the menu and phone/CTA sit
+   ON the banner instead of above it. A soft top-down scrim keeps the white text
+   legible over the photo. */
+@media (min-width: 992px) {
+  .site-header__bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    background: linear-gradient(180deg, rgba(12, 34, 51, 0.78), rgba(12, 34, 51, 0));
+    border-bottom: 0;
+  }
+  .site-header__bar-inner {
+    padding-block: 18px;
+  }
 }
 
 /* ---------- Buttons ---------- */
