@@ -1412,11 +1412,17 @@ p { margin: 0 0 11px; }
 
   .cta-inner { margin-bottom: 0; }
 
-  /* Heading stays centered on desktop, but the smaller lede beneath it is
-     left-aligned and kept to the full column width. */
-  .hero-slide__inner { text-align: center; }
-  .hero-slide__lede {
+  /* Desktop: shrink the copy to its own content and center that whole block,
+     then left-align both lines inside it — so the lede's first letter lines up
+     under the heading's first letter while the block as a whole stays centered. */
+  .hero-slide__inner {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
     text-align: left;
+  }
+  .hero-slide__lede {
+    max-width: none;
     margin-inline: 0;
   }
 
