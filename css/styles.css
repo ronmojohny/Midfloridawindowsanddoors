@@ -1412,9 +1412,9 @@ p { margin: 0 0 11px; }
 
   .cta-inner { margin-bottom: 0; }
 
-  .hero-slide__inner { text-align: left; }
-  .hero-slide__eyebrow { margin-bottom: 18px; }
-  .hero-slide__lede { margin-inline: 0; }
+  /* Centered slider copy on desktop (matches the mobile presentation). */
+  .hero-slide__inner { text-align: center; }
+  .hero-slide__lede { margin-inline: auto; }
 
   #site-footer .footer-col { margin-bottom: 1.25em; }
 }
