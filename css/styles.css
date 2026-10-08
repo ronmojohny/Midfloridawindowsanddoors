@@ -1382,17 +1382,33 @@ p { margin: 0 0 11px; }
     background-color: var(--ink);
   }
   .top-callout__nav-toggle .icon-bar + .icon-bar { margin-top: 4px; }
+  /* Two-up grid keeps the 9 links compact instead of one very tall column,
+     and gives each a real tap target inside the navy bar. */
   .top-callout__nav-list {
     display: none;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
   }
-  .top-callout__nav-list.is-open { display: flex; }
+  .top-callout__nav-list.is-open { display: grid; }
+  .top-callout__nav-list li { min-width: 0; }
+  .top-callout__nav-list li:last-child { grid-column: 1 / -1; }
   .top-callout__nav-list a {
     display: block;
-    padding: 6px 0;
+    padding: 9px 10px;
     font-size: 0.95rem;
+    text-align: center;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .site-header__bar .top-callout__nav-list a:hover,
+  .site-header__bar .top-callout__nav-list a:focus {
+    background: rgba(255, 255, 255, 0.16);
+    text-decoration: none;
   }
 }
 
