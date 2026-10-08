@@ -295,6 +295,11 @@ p { margin: 0 0 11px; }
     font-size: 1.2rem;
     border-radius: 6px;
   }
+
+  /* Desktop only: bump the phone line to match the larger button. */
+  .site-header__phone {
+    font-size: 1.4rem;
+  }
 }
 
 /* ---------- Buttons ---------- */
