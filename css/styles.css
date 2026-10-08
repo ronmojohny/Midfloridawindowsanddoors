@@ -161,8 +161,7 @@ p { margin: 0 0 11px; }
 .top-callout__nav-list .current-menu-item a { color: var(--teal); }
 
 /* ---------- Site header — full-bleed image banner + navy action bar ----------
-   Used by index2.html (staging) only. #top-callout above is left intact so the
-   live index.html continues to render exactly as before. */
+   Used by every page. #top-callout above is kept for the mobile nav styles. */
 .site-header__banner {
   display: block;
   width: 100%;
