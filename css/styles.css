@@ -223,6 +223,17 @@ p { margin: 0 0 11px; }
   background: var(--navy-dark);
 }
 
+/* On desktop the full-bleed banner can run nearly the full window height on a
+   large monitor (its 2688x1152 art scaled to the window width). Cap it at about
+   two-thirds of the viewport and crop the overflow with object-fit. */
+@media (min-width: 768px) {
+  .site-header__banner img {
+    max-height: 66vh;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-block;
