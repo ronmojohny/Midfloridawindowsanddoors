@@ -1412,9 +1412,13 @@ p { margin: 0 0 11px; }
 
   .cta-inner { margin-bottom: 0; }
 
-  /* Centered slider copy on desktop (matches the mobile presentation). */
+  /* Heading stays centered on desktop, but the smaller lede beneath it is
+     left-aligned and kept to the full column width. */
   .hero-slide__inner { text-align: center; }
-  .hero-slide__lede { margin-inline: auto; }
+  .hero-slide__lede {
+    text-align: left;
+    margin-inline: 0;
+  }
 
   #site-footer .footer-col { margin-bottom: 1.25em; }
 }
