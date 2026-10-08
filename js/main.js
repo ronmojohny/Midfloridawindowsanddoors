@@ -82,6 +82,94 @@
     });
   }
 
+  /* ---- Deferred (lazy) loading for gallery tiles (photos.html) ----
+     Native loading="lazy" only postpones the fetch; the browser still decodes
+     every off-screen tile. Here the src of each off-screen tile is parked in
+     data-src and restored 300px before it scrolls into view. Scripting is used
+     only to *move* an existing src, so with JS disabled the markup still
+     renders the full gallery. */
+  const lazyLinks = document.querySelectorAll(".photo-card__link img[loading='lazy']");
+
+  if (lazyLinks.length && "IntersectionObserver" in window) {
+    const revealImage = function (img) {
+      const pending = img.getAttribute("data-src");
+      if (pending) {
+        img.removeAttribute("data-src");
+        img.setAttribute("src", pending);
+      }
+
+      const finish = function () {
+        const link = img.closest(".photo-card__link");
+        if (link && link.hasAttribute("data-lazy")) {
+          link.setAttribute("data-lazy", "ready");
+        }
+      };
+
+      // Only fade tiles that actually had to be fetched, so instant/cached
+      // loads do not blink on their way in.
+      if (img.getAttribute("data-lazy-pending") === "true") {
+        img.removeAttribute("data-lazy-pending");
+        if (img.complete) {
+          finish();
+        } else {
+          img.addEventListener("load", finish, { once: true });
+          img.addEventListener("error", finish, { once: true });
+        }
+      }
+    };
+
+    let lazyObserver = null;
+
+    const observeTiles = function () {
+      lazyLinks.forEach(function (img) {
+        const src = img.getAttribute("src");
+        if (!src) return;
+
+        // Leave anything the browser has already decoded untouched: parking it
+        // now would re-trigger a fetch and blank out a visible tile. These also
+        // never receive data-lazy, so the opacity rule never applies to them.
+        if (img.complete) return;
+
+        const link = img.closest(".photo-card__link");
+        if (link) link.setAttribute("data-lazy", "pending");
+        img.setAttribute("data-lazy-pending", "true");
+
+        img.setAttribute("data-src", src);
+        img.removeAttribute("src");
+
+        if (lazyObserver) lazyObserver.observe(img);
+      });
+    };
+
+    lazyObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          lazyObserver.unobserve(entry.target);
+          revealImage(entry.target);
+        });
+      },
+      { rootMargin: "300px 0px", threshold: 0.01 }
+    );
+
+    // Wait for markup to settle (autoplay/hidden tabs can hold the parser back).
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", observeTiles);
+    } else {
+      observeTiles();
+    }
+
+    // Safety net: if the observer never fires (layout shift, engine quirk),
+    // restore every remaining src so no tile can stay blank.
+    window.addEventListener("load", function () {
+      window.setTimeout(function () {
+        lazyLinks.forEach(function (img) {
+          if (img.getAttribute("data-src")) revealImage(img);
+        });
+      }, 2500);
+    });
+  }
+
   /* ---- Hero slider (simple crossfade with dots) ---- */
   const slides = document.querySelectorAll(".hero-slide");
   const dots = document.querySelectorAll(".hero-dot");

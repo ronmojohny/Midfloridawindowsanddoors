@@ -879,7 +879,7 @@ p { margin: 0 0 11px; }
 
 .page-section { padding: 40px 0; background: var(--card); }
 .page-section--muted { background: var(--section); }
-.page-section h2 { text-align: center; color: var(--navy); }
+.page-section h1, .page-section h2 { text-align: center; color: var(--navy); }
 
 .page-lede {
   text-align: center;
@@ -1124,6 +1124,23 @@ p { margin: 0 0 11px; }
 }
 .photo-card__link:hover img,
 .photo-card__link:focus-visible img { transform: scale(1.05); }
+
+/* Lazily-loaded gallery tiles fade in once decoded (class added by js/main.js).
+   Tiles are only given this class after a real fetch, never on cached loads,
+   so images that arrive instantly do not flash. */
+.photo-card__link[data-lazy] img {
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.4s ease;
+}
+.photo-card__link[data-lazy="ready"] img { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-card__link[data-lazy] img,
+  .photo-card__link[data-lazy="ready"] img {
+    opacity: 1;
+    transition: none;
+  }
+}
 .photo-card figcaption {
   padding: 10px 14px;
   font-family: var(--font-ui);
