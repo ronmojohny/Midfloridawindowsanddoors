@@ -238,22 +238,54 @@ p { margin: 0 0 11px; }
   }
 }
 
-/* Desktop only (nav is inline at >=992px): lift the whole action bar out of flow
-   and pin it across the top of the header image, so the menu and phone/CTA sit
-   ON the banner instead of above it. A soft top-down scrim keeps the white text
-   legible over the photo. */
+/* Desktop only (nav is inline at >=992px): stretch the action bar over the whole
+   header image and split it top/bottom — the menu sits along the top edge, the
+   phone + CTA are bottom-centred. The bar itself is transparent to clicks so the
+   empty middle still links home; only its children capture pointer events.
+   Faint top and bottom scrims keep the white text legible over the photo. */
 @media (min-width: 992px) {
   .site-header__bar {
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
+    inset: 0;
     z-index: 5;
-    background: linear-gradient(180deg, rgba(12, 34, 51, 0.78), rgba(12, 34, 51, 0));
+    background: linear-gradient(
+      180deg,
+      rgba(12, 34, 51, 0.80) 0%,
+      rgba(12, 34, 51, 0) 20%,
+      rgba(12, 34, 51, 0) 60%,
+      rgba(12, 34, 51, 0.82) 100%
+    );
     border-bottom: 0;
+    pointer-events: none; /* let clicks pass through to the banner link */
   }
   .site-header__bar-inner {
-    padding-block: 18px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding-block: 18px 34px;
+    pointer-events: none;
+  }
+  .site-header__bar-inner > * {
+    pointer-events: auto; /* re-enable the menu and CTA */
+  }
+
+  /* Menu hugs the top edge, links centred. */
+  .top-callout__nav {
+    order: 1;
+    width: 100%;
+  }
+  .top-callout__nav-list {
+    justify-content: center;
+  }
+
+  /* Phone + CTA drop to the bottom of the image, centred. */
+  .site-header__cta {
+    order: 2;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
   }
 }
 
