@@ -287,6 +287,14 @@ p { margin: 0 0 11px; }
     width: 100%;
     text-align: center;
   }
+
+  /* Desktop only: enlarge the "FREE Estimate" banner button so it reads as the
+     primary action over the photo. */
+  .site-header__cta .btn {
+    padding: 14px 30px;
+    font-size: 1.2rem;
+    border-radius: 6px;
+  }
 }
 
 /* ---------- Buttons ---------- */
