@@ -1396,6 +1396,17 @@ p { margin: 0 0 11px; }
   }
 }
 
+/* Phones: the action bar wraps here, and space-between aligns a lone item to
+   the left edge — centre the CTA block so the phone number reads centred. */
+@media (max-width: 767px) {
+  .site-header__bar-inner { justify-content: center; }
+  .site-header__cta {
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
 /* Small phones: keep the callout image/text side-by-side and scale text to fit */
 @media (max-width: 479px) {
   .top-callout__row { gap: 10px; }
