@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Viewer is a tool page; the PDF files themselves carry the content for search. -->
+  <title>Document Viewer | Mid-Florida Windows & Doors</title>
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <!-- Fonts: Neuton (body) + Montserrat (headings/UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Neuton:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- PDF.js (UMD build exposes window.pdfjsLib; worker URL set in js/pdf-viewer.js).
+       If this fails to load, the page falls back to a direct PDF download link. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body class="pdf-body">
+
+  <!-- ===================== VIEWER TOP BAR ===================== -->
+  <header class="pdf-topbar">
+    <div class="container pdf-topbar__inner">
+      <a class="pdf-topbar__home" href="/" aria-label="Mid-Florida Windows & Doors — Home">Mid-Florida Windows & Doors</a>
+      <a class="pdf-topbar__back" href="products.html">&larr; Back to Products</a>
+    </div>
+  </header>
+
+  <!-- ===================== VIEWER ===================== -->
+  <main class="pdf-main">
+    <div class="container">
+
+      <div class="pdf-toolbar" role="toolbar" aria-label="Document controls">
+        <h1 class="pdf-toolbar__title" id="pdfTitle">Document</h1>
+        <div class="pdf-toolbar__controls">
+          <div class="pdf-zoom">
+            <button type="button" class="pdf-btn" id="pdfZoomOut" aria-label="Zoom out">&minus;</button>
+            <span class="pdf-zoom__val" id="pdfZoomVal" aria-live="polite">100%</span>
+            <button type="button" class="pdf-btn" id="pdfZoomIn" aria-label="Zoom in">+</button>
+            <button type="button" class="pdf-btn pdf-btn--wide" id="pdfFitWidth">Fit width</button>
+          </div>
+          <div class="pdf-nav">
+            <button type="button" class="pdf-btn pdf-btn--wide" id="pdfPrev" disabled>Prev</button>
+            <span class="pdf-pageinfo" id="pdfPageInfo" aria-live="polite">Page 1</span>
+            <button type="button" class="pdf-btn pdf-btn--wide" id="pdfNext" disabled>Next</button>
+          </div>
+          <div class="pdf-actions">
+            <a class="pdf-btn pdf-btn--wide" id="pdfOpen" href="#" target="_blank" rel="noopener">Open PDF</a>
+            <a class="pdf-btn pdf-btn--wide pdf-btn--primary" id="pdfDownload" href="#" download>Download</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="pdf-status" id="pdfStatus" hidden>Loading document&hellip;</p>
+
+      <div class="pdf-stage" id="pdfStage"></div>
+
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="pdf-foot">
+    <div class="container">
+      <p>&copy; <span id="year">2026</span> Mid-Florida Windows and Doors, LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/pdf-viewer.js" defer></script>
+</body>
+</html>

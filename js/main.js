@@ -275,9 +275,10 @@
         dd.open = !dd.open;
       });
 
-      // Collapse the menu once a brand link is chosen.
+      // Collapse every menu (including any parent) once a link is chosen.
       dd.addEventListener("click", function (e) {
-        if (e.target.closest("a")) dd.open = false;
+        if (!e.target.closest("a")) return;
+        prodDropdowns.forEach(function (d) { d.open = false; });
       });
     });
 
