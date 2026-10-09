@@ -30,8 +30,6 @@
   var zoomIn   = document.getElementById("pdfZoomIn");
   var zoomFit  = document.getElementById("pdfFitWidth");
   var zoomVal  = document.getElementById("pdfZoomVal");
-  var openLink = document.getElementById("pdfOpen");
-  var dlLink   = document.getElementById("pdfDownload");
   var prevBtn  = document.getElementById("pdfPrev");
   var nextBtn  = document.getElementById("pdfNext");
 
@@ -55,11 +53,6 @@
 
   document.title = doc.title + " | Mid-Florida Windows & Doors";
   if (titleEl) titleEl.textContent = doc.title;
-  if (openLink) openLink.href = doc.path;
-  if (dlLink) {
-    dlLink.href = doc.path;
-    dlLink.setAttribute("download", doc.path.split("/").pop());
-  }
 
   var fallback = ' <a href="' + doc.path + '" target="_blank" rel="noopener">Open ' + doc.title + ' (PDF)</a>.';
 

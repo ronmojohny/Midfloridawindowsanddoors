@@ -1297,8 +1297,7 @@ p { margin: 0 0 11px; }
   gap: 14px;
 }
 .pdf-zoom,
-.pdf-nav,
-.pdf-actions { display: flex; align-items: center; gap: 6px; }
+.pdf-nav { display: flex; align-items: center; gap: 6px; }
 .pdf-zoom__val {
   min-width: 3.2em;
   text-align: center;
@@ -1326,15 +1325,8 @@ p { margin: 0 0 11px; }
   cursor: pointer;
 }
 .pdf-btn--wide { padding-inline: 14px; }
-.pdf-btn--primary {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: #3a2a08;
-}
 .pdf-btn:hover,
 .pdf-btn:focus { border-color: var(--teal); color: var(--teal-dark); text-decoration: none; }
-.pdf-btn--primary:hover,
-.pdf-btn--primary:focus { background: var(--amber-dark); border-color: var(--amber-dark); color: #3a2a08; }
 .pdf-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
 
 .pdf-status {
