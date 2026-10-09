@@ -1161,6 +1161,58 @@ p { margin: 0 0 11px; }
 
 .prod-card .lic-heading { margin-top: 0; }
 
+/* ---------- Product card dropdown (products.html) ----------
+   Brand sub-menu revealed under a product card. Built on <details> so it
+   opens without JavaScript; js/main.js adds click-to-toggle and dismissal. */
+.prod-dropdown { margin-top: 2px; }
+.prod-dropdown__toggle {
+  display: inline-block;
+  cursor: pointer;
+  list-style: none;
+}
+.prod-dropdown__toggle::-webkit-details-marker { display: none; }
+.prod-dropdown__toggle::after { content: "\25BE"; } /* ▾ closed */
+.prod-dropdown[open] .prod-dropdown__toggle::after { content: "\25B4"; } /* ▴ open */
+
+.prod-dropdown__menu {
+  margin: 10px 0 0;
+  padding: 6px 0;
+  min-width: 170px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: 4px;
+}
+.prod-dropdown__menu li { margin: 0; }
+.prod-dropdown__menu a {
+  display: block;
+  padding: 8px 14px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--navy);
+}
+.prod-dropdown__menu a:hover,
+.prod-dropdown__menu a:focus {
+  background: var(--card);
+  color: var(--teal-dark);
+  text-decoration: none;
+}
+
+/* Brand sub-headings within the Replacement Windows section */
+.prod-subheading {
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin: 30px 0 14px;
+  padding-left: 12px;
+  border-left: 4px solid var(--amber);
+  scroll-margin-top: 12px;
+}
+.prod-subheading:first-of-type { margin-top: 12px; }
+
 /* ---------- Photo gallery (photos.html) ---------- */
 .photo-feature {
   margin: 0 0 26px;

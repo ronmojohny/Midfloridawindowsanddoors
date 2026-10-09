@@ -255,4 +255,43 @@
       }, 900);
     });
   });
+
+  /* ---- Product card dropdowns (products.html) ----
+     The menu is a <details> element, so it already opens and closes without
+     JavaScript. This enhancement makes a tap on the summary toggle it
+     (instead of only ever opening) and dismisses it on outside click or Esc;
+     with JS disabled the native disclosure still works. */
+  const prodDropdowns = document.querySelectorAll("[data-prod-dropdown]");
+
+  if (prodDropdowns.length) {
+    prodDropdowns.forEach(function (dd) {
+      const toggle = dd.querySelector("summary");
+      if (!toggle) return;
+
+      // Prevent the native toggle so we can flip the state ourselves and make
+      // a second click close the menu rather than re-open it.
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        dd.open = !dd.open;
+      });
+
+      // Collapse the menu once a brand link is chosen.
+      dd.addEventListener("click", function (e) {
+        if (e.target.closest("a")) dd.open = false;
+      });
+    });
+
+    // Dismiss any open menu when clicking elsewhere on the page.
+    document.addEventListener("click", function (e) {
+      prodDropdowns.forEach(function (dd) {
+        if (dd.open && !dd.contains(e.target)) dd.open = false;
+      });
+    });
+
+    // Dismiss any open menu with the Escape key.
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      prodDropdowns.forEach(function (dd) { dd.open = false; });
+    });
+  }
 })();
