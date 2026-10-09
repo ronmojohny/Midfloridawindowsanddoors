@@ -1357,14 +1357,20 @@ p { margin: 0 0 11px; }
   border-radius: 6px;
   -webkit-overflow-scrolling: touch;
 }
-.pdf-page-wrap { max-width: 100%; margin: 0 auto 16px; }
+/* The wrapper carries the page look so lazily-rendered placeholders already
+   read as pages before their canvas arrives. */
+.pdf-page-wrap {
+  max-width: 100%;
+  margin: 0 auto 16px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
 .pdf-page-wrap:last-child { margin-bottom: 0; }
+.pdf-page-wrap[data-state="queued"] { background: #f2f5f7; }
 .pdf-page {
   display: block;
   max-width: 100%;
   height: auto;
-  background: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .pdf-foot {

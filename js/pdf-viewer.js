@@ -1,6 +1,11 @@
 /* Mid-Florida Windows & Doors — PDF viewer (pdf-viewer.html)
    Renders a whitelisted PDF selected with ?file=<key> using PDF.js.
-   Keys map to files under pdfs/ so a URL can never request an arbitrary path. */
+   Keys map to files under pdfs/ so a URL can never request an arbitrary path.
+
+   Pages are rendered lazily as they approach the viewport. Product catalogs
+   run 20+ pages, so rendering them all up front would allocate hundreds of MB
+   of canvas memory and stall older phones; instead each page is a correctly
+   sized placeholder until it is needed, and pages are rendered one at a time. */
 (function () {
   "use strict";
 
@@ -11,6 +16,11 @@
 
   // Worker must match the pdf.min.js version loaded in pdf-viewer.html.
   var PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+  // Cap canvas resolution so a large page on a 3x display cannot allocate a
+  // multi-hundred-MB bitmap. 2600px on the long edge stays crisp in practice.
+  var MAX_CANVAS_DIM = 2600;
+  var MAX_DEVICE_PIXEL_RATIO = 2;
 
   var stage    = document.getElementById("pdfStage");
   var status   = document.getElementById("pdfStatus");
@@ -64,97 +74,153 @@
   var pdf = null;
   var pageCount = 0;
   var pageWidthPt = 612;   // US Letter width; replaced by the real first-page width
+  var pageHeightPt = 792;
   var zoom = 1;
   var wrappers = [];
-  var renderToken = 0;
-  var resizeTimer = null;
+  var observer = null;
+  var queue = [];
+  var rendering = false;
 
-  function blankStage() {
-    while (stage.firstChild) stage.removeChild(stage.firstChild);
-    wrappers = [];
-  }
+  /* ---------- layout ---------- */
 
-  // Fit the widest page to the stage; zoom multiplies on top of this.
-  function baseScale() {
+  // Fit-width scale; zoom multiplies on top of it.
+  function scaleFor() {
     var width = stage.clientWidth;
     if (width < 240) width = 240;
     return (width - 8) / pageWidthPt;
   }
 
-  function renderAll() {
-    var token = ++renderToken;
-    blankStage();
+  function placeholderHeight() {
+    return Math.round(pageHeightPt * scaleFor());
+  }
 
-    var outputScale = window.devicePixelRatio || 1;
-    var scale = baseScale() * zoom;
+  function stageTopOffset(wrap) {
+    return wrap.getBoundingClientRect().top - stage.getBoundingClientRect().top + stage.scrollTop;
+  }
 
-    function renderPage(n) {
-      return pdf.getPage(n).then(function (page) {
-        if (token !== renderToken) return null;
+  /* ---------- rendering ---------- */
 
-        var viewport = page.getViewport({ scale: scale });
+  function renderPageInto(wrap) {
+    var n = parseInt(wrap.getAttribute("data-page"), 10);
 
-        var wrap = document.createElement("div");
-        wrap.className = "pdf-page-wrap";
-        wrap.setAttribute("data-page", String(n));
+    return pdf.getPage(n).then(function (page) {
+      // The wrapper may have been discarded by a zoom/resize rebuild while the
+      // page was still loading from the worker.
+      if (!wrap.isConnected) {
+        wrap.removeAttribute("data-state");
+        return null;
+      }
 
-        var canvas = document.createElement("canvas");
-        canvas.className = "pdf-page";
-        canvas.setAttribute("role", "img");
-        canvas.setAttribute("aria-label", doc.title + " — page " + n + " of " + pageCount);
-        canvas.width = Math.floor(viewport.width * outputScale);
-        canvas.height = Math.floor(viewport.height * outputScale);
-        canvas.style.width = Math.floor(viewport.width) + "px";
-        canvas.style.height = Math.floor(viewport.height) + "px";
+      var viewport = page.getViewport({ scale: scaleFor() });
 
-        wrap.appendChild(canvas);
-        stage.appendChild(wrap);
-        wrappers.push(wrap);
+      var dpr = Math.min(window.devicePixelRatio || 1, MAX_DEVICE_PIXEL_RATIO);
+      var longEdge = Math.max(viewport.width, viewport.height) * dpr;
+      var outputScale = dpr * Math.min(1, MAX_CANVAS_DIM / longEdge);
 
-        return page.render({
-          canvasContext: canvas.getContext("2d"),
-          viewport: viewport,
-          transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
-        }).promise;
+      var canvas = document.createElement("canvas");
+      canvas.className = "pdf-page";
+      canvas.setAttribute("role", "img");
+      canvas.setAttribute("aria-label", doc.title + " — page " + n + " of " + pageCount);
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = Math.floor(viewport.width) + "px";
+      canvas.style.height = Math.floor(viewport.height) + "px";
+
+      var previous = wrap.querySelector("canvas");
+      if (previous) wrap.removeChild(previous);
+      wrap.appendChild(canvas);
+      wrap.style.minHeight = "";
+
+      return page.render({
+        canvasContext: canvas.getContext("2d"),
+        viewport: viewport,
+        transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
+      }).promise.then(function () {
+        wrap.setAttribute("data-state", "done");
       });
-    }
-
-    var chain = Promise.resolve();
-    for (var n = 1; n <= pageCount; n++) {
-      chain = chain.then(renderPage.bind(null, n));
-    }
-
-    return chain.then(function () {
-      if (token !== renderToken) return;
-      if (status) status.hidden = true;
-      updatePageIndicator();
+    }).catch(function () {
+      wrap.removeAttribute("data-state");
     });
   }
+
+  function pump() {
+    if (rendering || !queue.length) return;
+    var wrap = queue.shift();
+    rendering = true;
+    renderPageInto(wrap).then(function () {
+      rendering = false;
+      pump();
+    });
+  }
+
+  function enqueue(wrap) {
+    var state = wrap.getAttribute("data-state");
+    if (state === "queued" || state === "done") return;
+    wrap.setAttribute("data-state", "queued");
+    queue.push(wrap);
+    pump();
+  }
+
+  /* ---------- page scaffolding ---------- */
+
+  function buildPages() {
+    // Preserve the reader's place when re-laying out after a zoom or resize.
+    var prevScrollable = stage.scrollHeight - stage.clientHeight;
+    var fraction = prevScrollable > 0 ? stage.scrollTop / prevScrollable : 0;
+
+    queue = [];
+    while (stage.firstChild) stage.removeChild(stage.firstChild);
+    wrappers = [];
+
+    var height = placeholderHeight();
+    for (var n = 1; n <= pageCount; n++) {
+      var wrap = document.createElement("div");
+      wrap.className = "pdf-page-wrap";
+      wrap.setAttribute("data-page", String(n));
+      wrap.style.minHeight = height + "px";
+      stage.appendChild(wrap);
+      wrappers.push(wrap);
+      if (observer) observer.observe(wrap);
+    }
+
+    if (status) status.hidden = true;
+
+    // Restore scroll position, then refresh the page counter for it.
+    if (prevScrollable > 0) {
+      stage.scrollTop = fraction * (stage.scrollHeight - stage.clientHeight);
+    }
+    updatePageIndicator();
+  }
+
+  /* ---------- controls ---------- */
 
   function setZoom(next) {
     zoom = Math.max(0.4, Math.min(4, next));
     if (zoomVal) zoomVal.textContent = Math.round(zoom * 100) + "%";
-    renderAll();
+    buildPages();
   }
 
   function goToPage(n) {
     n = Math.max(1, Math.min(pageCount, n));
     var wrap = wrappers[n - 1];
     if (!wrap) return;
-    var y = wrap.getBoundingClientRect().top + window.scrollY - 16;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    stage.scrollTo({ top: stageTopOffset(wrap) - 8, behavior: "smooth" });
+  }
+
+  function currentPage() {
+    var m = pageInfo ? /Page (\d+)/.exec(pageInfo.textContent) : null;
+    return m ? parseInt(m[1], 10) : 1;
   }
 
   function updatePageIndicator() {
     if (!pageInfo || !wrappers.length) return;
 
-    var focusLine = window.scrollY + window.innerHeight * 0.35;
+    var focus = stage.scrollTop + stage.clientHeight * 0.35;
     var best = 1;
     var bestDist = Infinity;
 
     wrappers.forEach(function (wrap, i) {
-      var top = wrap.getBoundingClientRect().top + window.scrollY;
-      var dist = Math.abs(top - focusLine);
+      var dist = Math.abs(stageTopOffset(wrap) - focus);
       if (dist < bestDist) { bestDist = dist; best = i + 1; }
     });
 
@@ -168,19 +234,14 @@
   if (zoomFit) zoomFit.addEventListener("click", function () {
     zoom = 1;
     if (zoomVal) zoomVal.textContent = "100%";
-    renderAll();
+    buildPages();
   });
   if (prevBtn) prevBtn.addEventListener("click", function () { goToPage(currentPage() - 1); });
   if (nextBtn) nextBtn.addEventListener("click", function () { goToPage(currentPage() + 1); });
 
-  function currentPage() {
-    var m = pageInfo ? /Page (\d+)/.exec(pageInfo.textContent) : null;
-    return m ? parseInt(m[1], 10) : 1;
-  }
-
-  // Throttled scroll listener keeps the page counter in step with the view.
+  // Throttled scroll keeps the page counter in step without thrashing layout.
   var ticking = false;
-  window.addEventListener("scroll", function () {
+  stage.addEventListener("scroll", function () {
     if (ticking) return;
     ticking = true;
     window.requestAnimationFrame(function () {
@@ -189,12 +250,15 @@
     });
   });
 
-  // Re-fit after a resize (debounced so dragging is not expensive).
+  // Re-fit after a resize (debounced so dragging a window is not expensive).
+  var resizeTimer = null;
   window.addEventListener("resize", function () {
     if (!pdf) return;
     window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(function () { renderAll(); }, 200);
+    resizeTimer = window.setTimeout(function () { buildPages(); }, 200);
   });
+
+  /* ---------- load ---------- */
 
   window.pdfjsLib.getDocument({ url: doc.path }).promise
     .then(function (loaded) {
@@ -203,9 +267,28 @@
       return pdf.getPage(1);
     })
     .then(function (firstPage) {
-      pageWidthPt = firstPage.getViewport({ scale: 1 }).width;
+      var box = firstPage.getViewport({ scale: 1 });
+      pageWidthPt = box.width;
+      pageHeightPt = box.height;
+
       if (pageInfo) pageInfo.textContent = "Page 1 of " + pageCount;
-      return renderAll();
+
+      if ("IntersectionObserver" in window) {
+        observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            enqueue(entry.target);
+          });
+        }, { root: stage, rootMargin: "800px 0px", threshold: 0 });
+      }
+
+      buildPages();
+
+      // Without IntersectionObserver, render everything as a fallback.
+      if (!observer) {
+        wrappers.forEach(function (wrap) { enqueue(wrap); });
+      }
     })
     .catch(function () {
       showStatus("This document could not be displayed." + fallback);
