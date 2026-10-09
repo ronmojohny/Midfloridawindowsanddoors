@@ -1409,6 +1409,9 @@ p { margin: 0 0 11px; }
 
   .entry-content ul { width: 49%; }
   .two-col { float: left; }
+  /* The floated product lists sit outside normal flow, so the full-width CTA
+     button after them would overlap the list text. Clear it below the floats. */
+  .entry-content .two-col + p { clear: left; }
 
   .cta-inner { margin-bottom: 0; }
 
