@@ -1761,7 +1761,6 @@ p { margin: 0 0 11px; }
   }
 }
 
-/* Small phones: keep the callout image/text side-by-side and scale text to fit */
 @media (max-width: 479px) {
   .top-callout__row { gap: 10px; }
   .top-callout__text h2 { font-size: 1.35em; line-height: 1.15; }
@@ -1771,6 +1770,20 @@ p { margin: 0 0 11px; }
   .top-callout__phones { font-size: 0.8em; margin-bottom: 8px; }
   .top-callout__phones .sep { margin-inline: 2px; }
   .top-callout__text .btn { font-size: 0.8em; padding: 6px 8px; }
+}
+
+/* Desktop: increase the type size of the top "Product Overview" section so the
+   card headings, body copy and links are easier to read on larger screens. */
+@media (min-width: 992px) {
+  #product-overview .page-lede { font-size: 1.18rem; line-height: 1.6; }
+  #product-overview .prod-card { padding: 28px; }
+  #product-overview .prod-card h3 { font-size: 1.5rem; }
+  #product-overview .prod-card p { font-size: 1.12rem; line-height: 1.6; }
+  #product-overview .prod-card__link { font-size: 1rem; }
+  #product-overview .prod-card__tag { font-size: 0.75rem; padding: 4px 10px; }
+  #product-overview .prod-dropdown__menu a,
+  #product-overview .prod-dropdown__toggle--nested { font-size: 1rem; padding-block: 10px; }
+  #product-overview .page-note { font-size: 1.08rem; }
 }
 
 /* ---------- Reduced motion ---------- */
