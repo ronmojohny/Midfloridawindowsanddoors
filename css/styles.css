@@ -1002,6 +1002,11 @@ p { margin: 0 0 11px; }
 @media (min-width: 768px) {
   .page-lede--mobile-hide { display: block; }
 }
+/* Show a fragment on tablet/desktop only; hidden on mobile. */
+.desktop-only { display: none; }
+@media (min-width: 768px) {
+  .desktop-only { display: inline; }
+}
 .page-note {
   text-align: center;
   font-family: var(--font-ui);
