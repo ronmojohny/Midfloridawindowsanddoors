@@ -602,13 +602,24 @@ p { margin: 0 0 11px; }
   padding-block: 20px;
   text-align: center;
 }
-.bbb-banner__logo {
+.bbb-banner__logos {
+  /* Mobile: 2 + 1 centred grid. The two full-width cells fill the first row
+     side by side, then the third logo centres on its own beneath them. */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+}
+.bbb-banner__logos img {
   display: block;
-  width: 180px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 220px;
   height: auto;
   object-fit: contain;
 }
+.bbb-banner__logos img:last-child { grid-column: 1 / -1; justify-self: center; }
 .bbb-banner__text {
   display: flex;
   flex-direction: column;
@@ -1624,12 +1635,17 @@ p { margin: 0 0 11px; }
   }
 
   .bbb-banner__inner {
-    flex-direction: row;
-    gap: 22px;
+    flex-direction: column;
+    gap: 14px;
     padding-block: 22px;
   }
-  .bbb-banner__logo { width: 150px; flex: 0 0 150px; }
-  .bbb-banner__text { align-items: flex-start; text-align: left; gap: 5px; }
+  .bbb-banner__logos {
+    /* Desktop: single horizontal row (1 × 3 grid). */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .bbb-banner__logos img:last-child { grid-column: auto; justify-self: center; }
+  .bbb-banner__text { align-items: center; text-align: center; gap: 5px; }
 
   .financing__img { width: 360px; }
 
