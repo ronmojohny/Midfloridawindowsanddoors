@@ -595,11 +595,7 @@ p { margin: 0 0 11px; }
 /* ---------- BBB reviews banner ---------- */
 .bbb-banner {
   display: block;
-  /* Soft teal glow that fades to white, echoing the brand accent without
-     competing with the logos. */
-  background:
-    radial-gradient(120% 140% at 50% 0%, rgba(47, 124, 122, 0.14), rgba(47, 124, 122, 0) 70%),
-    linear-gradient(180deg, var(--section), var(--card));
+  background: var(--card);
   border-block: 1px solid var(--line);
   text-decoration: none;
 }
