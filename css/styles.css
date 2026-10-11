@@ -192,6 +192,14 @@ p { margin: 0 0 11px; }
   align-items: center;
   gap: 8px 16px;
 }
+/* Wraps the mobile hamburger together with the FREE Estimate button so the
+   toggle sits immediately to its left. On desktop the toggle is hidden and
+   this row collapses to just the button. */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .site-header__phone {
   margin: 0;
   font-family: var(--font-ui);
@@ -1730,8 +1738,7 @@ p { margin: 0 0 11px; }
   .top-callout__nav { width: 100%; }
   .top-callout__nav-toggle {
     display: block;
-    margin-left: auto;
-    padding: 9px 10px;
+    padding: 6px 7px;
     background: transparent;
     border: 1px solid var(--line);
     border-radius: 4px;
@@ -1739,12 +1746,12 @@ p { margin: 0 0 11px; }
   }
   .top-callout__nav-toggle .icon-bar {
     display: block;
-    width: 22px;
+    width: 18px;
     height: 2px;
     border-radius: 1px;
     background-color: var(--ink);
   }
-  .top-callout__nav-toggle .icon-bar + .icon-bar { margin-top: 4px; }
+  .top-callout__nav-toggle .icon-bar + .icon-bar { margin-top: 3px; }
   /* Two-up grid keeps the 9 links compact instead of one very tall column,
      and gives each a real tap target inside the navy bar. */
   .top-callout__nav-list {
