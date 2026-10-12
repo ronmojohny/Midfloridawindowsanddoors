@@ -757,6 +757,9 @@ p { margin: 0 0 11px; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Anchor to the top edge so the subject's head/top is never clipped; any
+     crop happens at the bottom instead of evenly on both edges. */
+  object-position: center top;
 }
 .img-box--windows {
   background:
