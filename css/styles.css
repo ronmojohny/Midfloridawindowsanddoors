@@ -209,27 +209,18 @@ p { margin: 0 0 11px; }
 .site-header__phone a:hover { color: var(--amber); }
 .site-header__label { font-weight: 600; color: rgba(255, 255, 255, 0.85); }
 
-/* BBB certification badge — kept separate from the phone number and CTA so it
-   reads as a trust mark rather than a label for the call button. */
+/* Small BBB logo shown beside the phone number in the navy action bar. */
 .header-bbb {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   flex: 0 0 auto;
-  margin-left: auto;
-  line-height: 1;
-  text-decoration: none;
+  line-height: 0;
 }
-.header-bbb__logo { display: block; width: 26px; height: auto; }
-.header-bbb__label {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  font-size: 0.8rem;
-  color: #fff;
+.header-bbb__logo { display: block; width: 32px; height: auto; }
+@media (min-width: 992px) {
+  /* Lay the badge out beside the phone number from the desktop breakpoint up. */
+  .site-header__phone-row { display: flex; align-items: center; gap: 12px; }
 }
-.header-bbb:hover .header-bbb__label,
-.header-bbb:focus .header-bbb__label { color: var(--amber); }
 
 /* Nav now sits on the navy bar instead of white — invert link/toggle colours */
 .site-header__bar .top-callout__nav-list a { color: #fff; }
@@ -308,17 +299,6 @@ p { margin: 0 0 11px; }
   .top-callout__nav-list {
     justify-content: center;
   }
-
-  /* Pin the BBB badge to the centre-right edge of the action bar — clear of the
-     top nav row and the bottom phone/CTA row, so it reads as a trust mark. */
-  .header-bbb {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    margin-left: 0;
-  }
-  .header-bbb__label { font-size: 0.9rem; }
 
   /* Phone + CTA drop to the bottom of the image, centred. */
   .site-header__cta {
@@ -1855,12 +1835,6 @@ p { margin: 0 0 11px; }
     align-items: center;
     justify-content: center;
     width: 100%;
-  }
-  /* Mobile/tablet: the badge drops to its own centred row beneath the CTA. */
-  .header-bbb {
-    flex: 0 0 100%;
-    justify-content: center;
-    margin: 8px 0 0;
   }
   .site-header__phone-row .top-callout__nav-toggle {
     position: absolute;
