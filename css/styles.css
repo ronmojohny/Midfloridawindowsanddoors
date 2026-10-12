@@ -780,6 +780,14 @@ p { margin: 0 0 11px; }
     linear-gradient(135deg, #25635F, #12304A);
 }
 
+/* Phones: the stacked section paddings (32px bottom on the cards + 32px top on
+   "Our Products") plus the last card's 24px margin left an oversized gap below
+   the IMPACT & ENERGY card. Tighten only on mobile; desktop keeps the original. */
+@media (max-width: 767px) {
+  #cta-content { padding-bottom: 12px; }
+  #main-content { padding-top: 16px; }
+}
+
 /* ---------- Main content ---------- */
 #main-content { padding: 32px 0; background: var(--card); }
 .entry-content h2 {
