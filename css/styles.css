@@ -209,6 +209,19 @@ p { margin: 0 0 11px; }
 .site-header__phone a:hover { color: var(--amber); }
 .site-header__label { font-weight: 600; color: rgba(255, 255, 255, 0.85); }
 
+/* Small BBB logo shown beside the phone number in the navy action bar. */
+.header-bbb {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.header-bbb__logo { display: block; width: 32px; height: auto; }
+@media (min-width: 992px) {
+  /* Lay the badge out beside the phone number from the desktop breakpoint up. */
+  .site-header__phone-row { display: flex; align-items: center; gap: 12px; }
+}
+
 /* Nav now sits on the navy bar instead of white — invert link/toggle colours */
 .site-header__bar .top-callout__nav-list a { color: #fff; }
 .site-header__bar .top-callout__nav-list a:hover { color: var(--amber); }
@@ -634,12 +647,12 @@ p { margin: 0 0 11px; }
 }
 .brands-banner__logos img:last-child { grid-column: 1 / -1; justify-self: center; }
 
-/* ---------- BBB badge (reviews section) ---------- */
-.reviews-bbb {
-  margin-top: 24px;
-  text-align: center;
-}
-.reviews-bbb__link {
+/* ---------- BBB badge / banner ---------- */
+.reviews-bbb { text-align: center; }
+
+/* Compact variant (Reviews page): a simple logo + link. */
+.reviews-bbb:not(.reviews-bbb--banner) { margin-top: 24px; }
+.reviews-bbb:not(.reviews-bbb--banner) .reviews-bbb__link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -649,8 +662,52 @@ p { margin: 0 0 11px; }
   color: var(--teal);
   text-decoration: none;
 }
-.reviews-bbb__link:hover, .reviews-bbb__link:focus { color: var(--navy); }
-.reviews-bbb__logo { display: block; width: 80px; height: auto; }
+.reviews-bbb:not(.reviews-bbb--banner) .reviews-bbb__link:hover,
+.reviews-bbb:not(.reviews-bbb--banner) .reviews-bbb__link:focus { color: var(--navy); }
+.reviews-bbb:not(.reviews-bbb--banner) .reviews-bbb__logo { display: block; width: 80px; height: auto; }
+
+/* Full banner variant (home page): card with logo, copy and CTA. */
+.reviews-bbb--banner {
+  margin-top: 32px;
+  padding: 28px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.reviews-bbb--banner .reviews-bbb__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+.reviews-bbb--banner .reviews-bbb__logo { display: block; width: 104px; height: auto; }
+.reviews-bbb__stars {
+  color: var(--amber);
+  letter-spacing: 2px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.reviews-bbb__title {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 1.25rem;
+}
+.reviews-bbb__copy {
+  margin: 0;
+  max-width: 640px;
+  color: var(--ink);
+}
+.reviews-bbb__cta {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  color: var(--teal);
+  font-size: 1.02rem;
+}
+.reviews-bbb--banner .reviews-bbb__link:hover .reviews-bbb__cta,
+.reviews-bbb--banner .reviews-bbb__link:focus .reviews-bbb__cta { color: var(--navy); }
 
 /* ---------- Financing banner ---------- */
 #financing {
