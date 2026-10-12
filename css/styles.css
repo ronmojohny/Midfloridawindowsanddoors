@@ -209,18 +209,6 @@ p { margin: 0 0 11px; }
 .site-header__phone a:hover { color: var(--amber); }
 .site-header__label { font-weight: 600; color: rgba(255, 255, 255, 0.85); }
 
-/* Small BBB logo shown beside the phone number in the navy action bar. */
-.header-bbb {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  line-height: 0;
-}
-.header-bbb__logo { display: block; width: 32px; height: auto; }
-@media (min-width: 992px) {
-  /* Lay the badge out beside the phone number from the desktop breakpoint up. */
-  .site-header__phone-row { display: flex; align-items: center; gap: 12px; }
-}
 
 /* Nav now sits on the navy bar instead of white — invert link/toggle colours */
 .site-header__bar .top-callout__nav-list a { color: #fff; }
