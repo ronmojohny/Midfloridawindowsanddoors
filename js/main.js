@@ -43,7 +43,11 @@
       const full = link.getAttribute("href");
 
       lightboxImg.src = full || (thumb ? thumb.getAttribute("src") : "");
-      lightboxImg.alt = thumb ? thumb.getAttribute("alt") || "" : "";
+      // Fall back to the link's aria-label for text-only triggers that have no
+      // thumbnail image to borrow alt text from.
+      lightboxImg.alt = thumb
+        ? thumb.getAttribute("alt") || ""
+        : link.getAttribute("aria-label") || "";
 
       lastFocused = link;
       lightbox.hidden = false;
