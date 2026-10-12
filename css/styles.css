@@ -610,12 +610,6 @@ p { margin: 0 0 11px; }
   padding-block: 20px;
   text-align: center;
 }
-.brands-banner__title {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  color: var(--navy);
-  font-size: 1.05rem;
-}
 .brands-banner__logos {
   /* Mobile: 2 + 1 centred grid. The two full-width cells fill the first row
      side by side, then the third logo centres on its own beneath them. */
