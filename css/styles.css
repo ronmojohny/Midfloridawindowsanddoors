@@ -159,6 +159,8 @@ p { margin: 0 0 11px; }
 }
 .top-callout__nav-list a:hover { color: var(--teal); }
 .top-callout__nav-list .current-menu-item a { color: var(--teal); }
+/* BBB logo link: only ever shown inside the mobile hamburger menu. */
+.top-callout__nav-list .nav-bbb { display: none; }
 
 /* ---------- Site header — full-bleed image banner + navy action bar ----------
    Used by every page. #top-callout above is kept for the mobile nav styles. */
@@ -1791,6 +1793,23 @@ p { margin: 0 0 11px; }
   .top-callout__nav-list.is-open { display: grid; }
   .top-callout__nav-list li { min-width: 0; }
   .top-callout__nav-list li:last-child { grid-column: 1 / -1; }
+  /* BBB logo: shown inside the opened mobile menu, spanning both columns. */
+  .top-callout__nav-list .nav-bbb {
+    display: block;
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .top-callout__nav-list .nav-bbb a {
+    display: inline-block;
+    padding: 8px;
+    background: transparent;
+  }
+  .top-callout__nav-list .nav-bbb img {
+    display: block;
+    width: 60px;
+    height: auto;
+  }
   .top-callout__nav-list a {
     display: block;
     padding: 9px 10px;
