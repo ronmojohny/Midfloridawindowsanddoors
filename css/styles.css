@@ -592,15 +592,15 @@ p { margin: 0 0 11px; }
 }
 .hero-dot.is-active { background: var(--amber); }
 
-/* ---------- BBB reviews banner ---------- */
-.bbb-banner {
+/* ---------- Brands strip (manufacturer logos) ---------- */
+.brands-banner {
   display: block;
   background: var(--card);
   border-block: 1px solid var(--line);
   text-decoration: none;
 }
-.bbb-banner:hover, .bbb-banner:focus { text-decoration: none; }
-.bbb-banner__inner {
+.brands-banner:hover, .brands-banner:focus { text-decoration: none; }
+.brands-banner__inner {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -609,7 +609,13 @@ p { margin: 0 0 11px; }
   padding-block: 20px;
   text-align: center;
 }
-.bbb-banner__logos {
+.brands-banner__title {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 1.05rem;
+}
+.brands-banner__logos {
   /* Mobile: 2 + 1 centred grid. The two full-width cells fill the first row
      side by side, then the third logo centres on its own beneath them. */
   display: grid;
@@ -619,40 +625,32 @@ p { margin: 0 0 11px; }
   align-items: center;
   justify-items: center;
 }
-.bbb-banner__logos img {
+.brands-banner__logos img {
   display: block;
   width: 100%;
   max-width: 220px;
   height: auto;
   object-fit: contain;
 }
-.bbb-banner__logos img:last-child { grid-column: 1 / -1; justify-self: center; }
-.bbb-banner__text {
-  display: flex;
-  flex-direction: column;
+.brands-banner__logos img:last-child { grid-column: 1 / -1; justify-self: center; }
+
+/* ---------- BBB badge (reviews section) ---------- */
+.reviews-bbb {
+  margin-top: 24px;
+  text-align: center;
+}
+.reviews-bbb__link {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-}
-.bbb-banner__stars {
-  color: var(--amber);
-  letter-spacing: 2px;
-  font-size: 1.15rem;
-  line-height: 1;
-}
-.bbb-banner__title {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  color: var(--navy);
-  font-size: 1.05rem;
-}
-.bbb-banner__cta {
+  justify-content: center;
+  gap: 12px;
   font-family: var(--font-ui);
   font-weight: 600;
   color: var(--teal);
-  font-size: 0.9rem;
+  text-decoration: none;
 }
-.bbb-banner__cta span { color: var(--amber); font-weight: 800; font-size: 1.15em; line-height: 0; }
-.bbb-banner:hover .bbb-banner__cta { color: var(--navy); }
+.reviews-bbb__link:hover, .reviews-bbb__link:focus { color: var(--navy); }
+.reviews-bbb__logo { display: block; width: 80px; height: auto; }
 
 /* ---------- Financing banner ---------- */
 #financing {
@@ -1663,18 +1661,17 @@ p { margin: 0 0 11px; }
     align-items: flex-end;
   }
 
-  .bbb-banner__inner {
+  .brands-banner__inner {
     flex-direction: column;
     gap: 14px;
     padding-block: 22px;
   }
-  .bbb-banner__logos {
+  .brands-banner__logos {
     /* Desktop: single horizontal row (1 × 3 grid). */
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
   }
-  .bbb-banner__logos img:last-child { grid-column: auto; justify-self: center; }
-  .bbb-banner__text { align-items: center; text-align: center; gap: 5px; }
+  .brands-banner__logos img:last-child { grid-column: auto; justify-self: center; }
 
   .financing__img { width: 360px; }
 
