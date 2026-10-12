@@ -64,6 +64,11 @@
 
     lightboxTriggers.forEach(function (link) {
       link.addEventListener("click", function (e) {
+        // Desktop-only triggers (data-lightbox-desktop) fall through to their
+        // normal link on smaller viewports, where text/labels are easier to read.
+        if (link.hasAttribute("data-lightbox-desktop") && window.innerWidth < 768) {
+          return;
+        }
         e.preventDefault();
         openLightbox(link);
       });
