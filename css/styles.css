@@ -1150,6 +1150,13 @@ p { margin: 0 0 11px; }
 .prod-card p { color: var(--ink-soft); }
 .prod-card--featured { border-top-color: var(--amber); }
 
+/* Anchor target inside the overview card: keep the "Replacement Windows"
+   heading visible above the paragraph when jumped to from the home page. */
+#replacement-windows { scroll-margin-top: 90px; }
+@media (min-width: 768px) {
+  #replacement-windows { scroll-margin-top: 110px; }
+}
+
 .prod-card .info-list dt:first-of-type { margin-top: 0; }
 
 .prod-card .info-list--check { margin: 4px 0 0; }
