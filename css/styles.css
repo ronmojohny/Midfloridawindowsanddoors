@@ -729,6 +729,7 @@ p { margin: 0 0 11px; }
 }
 
 .cta-inner__img { display: block; margin-top: 8px; }
+.cta-inner__img[data-lightbox] { cursor: zoom-in; }
 .img-box {
   position: relative;
   display: flex;
