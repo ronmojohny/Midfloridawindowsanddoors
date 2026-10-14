@@ -1571,6 +1571,22 @@ p { margin: 0 0 11px; }
 .lightbox__close:hover,
 .lightbox__close:focus { background: rgba(255, 255, 255, 0.15); }
 
+/* Desktop: let an enlarged gallery photo fill the full viewport. Scoped to the
+   gallery lightbox so the shared lightbox on other pages keeps its inset frame. */
+@media (min-width: 768px) {
+  .lightbox--gallery { padding: 0; }
+  .lightbox--gallery .lightbox__img {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  /* The image now runs edge to edge, so give the close button a backdrop that
+     stays legible over light photos. */
+  .lightbox--gallery .lightbox__close {
+    background: rgba(12, 34, 51, 0.75);
+  }
+}
+
 .footer-bottom {
   margin-top: 1.5em;
   padding-top: 1.2em;
