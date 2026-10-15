@@ -246,10 +246,30 @@
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---- Forms (front-end demo; replace with your form backend/endpoint) ---- */
+  /* ---- Estimate forms (submitted to Formspree) ---- */
   const forms = document.querySelectorAll("form[novalidate]");
 
   forms.forEach(function (form) {
+    // Each form posts to the Formspree endpoint in its own action attribute, so
+    // nothing here is hard-coded to a specific URL.
+    const endpoint = form.getAttribute("action");
+    const fine = form.querySelector(".form-fine");
+    const setMessage = function (text) {
+      if (fine) fine.textContent = text;
+    };
+
+    // Restrict the endpoint to formspree.io so a script-injected or
+    // copy-pasted action value cannot exfiltrate submissions elsewhere.
+    let endpointIsSafe = false;
+    if (endpoint) {
+      try {
+        endpointIsSafe =
+          new URL(endpoint, window.location.href).hostname === "formspree.io";
+      } catch (err) {
+        endpointIsSafe = false;
+      }
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -262,24 +282,89 @@
       });
 
       if (!valid) {
-        const fine = form.querySelector(".form-fine");
-        if (fine) fine.textContent = "Please fill in all required fields.";
+        setMessage("Please fill in all required fields.");
         return;
       }
 
       const btn = form.querySelector("button[type='submit']");
-      const original = btn.textContent;
-      btn.textContent = "Sending…";
-      btn.disabled = true;
+      const original = btn ? btn.textContent : "";
 
-      // Simulated submit — wire to your endpoint (e.g., Formspree, Netlify Forms, WP REST)
-      setTimeout(function () {
-        btn.textContent = original;
-        btn.disabled = false;
-        form.reset();
-        const fine = form.querySelector(".form-fine");
-        if (fine) fine.textContent = "Thanks! We'll be in touch shortly.";
-      }, 900);
+      // Without a usable Formspree endpoint, fall back to a plain native POST
+      // rather than pretending the submission succeeded.
+      if (!endpointIsSafe) {
+        setMessage("Form endpoint unavailable. Please call (888) 230-0243.");
+        return;
+      }
+
+      if (btn) {
+        btn.textContent = "Sending…";
+        btn.disabled = true;
+      }
+      setMessage("");
+
+      const restoreButton = function () {
+        if (btn) {
+          btn.textContent = original;
+          btn.disabled = false;
+        }
+      };
+
+      // Submitting the FormData natively would trigger a page navigation, so the
+      // body is sent as multipart form data (what the non-JS fallback uses too).
+      fetch(endpoint, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      })
+        .then(function (response) {
+          if (response.ok) return { ok: true };
+
+          // 422 carries per-field errors from Formspree; 429 means the monthly
+          // submission allowance is used up. Anything else is a generic failure.
+          return response
+            .json()
+            .catch(function () {
+              return {};
+            })
+            .then(function (data) {
+              let message = "";
+              if (data && data.errors && data.errors.length) {
+                message = data.errors
+                  .map(function (err) {
+                    return err.message;
+                  })
+                  .join(" ");
+              }
+              return { ok: false, status: response.status, message: message };
+            });
+        })
+        .then(function (result) {
+          restoreButton();
+
+          if (result.ok) {
+            form.reset();
+            setMessage("Thanks! We'll be in touch shortly.");
+            return;
+          }
+
+          if (result.status === 429) {
+            setMessage(
+              "We've reached our monthly message limit. Please call (888) 230-0243."
+            );
+            return;
+          }
+
+          setMessage(
+            result.message ||
+              "Sorry, something went wrong. Please call (888) 230-0243."
+          );
+        })
+        .catch(function () {
+          restoreButton();
+          setMessage(
+            "Network error. Please check your connection or call (888) 230-0243."
+          );
+        });
     });
   });
 
