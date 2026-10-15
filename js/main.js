@@ -253,9 +253,17 @@
     // Each form posts to the Formspree endpoint in its own action attribute, so
     // nothing here is hard-coded to a specific URL.
     const endpoint = form.getAttribute("action");
-    const fine = form.querySelector(".form-fine");
-    const setMessage = function (text) {
-      if (fine) fine.textContent = text;
+    const status = form.querySelector(".form-status");
+
+    // Writes the outcome into the dedicated status banner. The privacy line
+    // (.form-fine) is left untouched so it never gets overwritten by a result.
+    const setMessage = function (text, state) {
+      if (!status) return;
+      status.textContent = text || "";
+      status.classList.remove("is-success", "is-error", "is-visible");
+      if (!text) return;
+      status.classList.add(state === "success" ? "is-success" : "is-error");
+      status.classList.add("is-visible");
     };
 
     // Restrict the endpoint to formspree.io so a script-injected or
@@ -282,7 +290,7 @@
       });
 
       if (!valid) {
-        setMessage("Please fill in all required fields.");
+        setMessage("Please fill in all required fields.", "error");
         return;
       }
 
@@ -292,7 +300,7 @@
       // Without a usable Formspree endpoint, fall back to a plain native POST
       // rather than pretending the submission succeeded.
       if (!endpointIsSafe) {
-        setMessage("Form endpoint unavailable. Please call (888) 230-0243.");
+        setMessage("Form endpoint unavailable. Please call (888) 230-0243.", "error");
         return;
       }
 
@@ -343,26 +351,29 @@
 
           if (result.ok) {
             form.reset();
-            setMessage("Thanks! We'll be in touch shortly.");
+            setMessage("Thanks! We'll be in touch shortly.", "success");
             return;
           }
 
           if (result.status === 429) {
             setMessage(
-              "We've reached our monthly message limit. Please call (888) 230-0243."
+              "We've reached our monthly message limit. Please call (888) 230-0243.",
+              "error"
             );
             return;
           }
 
           setMessage(
             result.message ||
-              "Sorry, something went wrong. Please call (888) 230-0243."
+              "Sorry, something went wrong. Please call (888) 230-0243.",
+            "error"
           );
         })
         .catch(function () {
           restoreButton();
           setMessage(
-            "Network error. Please check your connection or call (888) 230-0243."
+            "Network error. Please check your connection or call (888) 230-0243.",
+            "error"
           );
         });
     });

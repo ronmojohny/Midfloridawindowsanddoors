@@ -955,6 +955,38 @@ p { margin: 0 0 11px; }
 .quote-form .btn-block { font-size: 1.05em; padding: 12px; }
 .form-fine { color: #f3e3c4 !important; font-size: 0.8rem; text-align: center; margin-top: 10px; }
 
+/* Submit status message (success / error) — kept separate from the small
+   privacy line above so it can be large and high-contrast on the dark form. */
+.form-status {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  color: #fff;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.form-status.is-visible { display: block; }
+.form-status.is-success {
+  background: #1e6b47;
+  border-color: #3fa96e;
+  color: #f2fff8;
+}
+.form-status.is-error {
+  background: #7e2323;
+  border-color: #e07a7a;
+  color: #fff3f3;
+}
+@media (max-width: 480px) {
+  .form-status { font-size: 0.95rem; padding: 11px 12px; }
+}
+
 /* ---------- Footer ---------- */
 #site-footer {
   background-color: var(--navy-dark);
