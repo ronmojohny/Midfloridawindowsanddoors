@@ -40,7 +40,10 @@
 
     const openLightbox = function (link) {
       const thumb = link.querySelector("img");
-      const full = link.getAttribute("href");
+      // Mobile-only triggers point at a page rather than an image, so they carry
+      // the enlarged photo in data-lightbox-src instead of href.
+      const full =
+        link.getAttribute("data-lightbox-src") || link.getAttribute("href");
 
       lightboxImg.src = full || (thumb ? thumb.getAttribute("src") : "");
       // Fall back to the link's aria-label for text-only triggers that have no
@@ -73,6 +76,21 @@
         if (link.hasAttribute("data-lightbox-desktop") && window.innerWidth < 768) {
           return;
         }
+        e.preventDefault();
+        openLightbox(link);
+      });
+    });
+
+    /* Mobile-only triggers (data-lightbox-mobile) behave the other way around:
+       tapping the image enlarges it on small viewports, while on desktop the
+       link keeps its normal destination (e.g. the products page). */
+    const mobileLightboxTriggers = document.querySelectorAll(
+      "[data-lightbox-mobile]"
+    );
+
+    mobileLightboxTriggers.forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        if (window.innerWidth >= 768) return;
         e.preventDefault();
         openLightbox(link);
       });

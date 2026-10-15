@@ -732,6 +732,10 @@ p { margin: 0 0 11px; }
 @media (min-width: 768px) {
   .cta-inner__img[data-lightbox] { cursor: zoom-in; }
 }
+/* Mobile-only lightbox triggers (e.g. the WINDOWS card image) enlarge on tap. */
+@media (max-width: 767px) {
+  .cta-inner__img[data-lightbox-mobile] { cursor: zoom-in; }
+}
 .img-box {
   position: relative;
   display: flex;
@@ -1540,7 +1544,8 @@ p { margin: 0 0 11px; }
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  /* Above the sticky site header so an enlarged photo is never clipped. */
+  z-index: 9999;
   display: none;
   align-items: center;
   justify-content: center;
@@ -1559,6 +1564,7 @@ p { margin: 0 0 11px; }
   position: absolute;
   top: 14px;
   right: 18px;
+  z-index: 1;
   padding: 6px 12px;
   font-size: 1.5rem;
   line-height: 1;
