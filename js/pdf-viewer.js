@@ -11,7 +11,9 @@
 
   var DOCS = {
     "pgt-vinyl-windows":    { path: "pdfs/pgt-vinyl-windows.pdf",    title: "PGT Vinyl Windows" },
-    "pgt-aluminum-windows": { path: "pdfs/pgt-aluminum-windows.pdf", title: "PGT Aluminum Windows" }
+    "pgt-aluminum-windows": { path: "pdfs/pgt-aluminum-windows.pdf", title: "PGT Aluminum Windows" },
+    "stormbreaker":         { path: "pdfs/stormbreaker.pdf",         title: "Simonton Stormbreaker Plus" },
+    "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500" }
   };
 
   // Worker must match the pdf.min.js version loaded in pdf-viewer.html.
