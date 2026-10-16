@@ -931,6 +931,14 @@ p { margin: 0 0 11px; }
 
 .quote-form { max-width: 780px; margin-inline: auto; }
 .form-group { margin-bottom: 16px; }
+
+/* Form field grid: single column on mobile, 2×2 (two columns, two
+   fields each) on desktop browsers. */
+.form-row { display: flex; flex-wrap: wrap; }
+.form-row .form-group { width: 100%; }
+@media (min-width: 768px) {
+  .form-row .form-group { width: 50%; }
+}
 .quote-form input,
 .quote-form select,
 .quote-form textarea {
