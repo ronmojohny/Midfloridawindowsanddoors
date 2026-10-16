@@ -1787,8 +1787,8 @@ p { margin: 0 0 11px; }
 
   /* Desktop: center the whole copy block on the slide rather than inside the
      content column, so the single-line heading can extend wider than the
-     container when it needs to. Both lines stay left-aligned inside it so the
-     lede's first character lines up under the heading's first character. */
+     container when it needs to. The heading stays flush left; the lede block is
+     centered beneath it, with its own text still left-justified. */
   .hero-slide__inner {
     width: fit-content;
     max-width: none;
@@ -1799,7 +1799,7 @@ p { margin: 0 0 11px; }
   }
   .hero-slide__lede {
     max-width: 60ch;
-    margin-inline: 0;
+    margin-inline: auto;
   }
 
   #site-footer .footer-col { margin-bottom: 1.25em; }
