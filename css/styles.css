@@ -1758,18 +1758,15 @@ p { margin: 0 0 11px; }
 
   .cta-inner { margin-bottom: 0; }
 
-  /* Desktop: shrink the copy to its own content and center that whole block,
-     then left-align both lines inside it — so the lede's first letter lines up
-     under the heading's first letter while the block as a whole stays centered. */
+  /* Desktop: keep the hero copy perfectly centered. The heading and lede are
+     centered together so the shorter heading sits on the true centerline
+     instead of being left-aligned inside a wider block. */
   .hero-slide__inner {
-    width: fit-content;
-    max-width: 100%;
-    margin-inline: auto;
-    text-align: left;
+    text-align: center;
   }
   .hero-slide__lede {
-    max-width: none;
-    margin-inline: 0;
+    max-width: 60ch;
+    margin-inline: auto;
   }
 
   #site-footer .footer-col { margin-bottom: 1.25em; }
