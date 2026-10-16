@@ -1774,6 +1774,13 @@ p { margin: 0 0 11px; }
 
 /* ≥ 992px — desktop nav */
 @media (min-width: 992px) {
+  /* Desktop: keep the hero headings on a single line. The h1 is long enough to
+     wrap at the default display size, so trim it slightly and prevent the break;
+     the vw-based size shrinks with the viewport so it never overflows. */
+  .hero-slide h1 {
+    white-space: nowrap;
+    font-size: clamp(1.5rem, 2.7vw, 2.4rem);
+  }
   /* Desktop only: stretch the link menu across the full content column */
   .top-callout__nav {
     display: block;
