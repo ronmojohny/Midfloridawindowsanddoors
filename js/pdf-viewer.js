@@ -14,8 +14,7 @@
     "pgt-aluminum-windows": { path: "pdfs/pgt-aluminum-windows.pdf", title: "PGT Aluminum Windows" },
     "stormbreaker":         { path: "pdfs/stormbreaker.pdf",         title: "Simonton Stormbreaker Plus" },
     "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500" },
-    "schlage-hardware":     { path: "pdfs/schlage.pdf",              title: "Schlage Door Hardware" },
-    "plastpro":             { path: "pdfs/plastpro-entry-doors.pdf", title: "Plastpro Entry Doors" }
+    "schlage-hardware":     { path: "pdfs/schlage.pdf",              title: "Schlage Door Hardware" }
   };
 
   // Worker must match the pdf.min.js version loaded in pdf-viewer.html.
