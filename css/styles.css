@@ -1347,6 +1347,16 @@ p { margin: 0 0 11px; }
   color: var(--teal-dark);
 }
 
+/* Mobile: the desktop 8px block padding on every menu link stacks into a wide
+   gap between rows once the type shrinks, so tighten the menu and the links.
+   Horizontal padding is left alone to keep the tap targets wide. */
+@media (max-width: 767px) {
+  .prod-dropdown__menu { margin-top: 6px; padding: 2px 0; }
+  .prod-dropdown__menu a { padding-block: 5px; }
+  .prod-dropdown__menu--nested { padding: 1px 0 3px; }
+  .prod-dropdown__toggle--nested { padding-block: 5px; }
+}
+
 /* ---------- PDF viewer (pdf-viewer.html) ---------- */
 .pdf-body { background: #5c6771; }
 .pdf-body main { display: block; }
