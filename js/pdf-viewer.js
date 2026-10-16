@@ -15,7 +15,8 @@
     "stormbreaker":         { path: "pdfs/stormbreaker.pdf",         title: "Simonton Stormbreaker Plus" },
     "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500" },
     "schlage-hardware":     { path: "pdfs/schlage.pdf",              title: "Schlage Door Hardware" },
-    "pgt-sliding-glass-doors": { path: "pdfs/pgt-sliding-glass-doors.pdf", title: "PGT Sliding Glass Doors" }
+    "pgt-vinyl-sliding-glass-doors":    { path: "pdfs/pgt-vinyl-windows.pdf",                title: "PGT Vinyl Sliding Glass Doors" },
+    "pgt-aluminum-sliding-glass-doors": { path: "pdfs/pgt-aluminum-windows.pdf",             title: "PGT Aluminum Sliding Glass Doors" }
   };
 
   // Worker must match the pdf.min.js version loaded in pdf-viewer.html.
