@@ -501,11 +501,10 @@ p { margin: 0 0 11px; }
 }
 
 /* Desktop only: the laptop/desktop breakpoints pushed a lot of dead space above
-   the slider copy. Trim the top padding (bottom stays generous) so the text sits
-   closer to the header image. */
+   and below the slider copy. Trim both so the slides are tighter vertically. */
 @media (min-width: 768px) {
   .hero-slide {
-    padding-top: clamp(30px, 4vw, 56px);
+    padding-block: clamp(24px, 3vw, 44px);
   }
 }
 .hero-slide.is-active {
