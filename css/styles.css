@@ -561,15 +561,8 @@ p { margin: 0 0 11px; }
   font-weight: 800;
   margin-bottom: 16px;
 }
-/* All three slider headings (h1 on slide 1, h2 on slides 2 & 3) share the
-   same size — matched to the "Impact Protection for Every Florida Home" slide. */
-.hero-slide h1, .hero-slide h2 { font-size: clamp(1.5rem, 4.5vw, 2.6rem); }
-
-/* Mobile only: revert slide 1's heading back to its original, larger size
-   (desktop/tablet keep the shared size above). */
-@media (max-width: 767px) {
-  .hero-slide h1 { font-size: clamp(1.7rem, 5vw, 3rem); }
-}
+.hero-slide h1 { font-size: clamp(1.7rem, 5vw, 3rem); }
+.hero-slide h2 { font-size: clamp(1.5rem, 4.5vw, 2.6rem); }
 .hero-slide__lede {
   font-size: clamp(1.05rem, 2.4vw, 1.3rem);
   color: #e6eef4;
@@ -1794,6 +1787,14 @@ p { margin: 0 0 11px; }
 
 /* ≥ 992px — desktop nav */
 @media (min-width: 992px) {
+  /* Desktop: size the hero heading to match the interior page hero
+     (.page-hero h1), and keep it on a single line. The min() fallback shrinks
+     the heading on narrower desktops so the one-line version still fits the
+     viewport without introducing a horizontal scrollbar. */
+  .hero-slide h1 {
+    white-space: nowrap;
+    font-size: min(clamp(1.8rem, 5vw, 2.9rem), 3vw);
+  }
   /* Desktop only: stretch the link menu across the full content column */
   .top-callout__nav {
     display: block;
