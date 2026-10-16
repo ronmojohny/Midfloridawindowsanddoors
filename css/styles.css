@@ -1758,15 +1758,16 @@ p { margin: 0 0 11px; }
 
   .cta-inner { margin-bottom: 0; }
 
-  /* Desktop: center the whole copy block, but keep both lines left-aligned
-     inside it so the lede's first character lines up under the heading's first
-     character. Sizing the block to its content (the single-line heading) keeps
-     the heading on the true centerline, and capping the lede stops it from
-     widening the block and pushing the heading off-center. */
+  /* Desktop: center the whole copy block on the slide rather than inside the
+     content column, so the single-line heading can extend wider than the
+     container when it needs to. Both lines stay left-aligned inside it so the
+     lede's first character lines up under the heading's first character. */
   .hero-slide__inner {
     width: fit-content;
-    max-width: 100%;
-    margin-inline: auto;
+    max-width: none;
+    margin-inline: 0;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: left;
   }
   .hero-slide__lede {
@@ -1779,12 +1780,13 @@ p { margin: 0 0 11px; }
 
 /* ≥ 992px — desktop nav */
 @media (min-width: 992px) {
-  /* Desktop: keep the hero headings on a single line. The h1 is long enough to
-     wrap at the default display size, so trim it slightly and prevent the break;
-     the vw-based size shrinks with the viewport so it never overflows. */
+  /* Desktop: size the hero heading to match the interior page hero
+     (.page-hero h1), and keep it on a single line. The min() fallback shrinks
+     the heading on narrower desktops so the one-line version still fits the
+     viewport without introducing a horizontal scrollbar. */
   .hero-slide h1 {
     white-space: nowrap;
-    font-size: clamp(1.5rem, 2.7vw, 2.4rem);
+    font-size: min(clamp(1.8rem, 5vw, 2.9rem), 3vw);
   }
   /* Desktop only: stretch the link menu across the full content column */
   .top-callout__nav {
