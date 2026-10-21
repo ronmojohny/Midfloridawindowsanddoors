@@ -10,7 +10,8 @@
   "use strict";
 
   var DOCS = {
-    "pgt-vinyl-windows":    { path: "pdfs/pgt-vinyl-windows.pdf",    title: "PGT Vinyl Windows" },
+    "pgt-vinyl-windows":    { path: "pdfs/pgt-vinyl-windows.pdf",    title: "PGT Vinyl Windows - Impact" },
+    "pgt-vinyl-windows-non-impact": { path: "pdfs/pgt-vinyl-windows.pdf", title: "PGT Vinyl Windows - Non-Impact" },
     "pgt-aluminum-windows": { path: "pdfs/pgt-aluminum-windows.pdf", title: "PGT Aluminum Windows" },
     "stormbreaker":         { path: "pdfs/stormbreaker.pdf",         title: "Simonton Stormbreaker Plus" },
     "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500" },
