@@ -14,7 +14,7 @@
     "pgt-vinyl-windows-non-impact": { path: "pdfs/PGT_EnergyVue_Brochure_ME0100059_260402_Digi.pdf", title: "PGT Vinyl Windows - Non-Impact" },
     "pgt-aluminum-windows": { path: "pdfs/pgt-aluminum-windows.pdf", title: "PGT Aluminum Windows" },
     "stormbreaker":         { path: "pdfs/stormbreaker.pdf",         title: "Simonton Stormbreaker Plus" },
-    "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500" },
+    "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500 - Non-Impact" },
     "schlage-hardware":     { path: "pdfs/schlage.pdf",              title: "Schlage Door Hardware" },
     "pgt-vinyl-sliding-glass-doors":    { path: "pdfs/pgt-vinyl-windows.pdf",                title: "PGT Vinyl Sliding Glass Doors" },
     "pgt-aluminum-sliding-glass-doors": { path: "pdfs/pgt-aluminum-windows.pdf",             title: "PGT Aluminum Sliding Glass Doors" }
