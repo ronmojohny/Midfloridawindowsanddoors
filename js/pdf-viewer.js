@@ -17,6 +17,7 @@
     "simonton-5500":        { path: "pdfs/5500.pdf",                 title: "Simonton 5500 - Non-Impact" },
     "schlage-hardware":     { path: "pdfs/schlage.pdf",              title: "Schlage Door Hardware" },
     "pgt-vinyl-sliding-glass-doors":    { path: "pdfs/pgt-vinyl-windows.pdf",                title: "PGT Vinyl Sliding Glass Doors - Impact" },
+    "pgt-vinyl-sliding-glass-doors-non-impact": { path: "pdfs/PGT_EnergyVue_Brochure_ME0100059_260402_Digi.pdf", title: "PGT Vinyl Sliding Glass Doors - Non-Impact" },
     "pgt-aluminum-sliding-glass-doors": { path: "pdfs/pgt-aluminum-windows.pdf",             title: "PGT Aluminum Sliding Glass Doors" }
   };
 
