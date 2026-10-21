@@ -1646,20 +1646,25 @@ p { margin: 0 0 11px; }
 .lightbox__close:hover,
 .lightbox__close:focus { background: rgba(255, 255, 255, 0.15); }
 
-/* Desktop: let an enlarged gallery photo fill the full viewport. Scoped to the
-   gallery lightbox so the shared lightbox on other pages keeps its inset frame. */
+/* Desktop: an enlarged gallery photo scales up to the viewport, but is always
+   contained rather than stretched to fill it. Forcing width/height to 100% with
+   object-fit: cover blew portrait shots up to full screen and cropped the top
+   and bottom off; containing them keeps the whole photo visible at a sane size
+   while landscape shots still use the available width. Scoped to the gallery
+   lightbox so the shared lightbox on other pages keeps its inset frame. */
 @media (min-width: 768px) {
-  .lightbox--gallery { padding: 0; }
+  .lightbox--gallery { padding: 24px; }
   .lightbox--gallery .lightbox__img {
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    object-fit: cover;
-    border-radius: 0;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 48px);
+    max-height: calc(100dvh - 48px);
+    object-fit: contain;
+    border-radius: 4px;
   }
-  /* The image now runs edge to edge, so give the close button a backdrop that
-     stays legible over light photos. */
+  /* The photo can now sit close to the viewport edge on wide screens and may be
+     bright, so give the close button a backdrop that stays legible. */
   .lightbox--gallery .lightbox__close {
     background: rgba(12, 34, 51, 0.75);
   }
