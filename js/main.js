@@ -300,7 +300,7 @@
       // Without a usable Formspree endpoint, fall back to a plain native POST
       // rather than pretending the submission succeeded.
       if (!endpointIsSafe) {
-        setMessage("Form endpoint unavailable. Please call (888) 230-0243.", "error");
+        setMessage("Form endpoint unavailable. Please call (888) 230-0243 or (407) 607-6528.", "error");
         return;
       }
 
@@ -357,7 +357,7 @@
 
           if (result.status === 429) {
             setMessage(
-              "We've reached our monthly message limit. Please call (888) 230-0243.",
+              "We've reached our monthly message limit. Please call (888) 230-0243 or (407) 607-6528.",
               "error"
             );
             return;
@@ -365,14 +365,14 @@
 
           setMessage(
             result.message ||
-              "Sorry, something went wrong. Please call (888) 230-0243.",
+              "Sorry, something went wrong. Please call (888) 230-0243 or (407) 607-6528.",
             "error"
           );
         })
         .catch(function () {
           restoreButton();
           setMessage(
-            "Network error. Please check your connection or call (888) 230-0243.",
+            "Network error. Please check your connection or call (888) 230-0243 or (407) 607-6528.",
             "error"
           );
         });
