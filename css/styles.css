@@ -209,7 +209,48 @@ p { margin: 0 0 11px; }
 }
 .site-header__phone a { color: #fff; }
 .site-header__phone a:hover { color: var(--amber); }
-.site-header__label { font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+
+/* Two-number header. On phones the row carries the toll-free number alone so it
+   cannot wrap against the hamburger; from 480px the "Toll-Free" role label joins
+   it, and from 768px both numbers show as
+   "Toll-Free (888) 230-0243 · Local (407) 607-6528". */
+.site-header__phone-sep,
+.site-header__phone-local,
+.site-header__role {
+  display: none;
+}
+.site-header__role {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+  margin-right: 0.15em;
+}
+/* Keep each role label glued to its number so they never split across lines. */
+.site-header__phone-toll,
+.site-header__phone-local {
+  white-space: nowrap;
+}
+@media (min-width: 480px) {
+  .site-header__phone-toll {
+    display: inline;
+  }
+  .site-header__role {
+    display: inline;
+  }
+}
+@media (min-width: 768px) {
+  .site-header__phone-local {
+    display: inline;
+  }
+  .site-header__phone-sep {
+    display: inline;
+    margin-inline: 0.45em;
+    opacity: 0.55;
+  }
+}
 
 
 /* Nav now sits on the navy bar instead of white — invert link/toggle colours */
@@ -306,19 +347,22 @@ p { margin: 0 0 11px; }
     border-radius: 6px;
   }
 
-  /* Desktop banner label reads "Call Us" — hide the trailing colon here only. */
-  .site-header__label-colon {
-    display: none;
-  }
-
-  /* Desktop only: bump the phone line to match the larger button, and keep it
-     white with a soft shadow so it stays legible over the photo. */
+  /* Desktop only: bump the phone line, and keep it white with a soft shadow so
+     it stays legible over the photo. Kept below the previous 1.8rem because
+     the line now carries two numbers plus their role labels. */
   .site-header__phone {
-    font-size: 1.8rem;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+  .site-header__role {
+    font-size: 0.62em;
+    letter-spacing: 0.08em;
+  }
+  .site-header__phone-sep {
+    margin-inline: 0.6em;
   }
   .site-header__phone,
-  .site-header__phone a,
-  .site-header__phone .site-header__label {
+  .site-header__phone a {
     color: #fff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
