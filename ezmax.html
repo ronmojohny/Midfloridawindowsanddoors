@@ -54,12 +54,15 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
 #top-section{padding-top:0;background:none}
 #inner-section{padding:0 15px;background:#fff}
 /* #80AFC7 is the background baked into the logo image, so the logo melts into
-   the band with no visible seam. */
-#header-top{position:relative;overflow:hidden;padding:16px 35px;background:#80AFC7}
+   the band with no visible seam. The band is a two-column row: logo left, back
+   link right, both sharing one vertical center line. */
+#header-top{display:flex;align-items:center;justify-content:space-between;
+ gap:24px;padding:20px 35px;background:#80AFC7}
 
 /* ---- masthead ---- */
-/* Logo sits at the left of the band at its original size on desktop. */
-#header{display:flex;align-items:center;justify-content:flex-start;height:auto}
+/* Logo renders at its native 311x100 so it stays crisp, and the 20px band
+   padding above and below keeps it optically centered. */
+#header{order:1;display:flex;align-items:center;height:auto}
 #logo{display:block;flex:0 0 auto}
 #logo img{width:311px;height:100px}
 
@@ -83,10 +86,10 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
 .feature img.plain{border:0;padding:0}
 .feature p{margin:0;padding:.5em 0;font-size:15px;color:#2a2a2a;text-align:left}
 
-/* ---- back to products (floats in the top-right of the header band) ---- */
-.ez-back{position:absolute;top:14px;right:35px;z-index:1;
+/* ---- back to products (right column, vertically centered on the logo) ---- */
+.ez-back{order:2;flex:0 0 auto;
  font-family:Arial,Helvetica,sans-serif;font-weight:600;font-size:.85rem;
- color:#12304A;text-decoration:none}
+ line-height:1;color:#12304A;text-decoration:none;white-space:nowrap}
 .ez-back:hover,.ez-back:focus{color:#fff;text-decoration:none}
 
 /* ---- small screens ---- */
