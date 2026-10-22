@@ -362,6 +362,12 @@ p { margin: 0 0 11px; }
     justify-content: center;
     width: 100%;
     text-align: center;
+    /* Desktop only: open up the horizontal gap between the two numbers and the
+       "FREE Estimate" button. The base 16px lets the phone text sit right against
+       the button's left edge, which reads as a collision at 1.3rem. 44px leaves
+       the visual separation obvious while still fitting on one row at 992px
+       (432 + 44 + 427 = 903px inside a 962px content box). */
+    column-gap: 44px;
   }
 
   /* Desktop only: enlarge the "FREE Estimate" banner button so it reads as the
