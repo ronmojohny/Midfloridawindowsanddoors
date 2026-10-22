@@ -394,8 +394,10 @@ p { margin: 0 0 11px; }
     vertical-align: 0.08em;
     text-shadow: none;
   }
+  /* Trim the gap around the separator dot — 0.6em each side was reading as a
+     big hole between the two numbers at this type size. */
   .site-header__phone-sep {
-    margin-inline: 0.6em;
+    margin-inline: 0.3em;
   }
   .site-header__phone,
   .site-header__phone a {
