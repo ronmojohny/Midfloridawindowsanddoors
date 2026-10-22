@@ -94,7 +94,7 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
 
 /* ---- small screens ---- */
 @media (max-width:820px){
-  body{padding-bottom:32px;font-size:13px}
+  body{padding-bottom:32px;font-size:15px;line-height:1.6}
   #container{width:100%}
   #top-section{background:none;padding-top:0}
   #inner-section{padding:0;background:#fff}
@@ -109,26 +109,26 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
   /* Turn the link into a tappable chip now that it is inline. */
   .ez-back{order:2;position:static;flex:0 0 auto;display:inline-block;
    padding:9px 12px;border:1px solid rgba(18,48,74,.3);border-radius:4px;
-   background:rgba(255,255,255,.4);font-size:.75rem;line-height:1;
+   background:rgba(255,255,255,.4);font-size:.85rem;line-height:1;
    white-space:nowrap;text-align:center}
 
   .hero{flex-direction:column;min-height:0}
   .wsite-header{flex:none;min-height:0;height:auto;aspect-ratio:418/316}
-  .hero-text{padding:14px 16px 0;font-size:15px}
+  .hero-text{padding:14px 16px 0;font-size:16px;line-height:1.6}
   #content{padding:24px 16px;min-height:0}
   #banner{padding-bottom:16px;background-size:100% 24px}
   .grid3{grid-template-columns:1fr;gap:0 0}
   .feature{margin-bottom:16px}
   .feature img{max-width:100%}
-  /* Keep the phone copy at its original size — the desktop bump is 820px+ only. */
-  .feature p{font-size:15px}
+  /* Phone copy matches the desktop step-up so the feature text stays readable. */
+  .feature p{font-size:16px}
 }
 
 /* Very narrow phones: shrink the logo so the band never wraps. */
 @media (max-width:420px){
-  #header-top{gap:8px;padding:10px 12px}
-  #logo img{width:176px;height:57px}
-  .ez-back{padding:7px 9px;font-size:.7rem}
+  #header-top{gap:8px;padding:10px 10px}
+  #logo img{width:150px;height:48px}
+  .ez-back{padding:7px 8px;font-size:.75rem}
 }
 @media (prefers-reduced-motion:no-preference){
   html{scroll-behavior:smooth}
