@@ -81,9 +81,11 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
 .feature p{margin:0;padding:.5em 0;font-size:15px;color:#2a2a2a;text-align:left}
 
 /* ---- back to products (matches the pdf-viewer top bar) ---- */
-.ez-topbar{max-width:980px;margin:-17px auto 0;background:#12304A}
+/* Width matches the header band: #container (980px) minus #inner-section's
+   15px inline padding on each side. */
+.ez-topbar{max-width:950px;margin:-17px auto 0;background:#12304A}
 .ez-backbar__inner{display:flex;align-items:center;justify-content:flex-end;gap:10px;
- padding:14px 15px}
+ padding:14px 35px}
 .ez-back{font-family:Arial,Helvetica,sans-serif;font-weight:600;font-size:.85rem;
  color:#d8e0e4;text-decoration:none}
 .ez-back:hover,.ez-back:focus{color:#E9A23B;text-decoration:none}
@@ -91,7 +93,8 @@ h2{margin:0;padding:.3em 0;font:600 1.7em/1.5 'Cabin Condensed',Arial,Helvetica,
 /* ---- small screens ---- */
 @media (max-width:820px){
   body{padding-top:0}
-  .ez-topbar{margin-top:0}
+  .ez-topbar{max-width:100%;margin-top:0}
+  .ez-backbar__inner{padding-inline:16px}
   #container{width:100%}
   #top-section{background:none;padding-top:0}
   #inner-section{padding:0;background:#fff}
