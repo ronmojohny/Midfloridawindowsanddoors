@@ -247,11 +247,11 @@ p { margin: 0 0 11px; }
 @media (min-width: 480px) {
   /* The 480-767 band has the least room: the whole line shares a row with the
      absolutely-positioned hamburger, so trim the type and the separator gap to
-     keep clear of it. 768px+ restores the larger size. */
+     keep clear of it. Full size returns at 768px. */
   .site-header__phone {
     display: block;
     line-height: inherit;
-    font-size: 0.92em;
+    font-size: 0.95em;
   }
   .site-header__phone-toll,
   .site-header__phone-local {
@@ -285,7 +285,10 @@ p { margin: 0 0 11px; }
 /* Small phones: tighten the action bar (the .top-callout__text rules no longer apply) */
 @media (max-width: 479px) {
   .site-header__cta { gap: 6px 10px; }
-  .site-header__phone { font-size: 0.9em; }
+  /* The numbers are the primary tap target on a phone, so give them the body
+     size (16.8px) instead of shrinking to 0.9em. Both lines still fit inside
+     the centred row at 320px because each is nowrap and only ~206px wide. */
+  .site-header__phone { font-size: 1.05em; }
   .site-header__cta .btn { font-size: 0.82em; padding: 6px 8px; }
 }
 
