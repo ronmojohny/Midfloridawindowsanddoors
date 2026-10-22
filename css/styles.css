@@ -376,9 +376,20 @@ p { margin: 0 0 11px; }
     font-size: 1.3rem;
     white-space: nowrap;
   }
+  /* Desktop only: red badge behind each role label so "TOLL-FREE" and "LOCAL"
+     read as tags rather than faint text. opacity resets to 1 here, otherwise
+     the base rule's 0.8 would wash the red out against the photo. */
   .site-header__role {
     font-size: 0.62em;
     letter-spacing: 0.08em;
+    color: #fff;
+    background: #C0392B;
+    opacity: 1;
+    padding: 0.24em 0.5em;
+    border-radius: 3px;
+    margin-right: 0.4em;
+    vertical-align: 0.08em;
+    text-shadow: none;
   }
   .site-header__phone-sep {
     margin-inline: 0.6em;
