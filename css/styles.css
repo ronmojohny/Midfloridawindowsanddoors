@@ -211,10 +211,10 @@ p { margin: 0 0 11px; }
 .site-header__phone a:hover { color: var(--amber); }
 
 /* Two-number header. Both numbers are present at every width, so a phone visitor
-   can still reach the local (407) line. Below 480px the two "role + number" pairs
-   stack on separate centred lines — that keeps each pair intact instead of
-   wrapping raggedly against the hamburger. From 480px they share one line as
-   "Toll-Free (888) 230-0243 · Local (407) 607-6528". */
+   can still reach the local (407) line. Only the toll-free number carries a role
+   label. Below 480px the two numbers stack on separate centred lines so neither
+   wraps raggedly against the hamburger. From 480px they share one line as
+   "Toll-Free (888) 230-0243 · (407) 607-6528". */
 .site-header__phone-sep {
   display: none;
 }
@@ -374,14 +374,14 @@ p { margin: 0 0 11px; }
 
   /* Desktop only: bump the phone line, and keep it white with a soft shadow so
      it stays legible over the photo. Kept below the previous 1.8rem because
-     the line now carries two numbers plus their role labels. */
+     the line now carries two numbers plus the toll-free role label. */
   .site-header__phone {
     font-size: 1.3rem;
     white-space: nowrap;
   }
-  /* Desktop only: red badge behind each role label so "TOLL-FREE" and "LOCAL"
-     read as tags rather than faint text. opacity resets to 1 here, otherwise
-     the base rule's 0.8 would wash the red out against the photo. */
+  /* Desktop only: red badge behind the "TOLL-FREE" label so it reads as a tag
+     rather than faint text over the photo. opacity resets to 1 here, otherwise
+     the base rule's 0.8 would wash the red out. */
   .site-header__role {
     font-size: 0.62em;
     letter-spacing: 0.08em;
