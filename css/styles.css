@@ -11,6 +11,60 @@
      Cards          — white       #FFFFFF
    ========================================================================== */
 
+/* ---------- Web fonts — self-hosted ----------
+   Previously these came from a render-blocking cross-origin request to
+   fonts.googleapis.com, which then had to resolve a second origin
+   (fonts.gstatic.com) before any text could paint. Both are now served from
+   this origin, and the @font-face rules live in this same stylesheet so no
+   extra round trip is needed.
+
+   Montserrat ships as a single variable file (wght 100–900). The stylesheet
+   uses 600/700/800 for UI text and one 900, so one 35KB file replaces four
+   static weights. Only the `latin` subset is included: every non-ASCII
+   character on the site (©, ·, —, curly quotes, ★) is either inside the
+   latin range or was already falling back to Helvetica today, because ★
+   (U+2605) is in neither subset.
+
+   Neuton is only served as static weights, so the two weights the stylesheet
+   actually uses (400 body, 700 emphasis) are declared individually. The
+   italic face and the 300 weight were requested but never used by any rule.
+
+   font-display: swap keeps text visible during the fetch; the fallback
+   metrics are close enough that the swap is not jarring. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900; /* variable axis — one file covers every weight */
+  font-display: swap;
+  src: url("../fonts/montserrat-latin.woff2") format("woff2-variations"),
+       url("../fonts/montserrat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Neuton";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/neuton-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Neuton";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/neuton-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --navy: #12304A;
   --navy-dark: #0C2233;

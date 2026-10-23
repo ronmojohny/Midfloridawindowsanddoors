@@ -4,6 +4,12 @@
 # live site published (and therefore the form Google indexed).
 # See MIGRATION.md sections 4 and 5.
 
+# ---------- Assets ----------
+# The site ships favicon.svg, but browsers still probe /favicon.ico unprompted.
+# Serving the SVG here keeps that probe off the 404 path (and out of the
+# "failed request" count in PageSpeed), at the cost of one rewrite rule.
+/favicon.ico                  /favicon.svg            200
+
 # ---------- Core pages: direct equivalents ----------
 /service-area/                /service-area           301
 /testimonials/                /testimonials           301

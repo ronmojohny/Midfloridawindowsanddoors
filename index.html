@@ -29,13 +29,22 @@
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
-  <!-- Fonts: Neuton (body) + Montserrat (headings/UI) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Neuton:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- Fonts are self-hosted — see the @font-face block at the top of
+       css/styles.css. Deliberately NOT preloaded: measured on a throttled
+       mobile profile, preloading the font made LCP ~200 ms WORSE, because a
+       font preload is implicitly high priority and competed with the banner
+       image for the same narrow pipe. The banner is the LCP element, so it
+       gets the exclusive head start and the font is discovered from the
+       stylesheet instead. font-display: swap keeps text visible throughout. -->
+
+  <!-- The header banner is the LCP element. Preloading the exact file each
+       breakpoint uses starts the fetch immediately, instead of leaving it to be
+       discovered only after the stylesheet resolves. -->
+  <link rel="preload" as="image" href="images/header-hero-960.webp" type="image/webp" media="(max-width: 767px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="images/header-hero-1920.webp" type="image/webp" media="(min-width: 768px)" fetchpriority="high" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=20261023c" />
+  <link rel="stylesheet" href="css/styles.css?v=20261024a" />
 
   <!-- Structured Data: LocalBusiness -->
   <script type="application/ld+json">
@@ -110,9 +119,9 @@
     <a class="site-header__banner" href="index.html" aria-label="Mid-Florida Windows & Doors — Home">
       <picture>
         <source type="image/webp" media="(max-width: 767px)" srcset="images/header-hero-960.webp" width="960" height="411" />
-        <source type="image/webp" srcset="images/header-hero.webp" width="2688" height="1152" />
-        <source type="image/jpeg" media="(max-width: 767px)" srcset="images/header-hero-960.jpg" width="960" height="411" />
-        <img src="images/header-hero.jpg" alt="Mid-Florida Windows & Doors — impact windows and doors on a Florida waterfront home with an infinity pool" width="2688" height="1152" fetchpriority="high" decoding="async" />
+        <source type="image/webp" srcset="images/header-hero-1920.webp" width="1920" height="823" />
+        <source type="image/jpeg" media="(max-width: 767px)" srcset="images/header-hero-960-opt.jpg" width="960" height="411" />
+        <img src="images/header-hero-1920.jpg" alt="Mid-Florida Windows & Doors — impact windows and doors on a Florida waterfront home with an infinity pool" width="1920" height="823" fetchpriority="high" decoding="async" />
       </picture>
     </a>
 
@@ -201,9 +210,9 @@
   <a class="brands-banner" href="products.html#brands-heading" aria-label="See the brands we install">
     <div class="container brands-banner__inner">
       <div class="brands-banner__logos">
-        <img src="images/brands/pgt_standardized.png" width="900" height="300" alt="PGT Windows" loading="lazy" decoding="async" />
-        <img src="images/brands/plastpro_standardized.png" width="900" height="300" alt="Plastpro Doors" loading="lazy" decoding="async" />
-        <img src="images/brands/simonton_standardized.png" width="900" height="300" alt="Simonton Windows" loading="lazy" decoding="async" />
+        <img src="images/brands/pgt_standardized-440.webp" width="440" height="147" alt="PGT Windows" loading="lazy" decoding="async" />
+        <img src="images/brands/plastpro_standardized-440.webp" width="440" height="147" alt="Plastpro Doors" loading="lazy" decoding="async" />
+        <img src="images/brands/simonton_standardized-440.webp" width="440" height="147" alt="Simonton Windows" loading="lazy" decoding="async" />
       </div>
     </div>
   </a>
@@ -217,9 +226,12 @@
             <h3>WINDOWS</h3>
             <p>Is it time to update your home with new windows? We offer energy efficient, non-impact and impact-resistant windows.</p>
             <p><a class="right-arrow" href="products.html#product-overview">View All</a></p>
-            <a href="products.html#product-overview" class="cta-inner__img" data-lightbox-mobile data-lightbox-src="images/indoor.webp" aria-label="Tap to enlarge photo of replacement windows installed by Mid-Florida Windows & Doors">
+            <a href="products.html#product-overview" class="cta-inner__img" data-lightbox-mobile data-lightbox-src="images/indoor-full.webp" aria-label="Tap to enlarge photo of replacement windows installed by Mid-Florida Windows & Doors">
               <span class="img-box img-box--windows">
-                <img src="images/indoor.webp" width="2048" height="1152" alt="Mid-Florida Windows & Doors technician installing a replacement window" loading="lazy" decoding="async" />
+                <!-- Card images are displayed in a ~360x170 box, so they are
+                     served at card resolution; the lightbox above loads the
+                     larger file only when the reader actually opens it. -->
+                <img src="images/indoor-card.webp" width="768" height="579" alt="Mid-Florida Windows & Doors technician installing a replacement window" loading="lazy" decoding="async" />
               </span>
             </a>
           </div>
@@ -229,9 +241,9 @@
             <h3>DOORS</h3>
             <p>We feature a fine selection of patio doors, french doors and entry doors. Brands include PGT, Simonton and Plastpro</p>
             <p><a class="right-arrow" href="products.html">View All</a></p>
-            <a href="products.html#product-overview" class="cta-inner__img" data-lightbox-mobile data-lightbox-src="images/our-work/door.webp" aria-label="Tap to enlarge photo of patio, French and entry doors installed by Mid-Florida Windows & Doors">
+            <a href="products.html#product-overview" class="cta-inner__img" data-lightbox-mobile data-lightbox-src="images/our-work/door-full.webp" aria-label="Tap to enlarge photo of patio, French and entry doors installed by Mid-Florida Windows & Doors">
               <span class="img-box img-box--doors">
-                <img src="images/our-work/door.webp" width="2048" height="1152" alt="Patio, French and entry doors installed by Mid-Florida Windows & Doors" loading="lazy" decoding="async" />
+                <img src="images/our-work/door-card.webp" width="768" height="432" alt="Patio, French and entry doors installed by Mid-Florida Windows & Doors" loading="lazy" decoding="async" />
               </span>
             </a>
           </div>
@@ -240,10 +252,10 @@
           <div class="cta-inner">
             <h3>IMPACT & ENERGY</h3>
             <p>Hurricane impact protection and energy efficiency — choose the perfect fit for your home and budget.</p>
-            <p><a class="right-arrow" href="images/energy.webp" data-lightbox aria-label="Enlarge photo of impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors">Click To Enlarge</a></p>
-            <a href="images/energy.webp" class="cta-inner__img" data-lightbox data-lightbox-desktop aria-label="Enlarge photo of impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors">
+            <p><a class="right-arrow" href="images/energy-full.webp" data-lightbox aria-label="Enlarge photo of impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors">Click To Enlarge</a></p>
+            <a href="images/energy-full.webp" class="cta-inner__img" data-lightbox data-lightbox-desktop aria-label="Enlarge photo of impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors">
               <span class="img-box img-box--impact">
-                <img src="images/energy.webp" width="2752" height="1536" alt="Impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors" loading="lazy" decoding="async" />
+                <img src="images/energy-card.webp" width="768" height="429" alt="Impact-resistant, energy-efficient windows installed by Mid-Florida Windows & Doors" loading="lazy" decoding="async" />
               </span>
             </a>
           </div>
@@ -464,6 +476,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=20261015c" defer></script>
+  <script src="js/main.js?v=20261024a" defer></script>
 </body>
 </html>
