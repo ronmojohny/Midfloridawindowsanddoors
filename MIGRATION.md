@@ -1,8 +1,30 @@
 # Migration Plan — Static Site Replacing WordPress
 
-**Status:** Draft for review — no code changes made yet
+**Status:** Staging complete — blocked on the DNS record change
 **Prepared:** 2026-10-15
+**Last updated:** 2026-10-23
 **Scope:** Replace the existing WordPress site at `https://midfloridawindowsanddoors.com/` with this static site.
+
+---
+
+## 0. Progress log
+
+Everything below is verified against the live staging deployment
+`https://midfloridawinwowsdoors.pages.dev`.
+
+| Item | State |
+|---|---|
+| Site deployed to Cloudflare Pages | **Done** — project `midfloridawindowsanddoors` |
+| Form delivery (risk #1) | **Done** — replaced CF7 with Formspree (`js/main.js`). No silent-drop path. |
+| `_redirects` (risk #2) | **Done** — 53 explicit rules + 5 wildcards, all returning 301 to a 200 |
+| Clean URLs (risk #3) | **Verified** — `/products`, `/service-area`, … all 200 on staging |
+| `robots.txt` | **Done** — added, advertises `sitemap.xml` |
+| Canonicals on every content page | **Done** — 9 pages |
+| `sitemap.xml` | **Done** — `door-catalogs` added, now 9 URLs |
+| `404.html` | **Verified** — unknown paths return 404 |
+| Custom domains attached to Pages | **Done** — apex + `www`, status `pending` |
+| **DNS record change (the actual cutover)** | **BLOCKED** — see §7 |
+| Email/DNS housekeeping (§8) | Not started — independent of cutover |
 
 ---
 
@@ -216,9 +238,71 @@ Use the **existing Google Workspace account** to send. Verified live: mail is Go
 ## 7. DNS cutover (Cloudflare)
 
 Authoritative NS: `gerald.ns.cloudflare.com`, `lucy.ns.cloudflare.com`.
+Zone ID: `2cb921da49e702c83b259be6682a8e81` (active).
+Account: `5536466c3f67bdd91b75891340bcdaea`.
 
-- [ ] Deploy this site to Cloudflare Pages and attach the custom domain.
-- [ ] **Change only the web record:** root `A`/`CNAME` currently `185.181.255.109` (proxied) → the Pages target (`*.pages.dev`).
+### 7.1 What is done
+
+- [x] Deployed this site to Cloudflare Pages (project `midfloridawindowsanddoors`).
+- [x] Attached `midfloridawindowsanddoors.com` and `www.midfloridawindowsanddoors.com`
+      as custom domains via the Pages API — both return `success: true`,
+      status `pending`.
+
+### 7.2 What is blocked, and why
+
+**The current `wrangler` OAuth token cannot modify DNS.** Its scopes are
+`zone (read)` and `pages (write)` — there is no `dns_records` scope:
+
+```
+$ curl .../zones/$ZONE/dns_records
+{"success": false, "errors": [{"code": 10000,
+  "message": "Authentication error"}]}
+```
+
+So the domains sit at `pending` and the apex still resolves to the WordPress
+origin. Because the apex already carries proxied `A` records, Cloudflare's
+automatic DNS-record creation for a Pages custom domain does not fire — those
+records have to be replaced, not added.
+
+### 7.3 The one remaining action
+
+Either grant the token `dns_records:edit` (or run `wrangler login` with a token
+that has **Zone → DNS → Edit**), or make the change in the dashboard. Then, in
+Cloudflare → DNS, replace the apex records:
+
+| Type | Name | Current | Change to |
+|---|---|---|---|
+| `A` | `midfloridawindowsanddoors.com` | `104.21.16.193` | delete |
+| `A` | `midfloridawindowsanddoors.com` | `172.67.215.145` | delete |
+| `AAAA` | `midfloridawindowsanddoors.com` | `2606:4700:3033::6815:10c1` | delete |
+| `AAAA` | `midfloridawindowsanddoors.com` | `2606:4700:3037::ac43:d791` | delete |
+
+…then add a single **proxied CNAME** at `@` →
+`midfloridawindowsanddoors.pages.dev`. Do the same for `www`.
+
+The 104.x/172.x addresses are Cloudflare's own anycast ranges, so the origin
+behind them cannot be read from outside — it may or may not be the WordPress host.
+
+### 7.4 Rollback
+
+The origin behind those four records is **not recoverable from public DNS**,
+because they are proxied Cloudflare IPs. Before deleting them, read the real
+targets in the dashboard (DNS → Records → toggle "Proxy status" off, or open each
+record) and save them here:
+
+```
+apex A     -> ........................................
+apex AAAA  -> ........................................
+www        -> ........................................
+```
+
+With those written down, rollback is: delete the Pages CNAMEs, re-create the
+saved records, re-enable proxying.
+
+### 7.5 Cutover checklist
+
+- [ ] Record the real (unproxied) origin values above.
+- [ ] Lower the TTL on the apex records to 300s and wait ~24h.
 - [ ] Do **not** touch: `MX` (Google), root `TXT` SPF/DKIM/verification, `_dmarc`, `_acme-challenge`.
 - [ ] Review cPanel-style subdomains (`cpanel.`, `cpcalendars.`, `cpcontacts.`, `webdisk.`, `webmail.`, `whm.`, `ftp.`) — they point at the old host; decide whether to remove or leave.
 - [ ] Lower TTL on the root record to 300s ~24h before cutover; restore after validation.
