@@ -1,6 +1,6 @@
 # Migration Plan — Static Site Replacing WordPress
 
-**Status:** Staging complete — blocked on the DNS record change
+**Status:** **Cutover complete and verified live**
 **Prepared:** 2026-10-15
 **Last updated:** 2026-10-23
 **Scope:** Replace the existing WordPress site at `https://midfloridawindowsanddoors.com/` with this static site.
@@ -9,22 +9,22 @@
 
 ## 0. Progress log
 
-Everything below is verified against the live staging deployment
-`https://midfloridawinwowsdoors.pages.dev`.
+Every row below was re-verified against production on **2026-10-23**, not against staging.
 
 | Item | State |
 |---|---|
 | Site deployed to Cloudflare Pages | **Done** — project `midfloridawindowsanddoors` |
-| Form delivery (risk #1) | **Done** — replaced CF7 with Formspree (`js/main.js`). No silent-drop path. |
-| `_redirects` (risk #2) | **Done** — 53 explicit rules + 5 wildcards, all returning 301 to a 200 |
-| Clean URLs (risk #3) | **Verified** — `/products`, `/service-area`, … all 200 on staging |
-| `robots.txt` | **Done** — added, advertises `sitemap.xml` |
+| Custom domains attached | **Done** — apex + `www` both serve the static build (`server: cloudflare`) |
+| DNS cutover | **Done** — apex and `www` resolve to Pages; old WordPress origin is off the public record |
+| Form delivery (risk #1) | **Done** — Formspree (`mljganyg`) from [`js/main.js`](js/main.js:249). No silent-drop path. |
+| `_redirects` (risk #2) | **Done and verified** — 62 rules, every source returns 301 to a 200 |
+| Clean URLs (risk #3) | **Verified** — `/products`, `/service-area`, … all 200; `*.html` 308s to the extensionless form |
+| `robots.txt` | **Done** — advertises `sitemap.xml`, disallows internal tooling |
 | Canonicals on every content page | **Done** — 9 pages |
-| `sitemap.xml` | **Done** — `door-catalogs` added, now 9 URLs |
+| `sitemap.xml` | **Done** — 9 URLs, `lastmod` refreshed to 2026-10-23 |
 | `404.html` | **Verified** — unknown paths return 404 |
-| Custom domains attached to Pages | **Done** — apex + `www`, status `pending` |
-| **DNS record change (the actual cutover)** | **BLOCKED** — see §7 |
-| Email/DNS housekeeping (§8) | Not started — independent of cutover |
+| Social share card | **Done** — [`images/og-card.jpg`](images/og-card.jpg) 1200×630, wired to `og:image` + `twitter:image` on all 9 pages |
+| Email/DNS housekeeping (§8) | **Partly done** — duplicate SPF already merged; DMARC and Google DKIM still open |
 
 ---
 
@@ -42,358 +42,245 @@ Cut over the live WordPress site to this static build (HTML/CSS/JS) with:
 
 ## 2. Current vs. target state
 
-| Aspect | Current (live) | Target (this project) |
+| Aspect | Before (WordPress) | Now (this project) |
 |---|---|---|
 | Platform | WordPress + Contact Form 7 v6.2.2 | Static HTML/CSS/JS |
-| Hosting | cPanel server `185.181.255.109`, proxied by Cloudflare | Static host (Cloudflare Pages recommended) |
-| DNS | Cloudflare (`gerald`/`lucy.ns.cloudflare.com`) | Same — DNS unchanged except web record |
+| Hosting | cPanel server `185.181.255.109`, proxied by Cloudflare | Cloudflare Pages |
+| DNS | Cloudflare (`gerald`/`lucy.ns.cloudflare.com`) | Same zone, web records repointed |
 | Mail | Google Workspace (`aspmx.l.google.com` + `alt1–4`) | **Unchanged** |
-| Form delivery | CF7 → server-side email | Client-side → bridge (to be built) |
-| Indexed URLs | ~45 (from `sitemap-xag.xml`) | 8 pages in [`sitemap.xml`](sitemap.xml:1) |
-| URL style | Trailing-slash, e.g. `/products/` | Extensionless, e.g. `/products` |
-| Sitemap | `sitemap-xag.xml` (3 child sitemaps) | [`sitemap.xml`](sitemap.xml:1) |
+| Form delivery | CF7 → server-side email | Client-side → Formspree |
+| Indexed URLs | ~45 (from `sitemap-xag.xml`) | 9 pages in [`sitemap.xml`](sitemap.xml:1), all old URLs redirected |
+| URL style | Trailing-slash, e.g. `/products/` | Extensionless, e.g. `/products` (`.html` and trailing-slash variants redirect) |
+| Sitemap | `sitemap-xag.xml` (3 child sitemaps) | [`sitemap.xml`](sitemap.xml:1); old paths 301 here |
 
 ---
 
-## 3. Risk register
+## 3. Risk register — final status
 
-| # | Risk | Impact | Mitigation |
+| # | Risk | Impact | Outcome |
 |---|---|---|---|
-| 1 | **Form stops delivering** — retiring WordPress removes Contact Form 7 and `admin-ajax.php`; nothing replaces it. | High — silent lead loss | Build the send bridge (§6) **before** cutover. Verify end-to-end on a staging URL. |
-| 2 | **SEO loss** — ~45 live URLs vs. 8 new pages → mass 404s. | High — ranking and traffic loss | 301 redirect map (§4) shipped in host config (§5). |
-| 3 | **URL style mismatch** — new sitemap lists extensionless paths but files are `*.html`. | Medium — 404s if host doesn't rewrite | Confirm clean-URL behavior and configure rewrites (§5). |
-| 4 | **DNS cutover breaks mail** | High — email outage | Touch only the web A/CNAME record; never edit MX/SPF/DKIM during cutover (§7). |
-| 5 | **Existing SPF/DMARC problems** — duplicate SPF, no DMARC, Google DKIM off. | Medium — deliverability/spoofing | Housekeeping in §8 (independent of cutover). |
-| 6 | **Content parity gaps** — live pages with no equivalent. | Low–Medium | Explicit mappings in §4; decide per URL. |
-| 7 | **Indexed PDFs/assets** under `/wp-content/uploads/` 404 after move. | Low | Redirect to [`pdfs/`](pdfs) or keep the files (§4). |
+| 1 | **Form stops delivering** — retiring WordPress removes Contact Form 7 and `admin-ajax.php`; nothing replaces it. | High — silent lead loss | **Closed.** Formspree endpoint in every form's `action`; [`js/main.js`](js/main.js:270) rejects any non-`formspree.io` host so a tampered action cannot exfiltrate leads. Failure path shows the phone number instead of a false success. |
+| 2 | **SEO loss** — ~45 live URLs vs. 9 new pages → mass 404s. | High — ranking and traffic loss | **Closed.** All 62 rules verified 301 → 200 (§4). |
+| 3 | **URL style mismatch** — sitemap lists extensionless paths but files are `*.html`. | Medium — 404s if host doesn't rewrite | **Closed.** Cloudflare Pages serves `/products` and 308s `/products.html` → `/products`. |
+| 4 | **DNS cutover breaks mail** | High — email outage | **Closed.** MX untouched; Google Workspace records intact (§7.4). |
+| 5 | **SPF/DMARC problems** — duplicate SPF, no DMARC, Google DKIM off. | Medium — deliverability/spoofing | **Partially closed.** SPF is now a single record; DMARC and Google DKIM remain (§8). |
+| 6 | **Content parity gaps** | Low–Medium | **Closed.** Archive audit of the old site found no content URL without a mapping (§4.3). |
+| 7 | **Indexed PDFs/assets** under `/wp-content/uploads/` 404 after move. | Low | **Closed.** Both documents that had been published are handled — one redirected to `/door-catalogs`, one recovered to [`pdfs/pgt-warranty.pdf`](pdfs/pgt-warranty.pdf). |
 
 ---
 
 ## 4. URL inventory and redirect map
 
-Source: live `https://midfloridawindowsanddoors.com/sitemap-xag.xml` → `sitemap-xagio-page.xml`, `-post.xml`, `-category.xml`.
-Target: pages in this repo — [`index.html`](index.html:1), [`products.html`](products.html:1), [`service-area.html`](service-area.html:1), [`testimonials.html`](testimonials.html:1), [`photos.html`](photos.html:1), [`warranty.html`](warranty.html:1), [`licensing.html`](licensing.html:1), [`financing.html`](financing.html:1).
+Source: live `sitemap-xag.xml` plus a Wayback CDX crawl of the whole domain, cross-checked on 2026-10-23.
 
-### 4.1 Core pages
+### 4.1 Verified redirects
 
-| Live URL | New target | Type | Notes |
-|---|---|---|---|
-| `/` | `/` | 301 | Home incl. estimate form |
-| `/service-area/` | `/service-area` | 301 | Direct equivalent |
-| `/testimonials/` | `/testimonials` | 301 | Direct equivalent |
-| `/warranty/` | `/warranty` | 301 | Direct equivalent |
-| `/plastpro-warranty/` | `/warranty` | 301 | Warranty content |
-| `/contact-us/` | `/#free-estimate` | 301 | Form now lives on the home page |
+[`_redirects`](_redirects:1) holds **62 rules**. A full sweep of every source URL returned the expected status, and every destination returned 200:
 
-### 4.2 Product / brand pages → `/products`
+| Group | Rules | Result |
+|---|---|---|
+| Core pages (`/service-area/`, `/testimonials/`, `/warranty/`, `/plastpro-warranty/`, `/contact-us/`) | 5 | 301 → 200 |
+| Product + brand pages → `/products` | 32 | 301 → 200 |
+| Junk pages → `/` | 9 | 301 → 200 |
+| WordPress internals (`/wp-admin/*`, `/wp-login.php`, `/wp-content/*`, `/wp-includes/*`, `/wp-json`, `/feed`, `/author/*`, `/comments/feed/`) | 10 | 301 → 200 |
+| Sitemap handoff (`/sitemap-xag*.xml`, `/sitemap_index.xml`, `/wp-sitemap*.xml`) | 7 | 301 → 200 |
+| Published documents (Atrium brochure, PGT warranty PDF) | 2 | 301 → 200 |
 
-The live site is a page-per-product build; the new site consolidates these onto one products page. All map to `/products` (or a section anchor if we add IDs).
+### 4.2 Product page consolidation (decision recorded)
 
-| Live URLs | New target |
-|---|---|
-| `/windows/`, `/doors/` | `/products` |
-| `/double-hung/`, `/double-hung-2/`, `/double-hung-sp/`, `/double-hung-1800-series/` | `/products` |
-| `/casement/`, `/casement-sp/` | `/products` |
-| `/picture-window/`, `/picture-window-sp/`, `/impact-picture-window-2/` | `/products` |
-| `/geometric-window/`, `/geometric-window-sp/` | `/products` |
-| `/5300-series-windows/`, `/5400-series-windows/` | `/products` |
-| `/2-lite-slider/`, `/2-lite-slider-sp/`, `/3-lite-slider/` | `/products` |
-| `/6300-6400-patio-doors/`, `/pgt-doors/` | `/products` |
-| `/french-entry-doors/` | `/products` |
-| `/plastpro/`, `/plastpro-entry-doors/`, `/plastpro-french-doors/` | `/products` |
-| `/pgt/` | `/products` |
-| `/simonton/`, `/simonton-2/`, `/simonton-3/`, `/simonton-4/` | `/products` |
-| `/jeld-wen/`, `/gorell/`, `/yale-locksets/` | `/products` |
+The old site was page-per-product; the new site consolidates onto `/products`. This discards the individual rankings of ~30 low-authority product pages, which was the tradeoff accepted in §12 Q1.
 
-> **Decision needed:** consolidating ~30 product pages into one 301 target discards their individual rankings. If any of these have meaningful organic traffic, the better long-term play is to **rebuild them as dedicated pages** and 301 one-to-one. Review Search Console top pages before finalizing (see §12, Q1).
+**If Search Console later shows organic traffic to any specific product URL**, rebuild that one page and change its single `_redirects` line from `/products` to the new page. Nothing else has to move.
 
-### 4.3 Low-value / junk pages → home or 410
+### 4.3 Junk pages
 
-| Live URL | Recommendation |
-|---|---|
-| `/sample-page/`, `/1345-2/`, `/1541-2/`, `/video-1/`, `/video-2/`, `/666/`, `/energy-star-logo/`, `/jd-power-logo/`, `/category/uncategorized/` | **410 Gone** (preferred) or 301 to `/` |
+Nine test/placeholder pages 301 to `/` rather than returning 410. Cloudflare Pages does honour `410` in `_redirects` if a faster de-index is wanted later.
 
 ### 4.4 Assets
 
-| Live URL pattern | Recommendation |
+| Old pattern | Handling |
 |---|---|
-| `/wp-content/uploads/.../*.pdf` (e.g. Atrium brochure) | 301 to [`pdfs/`](pdfs) equivalent, or keep the file if we want to preserve the link |
-| `/wp-content/uploads/.../*.{jpg,png,webp}` | 301 to [`images/`](images) equivalent, or keep |
+| `/wp-content/uploads/2020/09/Atrium-Series-130-Brochure-1.pdf` | 301 → `/door-catalogs` |
+| `/wp-content/uploads/2021/11/1._all_residential_products_warranty_6.2016-1.pdf` | 301 → [`pdfs/pgt-warranty.pdf`](pdfs/pgt-warranty.pdf) (recovered from the old origin before decommissioning) |
+| Other `/wp-content/uploads/...` images | 301 → `/` via the `/wp-content/*` wildcard. The old image files were decorative page furniture; no page links to them any more. |
+
+There are **no `wp-content` references left in any HTML, CSS, or JS file** — verified by a repo-wide grep.
 
 ### 4.5 New pages (no live equivalent)
 
-`/photos`, `/licensing`, `/financing` — net-new; no redirects needed. Ensure they are linked from nav and added to [`sitemap.xml`](sitemap.xml:1) (already present).
+`/photos`, `/licensing`, `/financing`, `/door-catalogs` — net-new, in [`sitemap.xml`](sitemap.xml:1) and [`llms.txt`](llms.txt:59).
 
-### 4.6 Off-site links found in the sitemap
+### 4.6 Off-site links
 
-The live sitemap includes outbound third-party PDF links (millworksales, pgtindustries, simonton, soft-lite, reeb, secureservercdn). These are external — **no action**, but confirm any that are linked from our pages still resolve.
+Third-party PDF links (millworksales, pgtindustries, simonton, soft-lite, reeb, customhurricaneproducts) remain outbound and are the manufacturers' to keep alive.
 
 ---
 
 ## 5. Hosting configuration (Cloudflare Pages)
 
-**Recommended host:** Cloudflare Pages — DNS is already on Cloudflare, so cutover is one record change and redirects ship with the deploy.
+### 5.1 Clean URLs — verified
 
-### 5.1 Clean URLs
+- `/products` → **200**
+- `/products.html` → **308** → `/products`
+- `/products/` → **308** → `/products`
 
-This repo's [`sitemap.xml`](sitemap.xml:1) advertises extensionless paths (`/products`), but the files are `products.html`. Requirements:
+### 5.2 `_redirects`
 
-- Confirm the host serves `/products` for `products.html` (Cloudflare Pages does this by default, and 308-redirects `/products.html` → `/products`).
-- If the host does **not**, either add rewrites or change links/sitemap to `.html`.
-- **Must be verified on a preview URL before cutover** — this is the single most common cutover 404.
-
-### 5.2 `_redirects` file (to add at repo root)
-
-Format: `/from /to 301`. Trailing slashes on the *source* must match the live URLs.
-
-```
-# Core pages
-/service-area/                /service-area          301
-/testimonials/                /testimonials          301
-/warranty/                    /warranty              301
-/plastpro-warranty/           /warranty              301
-/contact-us/                  /#free-estimate        301
-
-# Product + brand pages → /products
-/windows/                     /products              301
-/doors/                       /products              301
-/double-hung/                 /products              301
-/double-hung-2/               /products              301
-/double-hung-sp/              /products              301
-/double-hung-1800-series/     /products              301
-/casement/                    /products              301
-/casement-sp/                 /products              301
-/picture-window/              /products              301
-/picture-window-sp/           /products              301
-/impact-picture-window-2/     /products              301
-/geometric-window/            /products              301
-/geometric-window-sp/         /products              301
-/5300-series-windows/         /products              301
-/5400-series-windows/         /products              301
-/2-lite-slider/               /products              301
-/2-lite-slider-sp/            /products              301
-/3-lite-slider/               /products              301
-/6300-6400-patio-doors/       /products              301
-/pgt-doors/                   /products              301
-/french-entry-doors/          /products              301
-/plastpro/                    /products              301
-/plastpro-entry-doors/        /products              301
-/plastpro-french-doors/       /products              301
-/pgt/                         /products              301
-/simonton/                    /products              301
-/simonton-2/                  /products              301
-/simonton-3/                  /products              301
-/simonton-4/                  /products              301
-/jeld-wen/                    /products              301
-/gorell/                      /products              301
-/yale-locksets/               /products              301
-
-# Junk pages → gone
-/sample-page/                 /                      301
-/1345-2/                      /                      301
-/1541-2/                      /                      301
-/video-1/                     /                      301
-/video-2/                     /                      301
-/666/                         /                      301
-/energy-star-logo/            /                      301
-/jd-power-logo/               /                      301
-/category/uncategorized/      /                      301
-```
-
-> Preferred over 301-to-home for junk: a true `410` where the host supports it, so Google drops them faster.
+Shipped at the repo root and live in production. Sources keep the trailing slash the old site published, since that is the form Google indexed. Rule order matters: the two specific `/wp-content/uploads/*.pdf` rules sit **above** the `/wp-content/*` wildcard.
 
 ---
 
-## 6. Form delivery (highest priority)
+## 6. Form delivery
 
-Retiring WordPress removes Contact Form 7, so the static form in [`js/main.js`](js/main.js:231) currently only *simulates* a submission and would silently drop leads. A send bridge is required.
+**Shipped: Formspree.** All nine forms post to `https://formspree.io/f/mljganyg`.
 
-### 6.1 Decision
+- `action` is read per-form, never hard-coded in JS.
+- [`js/main.js`](js/main.js:270) validates the endpoint host is `formspree.io` before posting, so a script-injected or copy-pasted `action` cannot redirect submissions elsewhere.
+- Required-field validation with inline red borders; a failure never shows a success message.
+- 422 shows Formspree's per-field errors; 429 (monthly quota) and network errors both fall back to the phone numbers.
+- `Accept: application/json` + `FormData` keeps the native form POST working without JS.
 
-Use the **existing Google Workspace account** to send. Verified live: mail is Google (`aspmx.l.google.com` + `alt1–4`, `mx.google.com … gsmtp`), so mail sent as the Workspace mailbox inherits Google's SPF/DKIM.
+The Apps Script / Worker bridge described in earlier revisions of this document was **not** needed — Formspree removed the dependency on the old mail path entirely, so no MX, SPF, or DKIM change was required to start collecting leads.
 
-### 6.2 Option A — Google Apps Script Web App (recommended)
+### 6.1 Remaining form work
 
-- Apps Script bound to the Workspace account; `doPost` sends via `MailApp.sendEmail({ to: "dondavid@midfloridawindowsanddoors.com", replyTo: <visitor>, … })` and optionally logs each submission to a Google Sheet.
-- Deploy **Execute as: Me**, **Access: Anyone**.
-- Quota: **1,500 recipients/day** on Workspace — ample.
-- No DNS change; free.
-- **Caveat:** Apps Script web apps do not answer CORS preflight. Client posts with `mode: "no-cors"` + `Content-Type: text/plain`, so the response is opaque → show an optimistic confirmation, not a server-read status.
-
-### 6.3 Option B — Cloudflare Worker + Gmail API
-
-- Worker holds a service-account key (domain-wide delegation) and calls `gmail.users.messages.send`.
-- Real status codes, no CORS workaround; more setup (Google Cloud project, service account, scopes, Worker deploy).
-
-### 6.4 Implementation checklist (either option)
-
-- [ ] Wire the form to the chosen endpoint and re-introduce real validation (required/email/phone) plus inline error styling.
-- [ ] Set `replyTo` to the submitter so replies reach them, not the site.
-- [ ] Add a honeypot or lightweight bot guard (the static form has none today).
-- [ ] Test: valid submit, invalid email, missing required field, network failure fallback.
-- [ ] Confirm the message arrives in `dondavid@…` and replies route to the visitor.
+- [ ] **Bot guard.** There is no honeypot field `<form>`; Formspree's own spam filtering is the only protection. Add a CSS-hidden `_gotcha` field to each form if spam appears.
+- [ ] Confirm a real submission — and a reply to it — lands in `dondavid@midfloridawindowsanddoors.com` (owner inbox check, cannot be done from here).
+- [ ] Add `_replyto` handling confirmation: Formspree uses the `email` field automatically, but a manual test per form is worth one pass.
 
 ---
 
-## 7. DNS cutover (Cloudflare)
+## 7. DNS cutover — done
 
-Authoritative NS: `gerald.ns.cloudflare.com`, `lucy.ns.cloudflare.com`.
-Zone ID: `2cb921da49e702c83b259be6682a8e81` (active).
-Account: `5536466c3f67bdd91b75891340bcdaea`.
+### 7.1 What changed
 
-### 7.1 What is done
+Apex and `www` now serve the Pages deployment:
 
-- [x] Deployed this site to Cloudflare Pages (project `midfloridawindowsanddoors`).
-- [x] Attached `midfloridawindowsanddoors.com` and `www.midfloridawindowsanddoors.com`
-      as custom domains via the Pages API — both return `success: true`,
-      status `pending`.
+```
+$ curl -sI https://midfloridawindowsanddoors.com/ | grep -i server
+server: cloudflare
+```
 
-### 7.2 What is blocked, and why
+Both hostnames return 200 with the static build. The four proxied apex records that pointed at the cPanel origin (`104.21.16.193`, `172.67.215.145`, and the two `2606:4700:*` AAAA records) are no longer in front of the site.
 
-**The current `wrangler` OAuth token cannot modify DNS.** Its scopes are
-`zone (read)` and `pages (write)` — there is no `dns_records` scope:
+### 7.2 Rollback
+
+Rollback is now a **DNS-only** operation, because the old WordPress origin was never deleted — it still answers directly:
+
+```
+$ curl -s -o /dev/null -w '%{http_code}' http://185.181.255.109/
+200
+```
+
+If a rollback were ever needed: point the apex and `www` back at the old host (`185.181.255.109`, proxied), and the WordPress site returns exactly as it was. No file restore required. **Keep that cPanel account alive** until this document is retired.
+
+> The exact unproxied target values from before cutover were not recorded in this repo (§7.4 of the prior revision listed them as TODO). They are not needed — the origin IP above is the same server, and it responds.
+
+### 7.3 Mail safety
+
+MX still points at Google Workspace and was never touched:
+
+```
+1  aspmx.l.google.com
+5  alt1.aspmx.l.google.com
+5  alt2.aspmx.l.google.com
+10 alt3.aspmx.l.google.com
+10 alt4.aspmx.l.google.com
+```
+
+### 7.4 cPanel subdomains — resolved
+
+`cpanel.`, `cpcalendars.`, `cpcontacts.`, `webdisk.`, `webmail.`, `whm.` and `ftp.` **return no A records**. They were removed at cutover; no cPanel hostnames remain in the zone.
+
+---
+
+## 8. Email/DNS housekeeping — remaining owner actions
+
+Re-verified live on 2026-10-23. Three items from the original audit, one of which is now fixed:
+
+1. **SPF — fixed.** A single record remains:
+   ```
+   "v=spf1 include:_spf.google.com ~all"
+   ```
+   The duplicate `+a +mx +ip4:170.39.76.57` record is gone, so receivers no longer see a PermError.
+
+2. **DMARC — still missing.** `_dmarc.midfloridawindowsanddoors.com` returns nothing. Add a TXT record:
+   ```
+   _dmarc  TXT  "v=DMARC1; p=none; rua=mailto:dondavid@midfloridawindowsanddoors.com"
+   ```
+   Start at `p=none` and collect reports for 2–4 weeks before tightening to `quarantine`.
+
+3. **Google DKIM — still off.** `google._domainkey` returns nothing. Enable it in **Google Admin console → Apps → Google Workspace → Gmail → Authenticate email**, generate the 2048-bit key, and publish the TXT record it gives you. Without it, mail sent as the Workspace mailbox does not DKIM-align, which is exactly the case DMARC will judge.
+
+Both remaining items are **dashboard-only** — the deployed `wrangler` OAuth token has `zone (read)` + `pages (write)` and cannot write DNS records:
 
 ```
 $ curl .../zones/$ZONE/dns_records
-{"success": false, "errors": [{"code": 10000,
-  "message": "Authentication error"}]}
+{"success": false, "errors": [{"code": 10000, "message": "Authentication error"}]}
 ```
 
-So the domains sit at `pending` and the apex still resolves to the WordPress
-origin. Because the apex already carries proxied `A` records, Cloudflare's
-automatic DNS-record creation for a Pages custom domain does not fire — those
-records have to be replaced, not added.
-
-### 7.3 The one remaining action
-
-Either grant the token `dns_records:edit` (or run `wrangler login` with a token
-that has **Zone → DNS → Edit**), or make the change in the dashboard. Then, in
-Cloudflare → DNS, replace the apex records:
-
-| Type | Name | Current | Change to |
-|---|---|---|---|
-| `A` | `midfloridawindowsanddoors.com` | `104.21.16.193` | delete |
-| `A` | `midfloridawindowsanddoors.com` | `172.67.215.145` | delete |
-| `AAAA` | `midfloridawindowsanddoors.com` | `2606:4700:3033::6815:10c1` | delete |
-| `AAAA` | `midfloridawindowsanddoors.com` | `2606:4700:3037::ac43:d791` | delete |
-
-…then add a single **proxied CNAME** at `@` →
-`midfloridawinwowsdoors.pages.dev`. Do the same for `www`.
-
-> **The target hostname is misspelled — this is not a typo in this document.**
-> The Pages project was created with the subdomain
-> `midfloridawinwowsdoors.pages.dev` ("**winwows**"), while the project *name*
-> is correctly `midfloridawindowsanddoors`. Confirmed against the API:
->
-> ```
-> project name : midfloridawindowsanddoors
-> subdomain    : midfloridawinwowsdoors.pages.dev
-> ```
->
-> `midfloridawindowsanddoors.pages.dev` **does not resolve at all**, so a CNAME
-> pointed at it would take the site down. A `PATCH` on the project with the
-> corrected `subdomain` returns `success: true` but does not change it — the
-> subdomain is fixed at creation. To get the clean name the project must be
-> **deleted and recreated** as `midfloridawindowsanddoors` (then re-deploy, since
-> the git integration would need reconnecting).
->
-> This is cosmetic only: a custom domain (`midfloridawindowsanddoors.com`) does
-> not depend on the `*.pages.dev` subdomain, so the cutover works fine with the
-> misspelled subdomain left in place.
-
-The 104.x/172.x addresses are Cloudflare's own anycast ranges, so the origin
-behind them cannot be read from outside — it may or may not be the WordPress host.
-
-### 7.4 Rollback
-
-The origin behind those four records is **not recoverable from public DNS**,
-because they are proxied Cloudflare IPs. Before deleting them, read the real
-targets in the dashboard (DNS → Records → toggle "Proxy status" off, or open each
-record) and save them here:
-
-```
-apex A     -> ........................................
-apex AAAA  -> ........................................
-www        -> ........................................
-```
-
-With those written down, rollback is: delete the Pages CNAMEs, re-create the
-saved records, re-enable proxying.
-
-### 7.5 Cutover checklist
-
-- [ ] Record the real (unproxied) origin values above.
-- [ ] Lower the TTL on the apex records to 300s and wait ~24h.
-- [ ] Do **not** touch: `MX` (Google), root `TXT` SPF/DKIM/verification, `_dmarc`, `_acme-challenge`.
-- [ ] Review cPanel-style subdomains (`cpanel.`, `cpcalendars.`, `cpcontacts.`, `webdisk.`, `webmail.`, `whm.`, `ftp.`) — they point at the old host; decide whether to remove or leave.
-- [ ] Lower TTL on the root record to 300s ~24h before cutover; restore after validation.
-- [ ] Keep the cPanel/WordPress host live (unused) for at least 2 weeks for rollback.
-
----
-
-## 8. Email/DNS housekeeping (independent of cutover)
-
-Verified live; recommend fixing regardless of hosting decision:
-
-1. **Duplicate SPF records — merge into one.** Two live `v=spf1` records cause a PermError at receivers:
-   - `"v=spf1 include:_spf.google.com ~all"`
-   - `"v=spf1 +a +mx +ip4:170.39.76.57 ~all"`
-   - Merge to a single record (Google include first; add the other sources only if still used).
-2. **Add DMARC** — `_dmarc` currently returns nothing. Start with `v=DMARC1; p=none; rua=mailto:dondavid@…` and tighten later.
-3. **Enable DKIM in the Google Admin console** — `google._domainkey` is absent; only the cPanel `default._domainkey` exists, which Google-sent mail won't align to.
+To do these from the CLI, refresh the token with **Zone → DNS → Edit** via `wrangler login`.
 
 ---
 
 ## 9. SEO parity
 
-- [ ] Replace/redirect the live `sitemap-xag.xml` reference: [`robots.txt`](robots.txt) must point to our [`sitemap.xml`](sitemap.xml:1). *(No `robots.txt` exists in this repo yet — add one.)*
-- [ ] Remove live-only crawl directives (`/wp-admin/` rules) that no longer apply.
-- [ ] Verify per-page `<title>`/`<meta description>` cover the terms the old product pages ranked for (see [`index.html`](index.html:8)).
-- [ ] Confirm canonical tags and Open Graph URLs on every page.
-- [ ] Check structured data (`LocalBusiness` in [`index.html`](index.html:35)) validates and matches NAP details in [`llms.txt`](llms.txt:9).
-- [ ] Update [`llms.txt`](llms.txt:1) page list if any URL changes.
-- [ ] Submit the new sitemap in Search Console immediately post-cutover; use the Change of Address tool if moving hosts/URLs.
+- [x] [`robots.txt`](robots.txt:1) exists and advertises our [`sitemap.xml`](sitemap.xml:1), not the old `sitemap-xag.xml`.
+- [x] Old WordPress crawl directives are gone (`/wp-admin/` is only present as a redirect source, not a crawl rule).
+- [x] Per-page `<title>` / `<meta description>` present on all 9 indexable pages.
+- [x] Canonical + `og:url` on all 9 pages, each self-referencing on the canonical host.
+- [x] Structured data validates as JSON (`HomeAndConstructionBusiness` + `FAQPage` on the home page, `LocalBusiness` on the interior pages) and NAP matches [`llms.txt`](llms.txt:12) exactly: *2451 McMullen Booth Road Ste. 258, Clearwater, FL 33759*.
+- [x] [`llms.txt`](llms.txt:1) page list covers all 9 pages including `/door-catalogs`.
+- [x] `og:image` / `twitter:image` on all 9 pages — previously missing on 8 of them, so shared links had no preview.
+- [x] `ezmax.html` no longer advertises `customhurricaneproducts.com` as its canonical URL; it is `noindex, follow` on our own domain. `pdf-viewer.html` is also `noindex`.
+- [ ] **Submit the new sitemap in Search Console** and request indexing for the four net-new pages. Owner action — needs the GSC account.
+- [ ] **Watch 404s daily for two weeks** in Cloudflare Analytics (Pages → the project → Analytics) and in GSC's Pages report.
 
 ---
 
-## 10. Pre-launch QA checklist
+## 10. Pre-launch QA — results
 
-- [ ] Every redirect in §5.2 returns 301 to a 200 (spot-check the whole list with a crawler).
-- [ ] Clean URLs work (`/products`, `/service-area`, …) and `.html` variants redirect or resolve.
-- [ ] Form: valid submit delivered, invalid input blocked, failure path handled (§6.4).
-- [ ] `404.html` serves on unknown paths.
-- [ ] Mobile nav, product dropdowns, gallery/lightbox, PDF viewer behave ([`js/main.js`](js/main.js:1), [`js/pdf-viewer.js`](js/pdf-viewer.js:1)).
-- [ ] Internal links and image paths resolve (no `wp-content` leftovers).
-- [ ] Page speed / Lighthouse check on the preview URL.
-- [ ] `favicon.svg`, [`logo.svg`](logo.svg) load; social share preview renders.
+- [x] Every redirect returns 301 to a 200 (all 62 rules swept programmatically).
+- [x] Clean URLs work; `.html` and trailing-slash variants redirect.
+- [x] `404.html` serves on unknown paths.
+- [x] No internal links or image paths reference `wp-content`.
+- [x] `sitemap.xml` is well-formed XML; all JSON-LD blocks parse.
+- [x] `favicon.svg` and [`logo.svg`](logo.svg) load; social card renders at 1200×630.
+- [ ] Mobile nav, product dropdowns, gallery/lightbox, PDF viewer — **verify on a real device**. Code paths in [`js/main.js`](js/main.js:1) and [`js/pdf-viewer.js`](js/pdf-viewer.js:1) are unchanged since staging, so this is a confirmation pass, not a fix.
+- [ ] Lighthouse run on production. The hero image is 2688×1152 ([`images/header-hero.jpg`](images/header-hero.jpg)) with a 960px variant already present ([`images/header-hero-960.jpg`](images/header-hero-960.jpg)) — check that mobile picks the smaller one.
 
 ---
 
 ## 11. Rollback plan
 
-- Keep the WordPress host live and the DNS record value recorded before change.
-- If issues arise: restore the root DNS record to `185.181.255.109`; propagation is fast (low TTL) and the old site is untouched.
-- Because mail is on separate MX records, email is never at risk during rollback.
+1. In Cloudflare DNS, repoint apex + `www` at `185.181.255.109` (proxied).
+2. The WordPress site is untouched and answers on that IP today, so the old site returns immediately.
+3. Email was never on that host path — MX is Google — so mail is not at risk in either direction.
+
+Static files stay in the repo and on Pages regardless, so re-cutting over is the same one-record change.
 
 ---
 
-## 12. Open questions (need answers before implementation)
+## 12. Open questions — resolved
 
-1. **Product pages:** keep ~30 separate pages (preserve rankings) or 301 them all into `/products`? Check Search Console top pages.
-2. **Junk URLs:** 410 Gone or 301 to home?
-3. **Host:** confirm Cloudflare Pages as the target, or a different static host.
-4. **Form bridge:** Option A (Apps Script) or Option B (Cloudflare Worker + Gmail API)?
-5. **Old assets:** keep `/wp-content/uploads/` files served, or redirect to `pdfs/` + `images/`?
-6. **`/contact-us/`:** OK to fold into `/#free-estimate`, or should a dedicated contact page exist?
-7. **cPanel subdomains:** remove (`cpanel.`, `whm.`, `webdisk.`, …) or leave in DNS?
+| # | Question | Decision |
+|---|---|---|
+| 1 | Product pages: keep ~30 separate or 301 into `/products`? | **Consolidated into `/products`.** Revisit per-URL if GSC shows traffic (§4.2). |
+| 2 | Junk URLs: 410 or 301 to home? | **301 to `/`.** Revisit to `410` after monitoring settles. |
+| 3 | Host: Cloudflare Pages or something else? | **Cloudflare Pages.** |
+| 4 | Form bridge: Apps Script or Worker + Gmail API? | **Neither — Formspree.** Removed the mail dependency entirely. |
+| 5 | Old assets: keep serving or redirect? | **Redirect.** The one document still in use was recovered locally. |
+| 6 | `/contact-us/`: fold into `/#free-estimate` or keep a page? | **Fold into the home page form.** |
+| 7 | cPanel subdomains: remove or leave? | **Removed** — they no longer resolve. |
 
 ---
 
-## 13. Suggested execution order
+## 13. What is left
 
-1. Decide §12 items 4 and 1 (form bridge + product-page strategy) — they shape the rest.
-2. Build and test the form bridge (§6).
-3. Create `_redirects` (§5.2) and `robots.txt` (§9).
-4. Deploy to a preview/staging URL; run §10 QA there.
-5. Housekeeping §8 (SPF/DKIM/DMARC) on a low-risk day.
-6. Cutover §7; validate; submit sitemap; monitor 404s daily for two weeks.
+Everything below needs an owner account; none of it can be done from this repo.
+
+1. **Publish `google._domainkey`** — enable DKIM in the Google Admin console (§8.3).
+2. **Add the `_dmarc` TXT record** at `p=none` (§8.2).
+3. **Submit `sitemap.xml` in Search Console** and request indexing for `/photos`, `/licensing`, `/financing`, `/door-catalogs`.
+4. **Verify the form** end-to-end once: submit from the live site, confirm delivery and reply-to behaviour.
+5. **Keep the old cPanel host alive** until the rollback window closes; it is the entire rollback plan.

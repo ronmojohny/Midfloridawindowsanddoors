@@ -67,19 +67,33 @@
 /category/uncategorized/      /                       301
 
 # ---------- Old WordPress uploads ----------
-# Only one document under /wp-content/uploads/ was in the sitemap.
+# WordPress uploads that appeared in the sitemap or on a live page.
+# The Atrium brochure is now on the door-catalogs page.
 /wp-content/uploads/2020/09/Atrium-Series-130-Brochure-1.pdf   /door-catalogs   301
+# The PGT residential warranty PDF was linked from the live warranty page and is
+# now hosted locally at /pdfs/pgt-warranty.pdf.
+/wp-content/uploads/2021/11/1._all_residential_products_warranty_6.2016-1.pdf   /pdfs/pgt-warranty.pdf   301
 
 # WordPress admin/feeds are never useful once WordPress is gone.
 /wp-admin/*                   /                       301
 /wp-login.php                 /                       301
 /wp-content/*                 /                       301
 /wp-includes/*                /                       301
+/wp-json/*                    /                       301
+/wp-json                      /                       301
 /feed/                        /                       301
+/feed                         /                       301
+/comments/feed/               /                       301
+/author/*                     /                       301
 
 # ---------- Sitemap handoff ----------
-# Point anything still asking for the WordPress sitemap at the new one.
+# Point anything still asking for a WordPress sitemap at the new one.
 /sitemap-xag.xml              /sitemap.xml            301
 /sitemap-xagio-page.xml       /sitemap.xml            301
 /sitemap-xagio-post.xml       /sitemap.xml            301
 /sitemap-xagio-category.xml   /sitemap.xml            301
+/sitemap_index.xml            /sitemap.xml            301
+/wp-sitemap.xml               /sitemap.xml            301
+/wp-sitemap-posts-page-1.xml  /sitemap.xml            301
+/wp-sitemap-posts-post-1.xml  /sitemap.xml            301
+/wp-sitemap-taxonomies-category-1.xml   /sitemap.xml   301
