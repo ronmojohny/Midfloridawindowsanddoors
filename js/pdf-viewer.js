@@ -117,20 +117,20 @@
     return h - 2;
   }
 
-  // "page" shows a whole page at once; "width" fills the stage and lets the
-  // reader scroll down a tall page.
+  // "width" fills the stage and lets the reader scroll down a tall page;
+  // "page" shrinks a whole page to fit the stage at once.
   //
-  // The right default depends on the stage: a wide desktop stage at fit-width
-  // renders a Letter page ~1390px tall inside ~656px of visible area, which is
-  // why desktop readers were scrolling three times per page — so it defaults to
-  // "page". A phone stage is the opposite: fitting the height there would cap
-  // the page at ~214px wide inside a 277px-wide stage, so phones keep "width"
-  // and the small amount of vertical scroll that implies.
+  // Width is the default at every size: it is what readers are used to, it
+  // keeps the text at full legible size, and it was already the behaviour on
+  // phones. "Fit page" stays available as an explicit choice for anyone who
+  // wants the whole sheet in view — on a desktop stage fit-width renders a
+  // Letter page ~1390px tall inside ~656px of visible area, so that button is
+  // the way to trade legibility for a single-screen view.
   var fitMode = null;            // resolved per layout until the reader chooses
   var fitModeExplicit = false;
 
   function defaultFitMode() {
-    return contentWidth() < 640 ? "width" : "page";
+    return "width";
   }
 
   // Scale is resolved once per layout pass and then cached. Reading it per page

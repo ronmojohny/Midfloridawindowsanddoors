@@ -24,7 +24,7 @@ Every row below was re-verified against production on **2026-10-23**, not agains
 | `sitemap.xml` | **Done** — 9 URLs, `lastmod` refreshed to 2026-10-23 |
 | `404.html` | **Verified** — unknown paths return 404 |
 | Social share card | **Done** — [`images/og-card.jpg`](images/og-card.jpg) 1200×630, wired to `og:image` + `twitter:image` on all 9 pages |
-| PDF viewer zoom + fit (§5.4) | **Done and verified in production** — `+`/`-` scale the page, fit defaults by device |
+| PDF viewer zoom + fit (§5.4) | **Done and verified in production** — `+`/`-` scale the page; Fit width is default, Fit page one click away |
 | Email/DNS housekeeping (§8) | **Partly done** — duplicate SPF already merged; DMARC and Google DKIM still open |
 
 ---
@@ -173,16 +173,18 @@ One hop, apex returns `200`, query string intact, and the apex `404` and `_redir
 
 **Three scrolls per page on desktop.** Fit-width was the only mode, and on a 1106px stage it renders a Letter page 1390px tall inside ~656px of visible area — 2.11 screens per page. Mobile was never affected (fit-width yields a 358px page there), which is exactly why the complaint was desktop-only.
 
-[`fitMode`](js/pdf-viewer.js:125) now selects between fitting the page height and filling the width, defaulting by stage width so phones keep their existing behaviour:
+[`fitMode`](js/pdf-viewer.js:129) adds a second mode so the whole sheet can be brought into view in one click. **Fit width is the default**, at every viewport: it is the familiar behaviour, it keeps the text at full legible size, and it matches what phones already did. Fit page is the deliberate opt-in for reading layout rather than detail.
 
-| Viewport | Default mode | Page size | Screens per page |
-|---|---|---|---|
-| Desktop 1440×900 | page | 507×656 | 1.00 (was 2.11) |
-| Desktop 1280×800 | page | 430×556 | 1.00 (was 2.12) |
-| Tablet 820×1180 | page | 722×934 | 1.00 |
-| Phone 390×844 | width | 277×358 | 0.60 (unchanged) |
+| Viewport | Default (Fit width) | After clicking Fit page |
+|---|---|---|
+| Desktop 1440×900 | 1072×1387 — 2.11 screens/page | 507×656 — **1.00 screen** |
+| Desktop 1280×800 | 912×1180 — 2.12 screens/page | 430×556 — **1.00 screen** |
+| Tablet 820×1180 | 722×934 — 1.00 screen | 722×934 — 1.00 screen |
+| Phone 390×844 | 277×358 — 0.60 screen | 277×358 — 0.60 screen |
 
-`Fit page` and `Fit width` are persistent modes (`aria-pressed`), not one-shot resets — the old single button could not leave page mode. An explicit choice survives resize; the default only re-applies until the reader picks one.
+So the desktop complaint now has a one-click answer instead of requiring `Ctrl`-zoom on the browser. Text stays legible by default and the reader chooses when to trade that for the whole page.
+
+`Fit width` and `Fit page` are persistent modes (`aria-pressed`), not one-shot resets — the old single button could not leave page mode. An explicit choice survives resize; the default only re-applies until the reader picks one. The static markup marks `Fit width` active, so the correct button looks pressed before the script runs.
 
 > `pageHeightPt` comes from page 1. A document with mixed page sizes would lay out every page at page 1's height. Current catalogues are uniform, so this is latent, not active.
 
