@@ -287,7 +287,13 @@ $ curl -s -o /dev/null -w '%{http_code}' http://185.181.255.109/
 200
 ```
 
-If a rollback were ever needed: point the apex and `www` back at the old host (`185.181.255.109`, proxied), and the WordPress site returns exactly as it was. No file restore required. **Keep that cPanel account alive** until this document is retired.
+If a rollback were ever needed: point the apex and `www` back at the old host (`185.181.255.109`, proxied), and the WordPress site returns exactly as it was. No file restore required. **Keep that cPanel account alive** until the rollback window closes — see the dated window below.
+
+**Rollback window: 90 days, ending 2027-01-21.** Cutover was 2026-10-23; ninety days is the recommendation because it is long enough to cover a full Google re-crawl cycle plus the holiday trading period, and because the rollback is only as good as the host still answering. This is a business decision, not a technical limit — shorten it if the cPanel bill is unwelcome, but do not cancel the account before the new site has a clean Search Console crawl behind it.
+
+What the window is *not* protecting: **nothing rests on that host except rollback.** Mail is entirely Google Workspace (all five MX records are `*.aspmx.l.google.com`), and no page, asset, or form in this build references `185.181.255.109`. Confirmed on 2026-10-23: the origin still returns `200`, so rollback is currently a one-record DNS change.
+
+When the window closes, the things to remove are the cPanel account and the WordPress install on it. Nothing in this repo needs deleting — the static build is independent and stays on Pages regardless.
 
 > The exact unproxied target values from before cutover were not recorded in this repo (§7.4 of the prior revision listed them as TODO). They are not needed — the origin IP above is the same server, and it responds.
 
@@ -398,5 +404,5 @@ Everything below needs an owner account; none of it can be done from this repo.
 2. **Add the `_dmarc` TXT record** at `p=none` (§8.2).
 3. **Submit `sitemap.xml` in Search Console** and request indexing for `/photos`, `/licensing`, `/financing`, `/door-catalogs`.
 4. **Verify the form** end-to-end once: submit from the live site, confirm delivery and reply-to behaviour.
-5. **Keep the old cPanel host alive** until the rollback window closes; it is the entire rollback plan.
+5. **Keep the old cPanel host alive until 2027-01-21** (§7.2). That is the 90-day window from the 2026-10-23 cutover, and it is the entire rollback plan. Nothing else depends on the host — mail is Google-only — so the only cost of keeping it is the cPanel bill, and the only risk of cancelling early is losing the one-click fallback.
 6. **Re-run the PageSpeed report** once the PSI quota resets, to capture the official score for the §5.5 pass. The API was rate-limited (HTTP 429) throughout, so the figures recorded there are my own DevTools Protocol measurements rather than Lighthouse's.
