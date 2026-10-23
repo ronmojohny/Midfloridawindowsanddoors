@@ -149,7 +149,20 @@ return context.next();
 - Apex requests fall straight through to the static asset; no rewriting, so `_redirects` and the `404.html` fallback behave exactly as before.
 - Verified consistent with every canonical tag and `og:url` in the repo — all nine indexable pages already declare the **apex** as canonical, so the redirect direction is the one the markup was already asserting.
 
-> This requires the Pages project to have a build step, or to be configured as Pages-with-Functions. If `functions/` is not picked up, the fallback is a single Cloudflare **Redirect Rule** at the zone level (`host eq www.midfloridawindowsanddoors.com` → `concat("https://midfloridawindowsanddoors.com", http.request.uri.path)`), which achieves the same thing at the edge without repo changes.
+Verified live after deploy:
+
+```
+$ curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://www.midfloridawindowsanddoors.com/products
+301 https://midfloridawindowsanddoors.com/products
+
+$ curl -sL -o /dev/null -w '%{url_effective} %{http_code} %{num_redirects}\n' \
+    'https://www.midfloridawindowsanddoors.com/products?utm_source=fb'
+https://midfloridawindowsanddoors.com/products?utm_source=fb 200 1
+```
+
+One hop, apex returns `200`, query string intact, and the apex `404` and `_redirects` behaviour are unchanged. `http://www` takes two hops (`http→https`, then `www→apex`) because Cloudflare's Always Use HTTPS rule runs first — expected, and harmless.
+
+> Pages picked up `functions/` automatically. If it ever stops doing so, the equivalent fallback is a zone-level **Redirect Rule**: `host eq www.midfloridawindowsanddoors.com` → `concat("https://midfloridawindowsanddoors.com", http.request.uri.path)`, with query-string preservation enabled.
 
 ---
 
