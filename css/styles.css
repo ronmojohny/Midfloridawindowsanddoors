@@ -1530,6 +1530,15 @@ p { margin: 0 0 11px; }
 .pdf-btn:hover,
 .pdf-btn:focus { border-color: var(--teal); color: var(--teal-dark); text-decoration: none; }
 .pdf-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+/* Fit mode is a persistent state, not a momentary action, so the active button
+   is shaded to show which one is in effect. */
+.pdf-btn[aria-pressed="true"] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.pdf-btn[aria-pressed="true"]:hover,
+.pdf-btn[aria-pressed="true"]:focus { border-color: var(--navy); color: #fff; }
 
 .pdf-status {
   margin: 10px 0 18px;

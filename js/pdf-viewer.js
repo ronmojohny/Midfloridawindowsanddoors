@@ -36,6 +36,7 @@
   var zoomOut  = document.getElementById("pdfZoomOut");
   var zoomIn   = document.getElementById("pdfZoomIn");
   var zoomFit  = document.getElementById("pdfFitWidth");
+  var zoomPage = document.getElementById("pdfFitPage");
   var zoomVal  = document.getElementById("pdfZoomVal");
   var prevBtn  = document.getElementById("pdfPrev");
   var nextBtn  = document.getElementById("pdfNext");
@@ -92,16 +93,69 @@
     return width < 200 ? 200 : width;
   }
 
+  // Usable height inside the stage's padding. This is what makes "fit page"
+  // possible. On the very first pass the stage has no children yet, so its
+  // clientHeight collapses to its own padding and would report a page height of
+  // ~0. Measure the height the stylesheet's max-height actually resolves to by
+  // applying it for one layout, then putting the element back.
+  function contentHeight() {
+    var cs = window.getComputedStyle(stage);
+    var pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+
+    var h = stage.clientHeight - pad;
+
+    if (h < 120) {
+      var previous = stage.style.height;
+      stage.style.height = cs.maxHeight; // px or calc(); ignored if "none"
+      h = stage.clientHeight - pad;      // forces a layout
+      stage.style.height = previous;
+    }
+
+    if (h < 120) h = window.innerHeight - 260; // last resort
+    if (h < 120) h = 600;                      // better than a 1px page
+
+    return h - 2;
+  }
+
+  // "page" shows a whole page at once; "width" fills the stage and lets the
+  // reader scroll down a tall page.
+  //
+  // The right default depends on the stage: a wide desktop stage at fit-width
+  // renders a Letter page ~1390px tall inside ~656px of visible area, which is
+  // why desktop readers were scrolling three times per page — so it defaults to
+  // "page". A phone stage is the opposite: fitting the height there would cap
+  // the page at ~214px wide inside a 277px-wide stage, so phones keep "width"
+  // and the small amount of vertical scroll that implies.
+  var fitMode = null;            // resolved per layout until the reader chooses
+  var fitModeExplicit = false;
+
+  function defaultFitMode() {
+    return contentWidth() < 640 ? "width" : "page";
+  }
+
   // Scale is resolved once per layout pass and then cached. Reading it per page
   // would force a style recalc for every one of 20+ pages, and a layout shift
   // mid-render could otherwise size pages inconsistently.
   var pageScale = 1;
 
-  // Fit-width scale multiplied by the reader's zoom. The zoom factor is the
-  // whole point: without it the +/- buttons only relabelled the percentage and
-  // re-rendered every page at the same fit-width size, so nothing moved.
+  // Fit scale for the current mode, multiplied by the reader's zoom. The zoom
+  // factor is the whole point: without it the +/- buttons only relabelled the
+  // percentage and re-rendered every page at the same size, so nothing moved.
   function computeScale() {
-    return (contentWidth() / pageWidthPt) * zoom;
+    var byWidth = contentWidth() / pageWidthPt;
+    var base = byWidth;
+
+    if (fitMode === "page") {
+      var byHeight = contentHeight() / pageHeightPt;
+      // A very short viewport (landscape phone) would otherwise scale the page
+      // to roughly 19% and turn it into an unreadable thumbnail. Floor it and
+      // let the reader scroll a little instead.
+      if (byHeight < 0.35) byHeight = 0.35;
+      // Never exceed the width available, even on a very short document.
+      base = Math.min(byWidth, byHeight);
+    }
+
+    return base * zoom;
   }
 
   function scaleFor() {
@@ -195,8 +249,11 @@
     while (stage.firstChild) stage.removeChild(stage.firstChild);
     wrappers = [];
 
-    // Resolve the scale for this pass, before building any wrappers.
+    // Resolve the mode and the scale for this pass, before building any
+    // wrappers. An explicit choice by the reader is never overridden.
+    if (!fitModeExplicit) fitMode = defaultFitMode();
     pageScale = computeScale();
+    syncModeButtons();
 
     var height = placeholderHeight();
     // Give the placeholder the same physical width as the canvas that will
@@ -263,14 +320,35 @@
     if (nextBtn) nextBtn.disabled = best >= pageCount;
   }
 
-  if (zoomOut) zoomOut.addEventListener("click", function () { setZoom(zoom / 1.2); });
-  if (zoomIn)  zoomIn.addEventListener("click",  function () { setZoom(zoom * 1.2); });
-  if (zoomFit) zoomFit.addEventListener("click", function () {
+  // The two fit buttons are modes, not one-shot resets. "Fit width" has to
+  // switch fitMode away from "page", otherwise it would just re-apply the
+  // page fit it is meant to override.
+  function syncModeButtons() {
+    // Before the first layout pass fitMode is still unresolved; show what the
+    // default will be rather than leaving both buttons looking inactive.
+    var mode = fitMode || defaultFitMode();
+    if (zoomPage) zoomPage.setAttribute("aria-pressed", mode === "page"  ? "true" : "false");
+    if (zoomFit)  zoomFit.setAttribute("aria-pressed",  mode === "width" ? "true" : "false");
+  }
+
+  function setFitMode(mode) {
     if (!pdf) return;
+    fitMode = mode;
+    fitModeExplicit = true; // a deliberate choice; keep it across resizes
     zoom = 1;
     if (zoomVal) zoomVal.textContent = "100%";
+    syncModeButtons();
     buildPages();
-  });
+  }
+
+  if (zoomOut)  zoomOut.addEventListener("click",  function () { setZoom(zoom / 1.2); });
+  if (zoomIn)   zoomIn.addEventListener("click",   function () { setZoom(zoom * 1.2); });
+  if (zoomFit)  zoomFit.addEventListener("click",  function () { setFitMode("width"); });
+  if (zoomPage) zoomPage.addEventListener("click", function () { setFitMode("page"); });
+
+  // Reflect the resolved default on the buttons as soon as the toolbar exists,
+  // so the active state is never out of step with what is rendered.
+  syncModeButtons();
   if (prevBtn) prevBtn.addEventListener("click", function () { goToPage(currentPage() - 1); });
   if (nextBtn) nextBtn.addEventListener("click", function () { goToPage(currentPage() + 1); });
 
