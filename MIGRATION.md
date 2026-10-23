@@ -278,7 +278,28 @@ Cloudflare → DNS, replace the apex records:
 | `AAAA` | `midfloridawindowsanddoors.com` | `2606:4700:3037::ac43:d791` | delete |
 
 …then add a single **proxied CNAME** at `@` →
-`midfloridawindowsanddoors.pages.dev`. Do the same for `www`.
+`midfloridawinwowsdoors.pages.dev`. Do the same for `www`.
+
+> **The target hostname is misspelled — this is not a typo in this document.**
+> The Pages project was created with the subdomain
+> `midfloridawinwowsdoors.pages.dev` ("**winwows**"), while the project *name*
+> is correctly `midfloridawindowsanddoors`. Confirmed against the API:
+>
+> ```
+> project name : midfloridawindowsanddoors
+> subdomain    : midfloridawinwowsdoors.pages.dev
+> ```
+>
+> `midfloridawindowsanddoors.pages.dev` **does not resolve at all**, so a CNAME
+> pointed at it would take the site down. A `PATCH` on the project with the
+> corrected `subdomain` returns `success: true` but does not change it — the
+> subdomain is fixed at creation. To get the clean name the project must be
+> **deleted and recreated** as `midfloridawindowsanddoors` (then re-deploy, since
+> the git integration would need reconnecting).
+>
+> This is cosmetic only: a custom domain (`midfloridawindowsanddoors.com`) does
+> not depend on the `*.pages.dev` subdomain, so the cutover works fine with the
+> misspelled subdomain left in place.
 
 The 104.x/172.x addresses are Cloudflare's own anycast ranges, so the origin
 behind them cannot be read from outside — it may or may not be the WordPress host.
