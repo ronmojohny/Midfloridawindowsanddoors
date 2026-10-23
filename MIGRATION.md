@@ -128,6 +128,29 @@ Third-party PDF links (millworksales, pgtindustries, simonton, soft-lite, reeb, 
 
 Shipped at the repo root and live in production. Sources keep the trailing slash the old site published, since that is the form Google indexed. Rule order matters: the two specific `/wp-content/uploads/*.pdf` rules sit **above** the `/wp-content/*` wildcard.
 
+### 5.3 Canonical host — `www` → apex
+
+Both `midfloridawindowsanddoors.com` and `www.midfloridawindowsanddoors.com` are attached to the Pages project, so by default both answer `200` with byte-identical HTML — two URLs for every page, which splits ranking signals.
+
+This **cannot** be solved in `_redirects`: that file matches on path only and has no access to the request hostname. It is handled instead by a Pages Function at [`functions/_middleware.js`](functions/_middleware.js), which runs before the asset is served:
+
+```js
+if (REDIRECT_HOSTS.has(url.hostname)) {
+  url.protocol = "https:";
+  url.hostname = CANONICAL_HOST;
+  url.port = "";
+  return Response.redirect(url.toString(), 301);
+}
+return context.next();
+```
+
+- `301` (not `308`) — intentional permanent host move; crawlers and browsers should cache it and stop asking.
+- Path, query string, and trailing segments all survive the hop (`/products?utm_source=fb` → apex `/products?utm_source=fb`).
+- Apex requests fall straight through to the static asset; no rewriting, so `_redirects` and the `404.html` fallback behave exactly as before.
+- Verified consistent with every canonical tag and `og:url` in the repo — all nine indexable pages already declare the **apex** as canonical, so the redirect direction is the one the markup was already asserting.
+
+> This requires the Pages project to have a build step, or to be configured as Pages-with-Functions. If `functions/` is not picked up, the fallback is a single Cloudflare **Redirect Rule** at the zone level (`host eq www.midfloridawindowsanddoors.com` → `concat("https://midfloridawindowsanddoors.com", http.request.uri.path)`), which achieves the same thing at the edge without repo changes.
+
 ---
 
 ## 6. Form delivery
@@ -154,14 +177,16 @@ The Apps Script / Worker bridge described in earlier revisions of this document 
 
 ### 7.1 What changed
 
-Apex and `www` now serve the Pages deployment:
+Apex and `www` both resolve to the Pages deployment:
 
 ```
 $ curl -sI https://midfloridawindowsanddoors.com/ | grep -i server
 server: cloudflare
 ```
 
-Both hostnames return 200 with the static build. The four proxied apex records that pointed at the cPanel origin (`104.21.16.193`, `172.67.215.145`, and the two `2606:4700:*` AAAA records) are no longer in front of the site.
+The apex serves the static build with `200`. `www` is attached as a custom domain but is now `301`'d to the apex by [`functions/_middleware.js`](functions/_middleware.js) (§5.3), so only one hostname ever serves content.
+
+The four proxied apex records that pointed at the cPanel origin (`104.21.16.193`, `172.67.215.145`, and the two `2606:4700:*` AAAA records) are no longer in front of the site.
 
 ### 7.2 Rollback
 
