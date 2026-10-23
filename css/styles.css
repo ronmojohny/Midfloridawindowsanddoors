@@ -1932,11 +1932,13 @@ p { margin: 0 0 11px; }
   #intro-content h2 { text-align: left; }
 
   .entry-content ul { width: 49%; }
-  /* Let the warranty list run on one line, extending to twice its column width
-     so the long warranty sentence does not wrap. */
+  /* Let the warranty list use the full column width and wrap long sentences
+     rather than overflowing past the right edge of the column. */
   .entry-content ul.warranty-list {
-    width: 200%;
-    white-space: nowrap;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
   }
   .two-col { float: left; }
   /* The floated product lists sit outside normal flow, so the full-width CTA
