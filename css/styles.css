@@ -2015,6 +2015,13 @@ p { margin: 0 0 11px; }
     border-top: 3px solid var(--teal);
     color: var(--navy);
   }
+
+  /* Desktop: the BBB badge carries more weight at this width, so scale it up
+     from the 80px mobile size. Stays under the 186px source width to keep it
+     crisp, and the caption grows with it so the pair stays balanced. */
+  .reviews-bbb { margin-top: 32px; }
+  .reviews-bbb__link { gap: 18px; font-size: 1.15rem; }
+  .reviews-bbb__logo { width: 150px; }
 }
 
 /* Mobile / tablet nav (hamburger) — hide inline links, show toggle */
