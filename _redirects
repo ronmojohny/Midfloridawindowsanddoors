@@ -1,0 +1,85 @@
+# Cloudflare Pages redirect map — old WordPress URLs -> static site.
+# Source list taken from the live sitemap-xagio-page.xml / -post.xml / -category.xml
+# on 2026-10-23. Sources keep their trailing slash because that is the form the
+# live site published (and therefore the form Google indexed).
+# See MIGRATION.md sections 4 and 5.
+
+# ---------- Core pages: direct equivalents ----------
+/service-area/                /service-area           301
+/testimonials/                /testimonials           301
+/warranty/                    /warranty               301
+
+# Warranty content was split across two WordPress pages.
+/plastpro-warranty/           /warranty               301
+
+# The WordPress contact page held the estimate form; it now lives on the home page.
+/contact-us/                  /#free-estimate         301
+
+# ---------- Product + brand pages: consolidated onto /products ----------
+/windows/                     /products               301
+/doors/                       /products               301
+
+# Window styles
+/double-hung/                 /products               301
+/double-hung-2/               /products               301
+/double-hung-sp/              /products               301
+/double-hung-1800-series/     /products               301
+/casement/                    /products               301
+/casement-sp/                 /products               301
+/picture-window/              /products               301
+/picture-window-sp/           /products               301
+/impact-picture-window-2/     /products               301
+/geometric-window/            /products               301
+/geometric-window-sp/         /products               301
+/5300-series-windows/         /products               301
+/5400-series-windows/         /products               301
+/2-lite-slider/               /products               301
+/2-lite-slider-sp/            /products               301
+/3-lite-slider/               /products               301
+
+# Doors
+/6300-6400-patio-doors/       /products               301
+/pgt-doors/                   /products               301
+/french-entry-doors/          /products               301
+
+# Brands
+/pgt/                         /products               301
+/plastpro/                    /products               301
+/plastpro-entry-doors/        /products               301
+/plastpro-french-doors/       /products               301
+/simonton/                    /products               301
+/simonton-2/                  /products               301
+/simonton-3/                  /products               301
+/simonton-4/                  /products               301
+/jeld-wen/                    /products               301
+/gorell/                      /products               301
+/yale-locksets/               /products               301
+
+# ---------- Junk / test pages -> home ----------
+/sample-page/                 /                       301
+/1345-2/                      /                       301
+/1541-2/                      /                       301
+/video-1/                     /                       301
+/video-2/                     /                       301
+/666/                         /                       301
+/energy-star-logo/            /                       301
+/jd-power-logo/               /                       301
+/category/uncategorized/      /                       301
+
+# ---------- Old WordPress uploads ----------
+# Only one document under /wp-content/uploads/ was in the sitemap.
+/wp-content/uploads/2020/09/Atrium-Series-130-Brochure-1.pdf   /door-catalogs   301
+
+# WordPress admin/feeds are never useful once WordPress is gone.
+/wp-admin/*                   /                       301
+/wp-login.php                 /                       301
+/wp-content/*                 /                       301
+/wp-includes/*                /                       301
+/feed/                        /                       301
+
+# ---------- Sitemap handoff ----------
+# Point anything still asking for the WordPress sitemap at the new one.
+/sitemap-xag.xml              /sitemap.xml            301
+/sitemap-xagio-page.xml       /sitemap.xml            301
+/sitemap-xagio-post.xml       /sitemap.xml            301
+/sitemap-xagio-category.xml   /sitemap.xml            301

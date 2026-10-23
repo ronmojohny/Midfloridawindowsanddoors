@@ -1,0 +1,14 @@
+# Mid-Florida Windows and Doors, LLC
+# Static site on Cloudflare Pages. Replaces the former WordPress install.
+# See MIGRATION.md section 9.
+
+User-agent: *
+Allow: /
+
+# Internal tooling, not content.
+Disallow: /pdf-viewer
+Disallow: /ezmax
+Disallow: /404
+
+# The old WordPress sitemap no longer exists; point crawlers at the new one.
+Sitemap: https://midfloridawindowsanddoors.com/sitemap.xml
