@@ -92,15 +92,24 @@
     return width < 200 ? 200 : width;
   }
 
+  // Scale is resolved once per layout pass and then cached. Reading it per page
+  // would force a style recalc for every one of 20+ pages, and a layout shift
+  // mid-render could otherwise size pages inconsistently.
+  var pageScale = 1;
+
   // Fit-width scale multiplied by the reader's zoom. The zoom factor is the
   // whole point: without it the +/- buttons only relabelled the percentage and
   // re-rendered every page at the same fit-width size, so nothing moved.
-  function scaleFor() {
+  function computeScale() {
     return (contentWidth() / pageWidthPt) * zoom;
   }
 
+  function scaleFor() {
+    return pageScale;
+  }
+
   function placeholderHeight() {
-    return Math.round(pageHeightPt * scaleFor());
+    return Math.round(pageHeightPt * pageScale);
   }
 
   function stageTopOffset(wrap) {
@@ -186,11 +195,14 @@
     while (stage.firstChild) stage.removeChild(stage.firstChild);
     wrappers = [];
 
+    // Resolve the scale for this pass, before building any wrappers.
+    pageScale = computeScale();
+
     var height = placeholderHeight();
     // Give the placeholder the same physical width as the canvas that will
     // replace it, so the page look and the scroll extents are correct before
     // anything renders, and so zoom can exceed the stage width.
-    var width = Math.round(pageWidthPt * scaleFor());
+    var width = Math.round(pageWidthPt * pageScale);
     for (var n = 1; n <= pageCount; n++) {
       var wrap = document.createElement("div");
       wrap.className = "pdf-page-wrap";
