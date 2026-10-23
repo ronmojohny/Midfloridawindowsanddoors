@@ -25,6 +25,8 @@ Every row below was re-verified against production on **2026-10-23**, not agains
 | `404.html` | **Verified** — unknown paths return 404 |
 | Social share card | **Done** — [`images/og-card.jpg`](images/og-card.jpg) 1200×630, wired to `og:image` + `twitter:image` on all 9 pages |
 | PDF viewer zoom + fit (§5.4) | **Done and verified in production** — `+`/`-` scale the page; Fit width is default, Fit page one click away |
+| Mobile performance pass (§5.5) | **Done and verified in production** — fonts self-hosted, images right-sized, 2 → 0 third-party origins, LCP unchanged |
+| `/favicon.ico` | **Done** — `200` rewrite to `favicon.svg` in [`_redirects`](_redirects:1); stops the unprompted browser probe landing on the 404 path |
 | Email/DNS housekeeping (§8) | **Partly done** — duplicate SPF already merged; DMARC and Google DKIM still open |
 
 ---
@@ -188,6 +190,57 @@ So the desktop complaint now has a one-click answer instead of requiring `Ctrl`-
 
 > `pageHeightPt` comes from page 1. A document with mixed page sizes would lay out every page at page 1's height. Current catalogues are uniform, so this is latent, not active.
 
+### 5.5 Performance — mobile pass
+
+Started from a mobile PageSpeed report. **The report's own scores could not be retrieved** — the PSI API returned HTTP 429 (quota exhausted for project 583797351490), no Lighthouse binary was available, and no chrome-devtools MCP server was attached. Every number below is therefore my own measurement, not a Lighthouse score. The method: headless Chrome driven over the DevTools Protocol on an emulated Slow-4G profile (150 ms RTT, 1.6 Mbps down, 750 kbps up), 4× CPU throttle, 390×844 @3dpr, median of 5-7 runs per variant, comparing `HEAD` before the change against the working tree in a `git worktree` so both were measured identically.
+
+Two costs dominated the mobile critical path, and neither was the HTML or the JS.
+
+**Third-party fonts.** Google Fonts cost **3 `css2` requests (11,053 B) plus 10 woff2 files totalling 160,196 B** — and most of it was never rendered. The stylesheet requested four Neuton weights (300, 400, 400-italic, 700) when the CSS only uses 400 and 700, and each family pulled a latin-ext subset on top of latin (latin-ext alone was 68,224 B for Montserrat). Replaced with three self-hosted files:
+
+| File | Bytes | Contents |
+|---|---|---|
+| [`fonts/montserrat-latin.woff2`](fonts/montserrat-latin.woff2) | 35,508 | variable, `wght 100-900`, one file for every weight |
+| [`fonts/neuton-400-latin.woff2`](fonts/neuton-400-latin.woff2) | 12,532 | static 400 |
+| [`fonts/neuton-700-latin.woff2`](fonts/neuton-700-latin.woff2) | 11,800 | static 700 |
+
+The `@font-face` rules sit inline at the top of [`css/styles.css`](css/styles.css:1) rather than in a separate `fonts.css`, so the fonts are discovered in the same request that already blocks render — no added round-trip. Each carries `font-display: swap` and a latin `unicode-range`. Net: 171,249 B across 13 requests → **59,840 B across 3**, and two origins removed.
+
+**A font preload made it slower.** The obvious next step was `<link rel="preload" as="font">` on Montserrat. Measured, it was a regression: median LCP **1332 → 1544 ms** and the hero image's `responseEnd` **858 → 995 ms**. A font preload is implicitly high priority, so it took the top of the queue on a 1.6 Mbps pipe and pushed the banner out of the way. Since the banner is the LCP element, the preload was fighting the metric it was meant to help. Removed it; LCP returned to **1344 ms** with heroEnd **811 ms** — better than baseline. The reasoning is recorded as a comment in [`index.html`](index.html:32) so it is not "optimised" back in. `font-display: swap` keeps text visible throughout, so the font is not worth preloading at all.
+
+**Images sized for their slot, not their sensor.** The three homepage CTA cards rendered at roughly 360 px wide but pointed at full-bleed originals: [`images/energy.webp`](images/energy.webp) **3,061,472 B**, [`images/indoor.webp`](images/indoor.webp) **2,160,200 B**, [`images/our-work/door.webp`](images/our-work/door.webp) 208,746 B. Brand logos shipped at up to 109,606 B each for a 440 px slot.
+
+| Element | Before | After |
+|---|---|---|
+| Brand logos (4 on homepage) | 281,253 B | **41,979 B** |
+| CTA card — windows | `indoor.webp` 2,160,200 B | [`images/indoor-card.webp`](images/indoor-card.webp) **73,720 B** |
+| CTA card — doors | `our-work/door.webp` 208,746 B | [`images/our-work/door-card.webp`](images/our-work/door-card.webp) **45,008 B** |
+| CTA card — energy | `energy.webp` 3,061,472 B | [`images/energy-card.webp`](images/energy-card.webp) **38,240 B** |
+
+The full-resolution versions are still reachable. [`openLightbox()`](js/main.js:41) prefers `data-lightbox-src` over `href`, so each card links to a `*-full.webp` sized for the enlarged view (indoor 294,320 B, door 155,004 B, energy 100,522 B) while the card itself loads the small one. The `data-lightbox-mobile` / `data-lightbox-desktop` gates are preserved, so the enlarged-photo behaviour is unchanged at both breakpoints — verified by clicking every trigger at 390 px and 1280 px.
+
+The banner `<picture>` gained 1920 px desktop variants and a smaller 960 JPEG fallback. The 960 webp remains the mobile LCP element at 42,820 B, unchanged.
+
+**Result** (homepage, Slow-4G + 4× CPU, 390×844):
+
+| | Before | After |
+|---|---|---|
+| Bytes transferred | 524-577 KB | **299-316 KB** |
+| Requests | 8-9 | 12-13 |
+| Third-party origins | 2 | **0** |
+| LCP | ~888 ms median | **~884 ms median** |
+| CLS | 0 | **0** |
+
+Requests go *up* because the font is now three local files rather than one CSS import that hid ten — but those are same-origin, cached, and half the bytes. Measured wire sizes come from the live site, which serves **brotli**: `styles.css` is 11,931 B on the wire against 56,891 B raw, so raw-byte comparisons overstate the stylesheet's cost about 5×.
+
+**Rejected: non-blocking CSS.** Making the stylesheet non-render-blocking (`media="print" onload="this.media='all'"`) was measured too, because the stylesheet is the remaining render-blocking request. It cut FCP from **876 ms to 280 ms** — but made LCP **worse** (952 → 1064 ms) by delaying layout until the stylesheet landed, and introduced **CLS 0.0212**. That trades a Core Web Vital for a Speed Index win, so it was not adopted.
+
+**Also fixed:** browsers probe `/favicon.ico` unprompted and the site only ships `favicon.svg`, so it showed as a failed request. [`_redirects`](_redirects:8) now rewrites it to a `200` on the SVG.
+
+**Left alone deliberately.** About 7.4 MB of assets are no longer referenced by any page — the originals replaced above, plus `header-hero.jpg` (937,821 B), `header-hero.webp` (334,450 B), `room.jpg` (403,626 B), `logo.png` (305,807 B), `brands/window-installation.webp` (252,864 B), `brands/pgt.png`, `brands/simonton.gif` and the three `*_standardized.png` files. They cost nothing at runtime (verified: zero references across every `src`, `href`, `srcset`, `data-lightbox-src`, and CSS `url()`). Deleting them is repo hygiene, not performance, and is left as a separate decision so the originals remain available if a slot size changes.
+
+**Not optimised yet, known:** 214 internal links point at `*.html` and take a 308 hop to the extensionless form. That is one extra RTT on some navigations, but only after the first page and only for same-origin navigations that a browser can cache the redirect for — measured as no effect on the mobile homepage metrics, so it was not worth rewriting 214 links across 13 files in this pass.
+
 ---
 
 ## 6. Form delivery
@@ -346,3 +399,4 @@ Everything below needs an owner account; none of it can be done from this repo.
 3. **Submit `sitemap.xml` in Search Console** and request indexing for `/photos`, `/licensing`, `/financing`, `/door-catalogs`.
 4. **Verify the form** end-to-end once: submit from the live site, confirm delivery and reply-to behaviour.
 5. **Keep the old cPanel host alive** until the rollback window closes; it is the entire rollback plan.
+6. **Re-run the PageSpeed report** once the PSI quota resets, to capture the official score for the §5.5 pass. The API was rate-limited (HTTP 429) throughout, so the figures recorded there are my own DevTools Protocol measurements rather than Lighthouse's.
