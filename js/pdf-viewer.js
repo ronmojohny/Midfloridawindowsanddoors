@@ -83,11 +83,20 @@
 
   /* ---------- layout ---------- */
 
-  // Fit-width scale; zoom multiplies on top of it.
+  // Usable content width inside the stage's padding. Floored so a hidden or
+  // collapsed stage cannot produce a divide-by-zero or a 1px-wide page.
+  function contentWidth() {
+    var cs = window.getComputedStyle(stage);
+    var pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    var width = stage.clientWidth - pad - 2; // 2px guards against rounding
+    return width < 200 ? 200 : width;
+  }
+
+  // Fit-width scale multiplied by the reader's zoom. The zoom factor is the
+  // whole point: without it the +/- buttons only relabelled the percentage and
+  // re-rendered every page at the same fit-width size, so nothing moved.
   function scaleFor() {
-    var width = stage.clientWidth;
-    if (width < 240) width = 240;
-    return (width - 8) / pageWidthPt;
+    return (contentWidth() / pageWidthPt) * zoom;
   }
 
   function placeholderHeight() {
@@ -123,8 +132,10 @@
       canvas.setAttribute("aria-label", doc.title + " — page " + n + " of " + pageCount);
       canvas.width = Math.floor(viewport.width * outputScale);
       canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = Math.floor(viewport.width) + "px";
-      canvas.style.height = Math.floor(viewport.height) + "px";
+      // Round (not floor) so the canvas matches the wrapper width set in
+      // buildPages(); a 1px mismatch shows as a white sliver beside the page.
+      canvas.style.width = Math.round(viewport.width) + "px";
+      canvas.style.height = Math.round(viewport.height) + "px";
 
       var previous = wrap.querySelector("canvas");
       if (previous) wrap.removeChild(previous);
@@ -169,14 +180,22 @@
     var fraction = prevScrollable > 0 ? stage.scrollTop / prevScrollable : 0;
 
     queue = [];
+    // Drop observations for the wrappers we are about to discard, otherwise
+    // every zoom or resize leaks the detached nodes to the observer.
+    if (observer) observer.disconnect();
     while (stage.firstChild) stage.removeChild(stage.firstChild);
     wrappers = [];
 
     var height = placeholderHeight();
+    // Give the placeholder the same physical width as the canvas that will
+    // replace it, so the page look and the scroll extents are correct before
+    // anything renders, and so zoom can exceed the stage width.
+    var width = Math.round(pageWidthPt * scaleFor());
     for (var n = 1; n <= pageCount; n++) {
       var wrap = document.createElement("div");
       wrap.className = "pdf-page-wrap";
       wrap.setAttribute("data-page", String(n));
+      wrap.style.width = width + "px";
       wrap.style.minHeight = height + "px";
       stage.appendChild(wrap);
       wrappers.push(wrap);
@@ -195,6 +214,9 @@
   /* ---------- controls ---------- */
 
   function setZoom(next) {
+    // Ignore clicks that arrive before the document exists; buildPages() would
+    // otherwise clear the stage and hide the "Loading document…" message.
+    if (!pdf) return;
     zoom = Math.max(0.4, Math.min(4, next));
     if (zoomVal) zoomVal.textContent = Math.round(zoom * 100) + "%";
     buildPages();
@@ -232,6 +254,7 @@
   if (zoomOut) zoomOut.addEventListener("click", function () { setZoom(zoom / 1.2); });
   if (zoomIn)  zoomIn.addEventListener("click",  function () { setZoom(zoom * 1.2); });
   if (zoomFit) zoomFit.addEventListener("click", function () {
+    if (!pdf) return;
     zoom = 1;
     if (zoomVal) zoomVal.textContent = "100%";
     buildPages();
