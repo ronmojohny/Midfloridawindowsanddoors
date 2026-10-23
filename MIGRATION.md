@@ -14,7 +14,7 @@ Every row below was re-verified against production on **2026-10-23**, not agains
 | Item | State |
 |---|---|
 | Site deployed to Cloudflare Pages | **Done** — project `midfloridawindowsanddoors` |
-| Custom domains attached | **Done** — apex + `www` both serve the static build (`server: cloudflare`) |
+| Custom domains attached | **Done** — apex serves the build; `www` 301s to the apex (§5.3) |
 | DNS cutover | **Done** — apex and `www` resolve to Pages; old WordPress origin is off the public record |
 | Form delivery (risk #1) | **Done** — Formspree (`mljganyg`) from [`js/main.js`](js/main.js:249). No silent-drop path. |
 | `_redirects` (risk #2) | **Done and verified** — 62 rules, every source returns 301 to a 200 |
@@ -24,6 +24,7 @@ Every row below was re-verified against production on **2026-10-23**, not agains
 | `sitemap.xml` | **Done** — 9 URLs, `lastmod` refreshed to 2026-10-23 |
 | `404.html` | **Verified** — unknown paths return 404 |
 | Social share card | **Done** — [`images/og-card.jpg`](images/og-card.jpg) 1200×630, wired to `og:image` + `twitter:image` on all 9 pages |
+| PDF viewer zoom + fit (§5.4) | **Done and verified in production** — `+`/`-` scale the page, fit defaults by device |
 | Email/DNS housekeeping (§8) | **Partly done** — duplicate SPF already merged; DMARC and Google DKIM still open |
 
 ---
@@ -163,6 +164,27 @@ https://midfloridawindowsanddoors.com/products?utm_source=fb 200 1
 One hop, apex returns `200`, query string intact, and the apex `404` and `_redirects` behaviour are unchanged. `http://www` takes two hops (`http→https`, then `www→apex`) because Cloudflare's Always Use HTTPS rule runs first — expected, and harmless.
 
 > Pages picked up `functions/` automatically. If it ever stops doing so, the equivalent fallback is a zone-level **Redirect Rule**: `host eq www.midfloridawindowsanddoors.com` → `concat("https://midfloridawindowsanddoors.com", http.request.uri.path)`, with query-string preservation enabled.
+
+### 5.4 PDF viewer — zoom and fit behaviour
+
+[`pdf-viewer.html`](pdf-viewer.html:1) renders a whitelisted PDF with PDF.js. Two defects were fixed here; both were live before the fix.
+
+**Dead `+` / `-` buttons.** [`scaleFor()`](js/pdf-viewer.js:157) returned the fit-width scale and never multiplied by `zoom`, so every click relabelled the percentage and re-rendered every page at an identical size. Two further faults would have masked the repair: [`max-width: 100%`](css/styles.css:1558) on `.pdf-page-wrap`/`.pdf-page` clamped zoom-in straight back to fit-width, and `buildPages()` set only `min-height`, leaving placeholders with no width to scroll horizontally against. Removed the clamps, set an explicit wrapper width, and rounded canvas dimensions to match it so no 1px seam shows.
+
+**Three scrolls per page on desktop.** Fit-width was the only mode, and on a 1106px stage it renders a Letter page 1390px tall inside ~656px of visible area — 2.11 screens per page. Mobile was never affected (fit-width yields a 358px page there), which is exactly why the complaint was desktop-only.
+
+[`fitMode`](js/pdf-viewer.js:125) now selects between fitting the page height and filling the width, defaulting by stage width so phones keep their existing behaviour:
+
+| Viewport | Default mode | Page size | Screens per page |
+|---|---|---|---|
+| Desktop 1440×900 | page | 507×656 | 1.00 (was 2.11) |
+| Desktop 1280×800 | page | 430×556 | 1.00 (was 2.12) |
+| Tablet 820×1180 | page | 722×934 | 1.00 |
+| Phone 390×844 | width | 277×358 | 0.60 (unchanged) |
+
+`Fit page` and `Fit width` are persistent modes (`aria-pressed`), not one-shot resets — the old single button could not leave page mode. An explicit choice survives resize; the default only re-applies until the reader picks one.
+
+> `pageHeightPt` comes from page 1. A document with mixed page sizes would lay out every page at page 1's height. Current catalogues are uniform, so this is latent, not active.
 
 ---
 
