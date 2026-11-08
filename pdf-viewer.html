@@ -22,8 +22,18 @@
   <!-- PDF.js (UMD build exposes window.pdfjsLib; worker URL set in js/pdf-viewer.js).
        If this fails to load, the page falls back to a direct PDF download link. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Google Tag Manager (loader + container ID live in js/gtm.js).
+       Deferred on purpose: the third-party fetch must not compete with the
+       banner image, which is this page's LCP element. -->
+  <script src="js/gtm.js?v=20261108c" defer></script>
 </head>
 <body class="pdf-body">
+
+  <!-- Google Tag Manager (noscript fallback). The ID is duplicated here
+       because a <noscript> cannot read js/gtm.js — change BOTH this line and
+       GTM_CONTAINER_ID in js/gtm.js when the container changes. -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MM3HDJWG" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <!-- ===================== VIEWER TOP BAR ===================== -->
   <header class="pdf-topbar">
@@ -69,7 +79,7 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=20261024a" defer></script>
+  <script src="js/main.js?v=20261108a" defer></script>
   <script src="js/pdf-viewer.js?v=20261023c" defer></script>
 </body>
 </html>

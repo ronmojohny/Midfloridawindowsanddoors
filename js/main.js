@@ -2,6 +2,37 @@
 (function () {
   "use strict";
 
+  /* ---- Analytics (Google Tag Manager) ----
+     js/gtm.js owns the container and creates window.dataLayer. If it is absent
+     (or the container ID is still a placeholder) the pushes below land in a
+     plain array and are simply never read — safe either way. Nothing here
+     depends on gtag.js or a specific vendor; these are generic dataLayer
+     events that any tag inside the container can trigger on. */
+  const dataLayer = window.dataLayer || (window.dataLayer = []);
+
+  const track = function (event, params) {
+    const payload = { event: event };
+    if (params) {
+      Object.keys(params).forEach(function (key) {
+        payload[key] = params[key];
+      });
+    }
+    dataLayer.push(payload);
+  };
+
+  /* Phone clicks are this site's main conversion — there is no cart and the
+     estimate form is the only other lead capture. A delegated listener covers
+     every tel: link in the header, body copy, buttons and footer without
+     touching each one. */
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest('a[href^="tel:"]');
+    if (!link) return;
+    track("phone_click", {
+      phone_number: link.getAttribute("href").replace(/^tel:/, ""),
+      link_text: (link.textContent || "").trim()
+    });
+  });
+
   /* ---- Mobile navigation toggle ---- */
   const navToggle = document.getElementById("navToggle");
   const nav = document.getElementById("topCalloutNav");
@@ -352,6 +383,13 @@
           if (result.ok) {
             form.reset();
             setMessage("Thanks! We'll be in touch shortly.", "success");
+            // Fires only on a confirmed Formspree 2xx, so failed validation and
+            // network errors never inflate the lead count.
+            track("generate_lead", {
+              method: "estimate_form",
+              form_id: form.id || "",
+              page_path: window.location.pathname
+            });
             return;
           }
 
