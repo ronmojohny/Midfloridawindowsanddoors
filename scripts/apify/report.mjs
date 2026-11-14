@@ -101,7 +101,7 @@ const add = (...lines) => L.push(...lines);
 add(
   '# Competitor Briefing — Central Florida Window & Door Contractors',
   '',
-  `Generated **${new Date(snap.generatedAt).toLocaleDateString('en-US', { dateStyle: 'long' })}** from ${snap.cities} city-level Google Maps searches across ${counties.length} ${counties.length === 1 ? 'county' : 'counties'} (of the eight listed on \`service-area.html\`).`,
+  `Generated **${new Date(snap.generatedAt).toLocaleDateString('en-US', { dateStyle: 'long' })}** from ${snap.cities} city-level Google Maps ${snap.cities === 1 ? 'search' : 'searches'} across ${counties.length} ${counties.length === 1 ? 'county' : 'counties'} (of the eight listed on \`service-area.html\`).`,
   '',
   '## Headline numbers',
   '',
@@ -114,7 +114,9 @@ add(
   '',
   '> Review counts are a public proxy for lead volume, not a revenue figure. Every number here is from the Google Maps "places" dataset on the date above — re-run the scraper before quoting any of it.',
   '',
-  '## The ten who dominate the market',
+  // The heading must not promise a fixed count: a one-city run finds far fewer
+  // than ten, and a full eight-county run can exceed it. Describe what is shown.
+  `## The top ${Math.min(10, ranked.length)} who dominate the market`,
   '',
   '| # | Company | Rating | Reviews | Strength | County | Website |',
   '| --- | --- | --- | --- | --- | --- | --- |',
@@ -160,7 +162,7 @@ add(
   '## Method',
   '',
   `- Actor: \`compass/crawler-google-places\` (Google Maps Scraper) via the Apify REST API.`,
-  `- ${snap.cities} searches, one per city, "${esc(all[0]?.searchString ?? '')}" pattern, up to 20 places each.`,
+  `- ${snap.cities} ${snap.cities === 1 ? 'search' : 'searches'}, one per city, "${esc(all[0]?.searchString ?? '')}" pattern, up to 20 places each.`,
   `- Deduplicated by Google \`placeId\`; a business found in several cities keeps its best-known review count and the full city list (\`matchedCities\`).`,
   `- Rows whose name matched a Mid-Florida brand variant were removed before ranking.`,
   '- Strength = reviews × rating penalty (1.0 at ≥4.7 down to 0.3 below 3.8). Ordering device only.',
