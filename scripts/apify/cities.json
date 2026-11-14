@@ -1,0 +1,49 @@
+{
+  "_comment": "Mirrors the county/city matrix published on service-area.html. Update both together.",
+  "brand": [
+    "Mid-Florida Windows and Doors",
+    "Mid Florida Windows & Doors",
+    "Mid Florida Windows and Doors",
+    "Midflorida Windows"
+  ],
+  "queries": [
+    "replacement windows",
+    "impact windows",
+    "window installation"
+  ],
+  "counties": [
+    {
+      "county": "Pinellas",
+      "office": true,
+      "cities": ["Clearwater", "St. Petersburg", "Largo", "Palm Harbor", "Dunedin", "Safety Harbor"]
+    },
+    {
+      "county": "Hillsborough",
+      "cities": ["Tampa", "Brandon", "Riverview", "Valrico", "Plant City", "Apollo Beach"]
+    },
+    {
+      "county": "Pasco",
+      "cities": ["New Port Richey", "Land O' Lakes", "Wesley Chapel", "Trinity", "Zephyrhills"]
+    },
+    {
+      "county": "Hernando",
+      "cities": ["Spring Hill", "Brooksville", "Weeki Wachee"]
+    },
+    {
+      "county": "Polk",
+      "cities": ["Lakeland", "Winter Haven", "Bartow", "Haines City", "Davenport"]
+    },
+    {
+      "county": "Orange",
+      "cities": ["Orlando", "Winter Park", "Apopka", "Windermere", "Ocoee"]
+    },
+    {
+      "county": "Manatee",
+      "cities": ["Bradenton", "Palmetto", "Lakewood Ranch", "Anna Maria"]
+    },
+    {
+      "county": "Sarasota",
+      "cities": ["Sarasota", "Venice", "North Port", "Longboat Key"]
+    }
+  ]
+}
