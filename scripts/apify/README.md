@@ -46,6 +46,29 @@ Expected: `{ username: '...', plan: '...', email: '...' }`
 
 You can also `export APIFY_TOKEN=...` for a one-off run instead of using `.env`. The scripts read the environment first, so an exported value wins over the file.
 
+### After a breach notice: fan out and clean up
+
+`set-token.sh` handles `.env` and the two MCP clients. It does **not** know about the other places a token accumulates. `rotate.sh` does:
+
+```sh
+sh scripts/apify/rotate.sh
+```
+
+| Step | What it does |
+| --- | --- |
+| Verify | `GET /v2/users/me` before writing anything. A fan-out of a dead token silently breaks every consumer, so it refuses to proceed on a non-`200`. |
+| Fan out | Pushes the key into `.env`, both MCP clients, and `~/.config/app-opportunities/apify.token`. |
+| Purge backups | Deletes `mcp.json.bak-*` / `mcp_settings.json.bak-*` that still contain an `apify_api_` literal. These are the files a sync or backup tool sweeps up months later. |
+| Scrub history | Removes `apify_api_` lines from `~/.zsh_history` and `~/.bash_history`. |
+| Report | Lists every remaining token file and flags any that hold a *different* key. |
+
+Two flags guard the destructive parts:
+
+- **`--allow-same`** — `rotate.sh` records a SHA-256 of the key in `scripts/apify/.token-digest` (gitignored). If the token in `.env` matches the last rotation, it exits `3`: re-running rotation with the same key is the most likely way to *spread* a compromised credential, since the script's whole job is replication. Override deliberately.
+- **`--adopt-other`** — `~/.config/app-opportunities/apify.token` belongs to a **different project** with its own credential lifecycle. When it holds a key that differs from `.env`, `rotate.sh` leaves it untouched and warns. The old value is unrecoverable once overwritten, so consent is explicit. An empty file and an already-matching file are both updated automatically — neither loses information.
+
+What it cannot do: **revoke the old token.** Apify exposes no revoke endpoint (`GET /v2/users/me/tokens` → `404`), so revocation is Console-only. Until the old key is revoked *at the source*, any copy already exfiltrated keeps working — which is why the purge and history-scrub steps matter, and why they are not sufficient on their own.
+
 ## 2. Preview the plan (free, no API calls)
 
 ```sh
@@ -213,4 +236,5 @@ Token placement note: putting the token in an `Authorization` header keeps it ou
 | [`scrape-competitors.mjs`](scrape-competitors.mjs) | Actor runs → `data/competitors/` |
 | [`report.mjs`](report.mjs) | Snapshot → markdown briefing + CSV |
 | [`set-token.sh`](set-token.sh) | Rotate the token: write `.env`, verify, re-push to every MCP client |
+| [`rotate.sh`](rotate.sh) | Fan a rotated token out to every file on the machine, purge stale backups, scrub shell history |
 | [`install-mcp.mjs`](install-mcp.mjs) | Register/verify/unregister the Apify MCP server (remote or stdio) |

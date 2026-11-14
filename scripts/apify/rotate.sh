@@ -76,12 +76,30 @@ ok "HTTP 200 from /v2/users/me"
 # ---------------------------------------------------------------- 2. fan out
 say "Propagating"
 
-if [ -d "$(dirname "$OTHER_TOKEN")" ]; then
-  printf 'APIFY_TOKEN=%s\n' "$TOKEN" > "$OTHER_TOKEN"
-  chmod 600 "$OTHER_TOKEN"
-  ok "app-opportunities token updated"
+# The other project is a DIFFERENT project with its own credential lifecycle.
+# Overwriting it silently destroys a key its owner may still depend on, and the
+# old value is unrecoverable once written. Detect a differing key and require
+# explicit consent; only auto-update when it already matches or is empty.
+if [ -d "$(dirname "$OTHER_TOKEN")" ] && [ -f "$OTHER_TOKEN" ]; then
+  OPREV=$(sed -n 's/^[[:space:]]*\(APIFY_TOKEN=\)\{0,1\}[[:space:]]*//p' "$OTHER_TOKEN" | head -1 | tr -d '"\r')
+  if [ -z "$OPREV" ]; then
+    printf 'APIFY_TOKEN=%s\n' "$TOKEN" > "$OTHER_TOKEN"
+    chmod 600 "$OTHER_TOKEN"
+    ok "app-opportunities token set (was empty)"
+  elif [ "$OPREV" = "$TOKEN" ]; then
+    ok "app-opportunities already matches"
+  elif [ "${1:-}" = "--adopt-other" ] || [ "${2:-}" = "--adopt-other" ]; then
+    printf 'APIFY_TOKEN=%s\n' "$TOKEN" > "$OTHER_TOKEN"
+    chmod 600 "$OTHER_TOKEN"
+    ok "app-opportunities OVERWRITTEN (${OPREV%"${OPREV#????????????}"}…${OPREV#"${OPREV%????}"} replaced)"
+  else
+    bad "app-opportunities holds a DIFFERENT key — left untouched"
+    say "    ${OPREV%"${OPREV#????????????}"}…${OPREV#"${OPREV%????}"} in $OTHER_TOKEN"
+    say "    This is a separate project. Overwriting is destructive and cannot be undone."
+    say "    Re-run with --adopt-other only if it should share this account's key."
+  fi
 else
-  warn "skipped ~/.config/app-opportunities (directory absent)"
+  warn "skipped ~/.config/app-opportunities (absent)"
 fi
 
 if node "$REPO/scripts/apify/install-mcp.mjs" >/tmp/rotate-install.log 2>&1; then
