@@ -1,3 +1,9 @@
 .DS_Store
 .tmp-preview/
 .work/
+
+# Apify competitor research — raw scrape output contains reviewer/business PII
+# and must never reach the Cloudflare Pages deploy.
+data/
+.env
+scripts/apify/.env
