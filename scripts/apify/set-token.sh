@@ -17,6 +17,12 @@ set -eu
 cd "$(dirname "$0")/../.."
 ENV_FILE="scripts/apify/.env"
 
+# Snapshot the current value BEFORE prompting. After a breach notice the failure
+# mode is not "paste nothing", it is "paste the same compromised key again" --
+# which verifies fine as HTTP 200 and silently reports success while rotating
+# nothing at all. Compare against this to catch that.
+PREVIOUS=$(sed -n 's/^[[:space:]]*APIFY_TOKEN[[:space:]]*=[[:space:]]*//p' "$ENV_FILE" 2>/dev/null | head -1 | tr -d '"\r' || true)
+
 printf 'Paste your Apify token (input hidden), then press Enter: '
 stty -echo 2>/dev/null || true
 IFS= read -r TOKEN || true
@@ -29,6 +35,21 @@ TOKEN=$(printf '%s' "$TOKEN" | tr -d ' \t\r\n' | sed -e 's/^["'\'']//' -e 's/["'
 if [ -z "$TOKEN" ]; then
   echo "No token entered. Nothing written." >&2
   exit 1
+fi
+
+# A rotation that produces the same key is not a rotation. Refuse loudly rather
+# than printing "Done" over the top of an unchanged, compromised credential.
+if [ -n "$PREVIOUS" ] && [ "$TOKEN" = "$PREVIOUS" ]; then
+  echo
+  echo "Refusing: this is the SAME token already in $ENV_FILE." >&2
+  echo "  ${PREVIOUS%"${PREVIOUS#????????????}"}…${PREVIOUS#"${PREVIOUS%????}"}" >&2
+  echo
+  echo "Nothing was written. If you intended to rotate after a security notice," >&2
+  echo "create a NEW token and revoke the old one first:" >&2
+  echo "  https://console.apify.com/settings/integrations" >&2
+  echo
+  echo "To deliberately re-apply the same token, pass --allow-same." >&2
+  [ "${1:-}" = "--allow-same" ] || exit 1
 fi
 
 case "$TOKEN" in

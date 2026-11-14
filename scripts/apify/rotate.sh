@@ -47,6 +47,20 @@ bad()  { printf '  \033[31mfail\033[0m %s\n' "$*"; }
 TOKEN=$(sed -n 's/^[[:space:]]*APIFY_TOKEN[[:space:]]*=[[:space:]]*//p' "$SESSION" | head -1 | tr -d '"'"'"' \r')
 [ -n "$TOKEN" ] || { bad "no APIFY_TOKEN in $SESSION"; exit 1; }
 
+# Guard: rotate.sh fans a key out to FOUR files. If the operator never actually
+# replaced the key, this is the script that makes that mistake permanent and
+# spreads it further. Compare against the recorded digest of the previous key.
+DIGEST_FILE=$REPO/scripts/apify/.token-digest
+NEW_DIGEST=$(printf '%s' "$TOKEN" | shasum -a 256 | cut -d' ' -f1)
+if [ -f "$DIGEST_FILE" ] && [ "$(cat "$DIGEST_FILE")" = "$NEW_DIGEST" ]; then
+  bad "this is the SAME token as the last rotation — nothing to fan out"
+  say "  Create and revoke in Console, then re-run set-token.sh:"
+  say "  https://console.apify.com/settings/integrations"
+  say ""
+  say "  To force anyway: sh scripts/apify/rotate.sh --allow-same"
+  [ "${1:-}" = "--allow-same" ] || exit 3
+fi
+
 say "Rotating token        ${TOKEN%"${TOKEN#????????????}"}…${TOKEN#"${TOKEN%????}"}"
 
 # Verify before touching anything else. A fan-out of a dead token is worse
@@ -140,3 +154,6 @@ fi
 say ""
 say "Last step, cannot be automated: revoke the old key in Apify Console."
 say "Until it is revoked at the source, any copy of it still works."
+
+printf '%s\n' "$NEW_DIGEST" > "$DIGEST_FILE"
+chmod 600 "$DIGEST_FILE"
